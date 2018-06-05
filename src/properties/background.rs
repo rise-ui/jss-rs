@@ -5,8 +5,9 @@ use yoga::StyleUnit;
 use webrender::api as wr_api;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub enum BackgroundStyle {
-  Gradient(GradientStyle),
+#[serde(untagged)]
+pub enum Background {
+  Gradient(Gradient),
   Color(Color),
 }
 
@@ -17,7 +18,7 @@ pub struct GradientStop {
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct GradientStyle {
+pub struct Gradient {
   pub stops: Vec<GradientStop>,
   // By percentage
   pub from: (f32, f32),

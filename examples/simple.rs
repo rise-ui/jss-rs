@@ -2,7 +2,7 @@ extern crate failure;
 extern crate jss;
 
 use failure::Error;
-use jss::parse_json_style;
+use jss::*;
 
 fn main() -> Result<(), Error> {
   let style = r#"{
@@ -11,6 +11,7 @@ fn main() -> Result<(), Error> {
 
   let result = parse_json_style(style.to_string())?;
   println!("Style: \n{:#?}", result);
+  println!("Layout: \n{:#?}", result.get_prepared_layout());
 
   Ok(())
 }

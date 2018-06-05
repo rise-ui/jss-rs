@@ -3,7 +3,11 @@ use palette;
 #[cfg(feature = "webrender_support")]
 use webrender::api::ColorF;
 
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
+use serde::de::{Deserialize, Deserializer};
+use serde::ser::{Serialize, Serializer};
+use serde_json::Value;
+
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Color {
   pub red: u8,
   pub green: u8,
@@ -11,9 +15,25 @@ pub struct Color {
   pub alpha: f32,
 }
 
-impl Default for Color {
-  fn default() -> Self {
-    Color::black()
+impl Serialize for Color {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: Serializer,
+  {
+    serializer.serialize_str(&*self.to_string())
+  }
+}
+
+impl<'de> Deserialize<'de> for Color {
+  fn deserialize<D>(deserializer: D) -> Result<Color, D::Error>
+  where
+    D: Deserializer<'de>,
+  {
+    let value = Value::deserialize(deserializer)?;
+    match value {
+      Value::String(color) => Ok(color.into()),
+      _ => Ok(Color::transparent()),
+    }
   }
 }
 
@@ -27,16 +47,12 @@ impl Color {
     }
   }
 
-  pub fn transparent() -> Self {
-    Color::new([0, 0, 0], 1.0)
+  pub fn transparent() -> Color {
+    "rgba(0,0,0,0)".to_string().into()
   }
 
-  pub fn black() -> Self {
-    Color::new([0, 0, 0], 1.0)
-  }
-
-  pub fn white() -> Self {
-    Color::new([255, 255, 255], 1.0)
+  pub fn to_string(&self) -> String {
+    format!("rgba({}, {}, {}, {})", self.red, self.green, self.blue, self.alpha as i32)
   }
 }
 

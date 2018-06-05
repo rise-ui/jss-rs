@@ -1,9 +1,11 @@
 use failure::Error;
 use ordered_float::OrderedFloat;
-use parser::PrepareStyleExt;
 use serde_json;
 
-use yoga::{self, Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
+use parser::PrepareStyleExt;
+use properties::{Background, Gradient};
+
+use yoga::{Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
 
 mod parse_unit {
   use serde::{Deserialize, Deserializer, Serializer};
@@ -40,6 +42,7 @@ mod parse_unit {
 #[derive(Serialize, Deserialize, Debug, Clone, PrepareStyle)]
 #[serde(rename_all = "snake_case")]
 pub struct ElementStyle {
+  // Layout Styles
   pub flex_direction: Option<FlexDirection>,
   pub justify_content: Option<Justify>,
   pub position: Option<PositionType>,
@@ -157,6 +160,9 @@ pub struct ElementStyle {
   #[serde(default)]
   #[serde(with = "parse_unit")]
   pub width: Option<StyleUnit>,
+
+  // Apperance Styles
+  pub background: Option<Background>,
 }
 
 pub fn parse_json_style(json: String) -> Result<ElementStyle, Error> {
