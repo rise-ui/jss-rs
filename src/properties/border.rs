@@ -1,5 +1,38 @@
+use properties::Color;
+
 #[cfg(feature = "webrender_support")]
 use webrender::api as wr_api;
+
+#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
+pub struct BorderRadius {
+  pub bottom_right: i32,
+  pub bottom_left: i32,
+  pub top_right: i32,
+  pub top_left: i32,
+}
+
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
+pub struct Border {
+  pub style: BorderStyle,
+  pub color: Color,
+}
+
+impl Default for Border {
+  fn default() -> Border {
+    Border {
+      style: BorderStyle::None,
+      color: Color::transparent(),
+    }
+  }
+}
+
+#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
+pub struct BorderStyles {
+  pub bottom: Border,
+  pub right: Border,
+  pub left: Border,
+  pub top: Border,
+}
 
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

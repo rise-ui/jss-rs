@@ -37,7 +37,7 @@ mod tests {
 
     bench.iter(|| {
       let parsed = parse_json_style(style.to_string()).unwrap();
-      parsed.get_prepared_layout();
+      parsed.get_prepared_styles();
     });
   }
 }

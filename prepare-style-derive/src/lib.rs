@@ -1,18 +1,30 @@
+#![recursion_limit = "128"]
+
 extern crate inflector;
 extern crate ordered_float;
-extern crate proc_macro2;
 extern crate proc_macro;
+extern crate proc_macro2;
+extern crate regex;
 extern crate syn;
 
+#[macro_use]
+extern crate lazy_static;
 #[macro_use]
 extern crate enum_extract;
 #[macro_use]
 extern crate quote;
 
-use syn::{DeriveInput, GenericArgument, PathArguments, PathSegment, Type};
-use proc_macro2::{Ident, TokenStream, Span};
 use inflector::Inflector;
+use proc_macro2::{Ident, Span, TokenStream};
+use regex::Regex;
 use syn::punctuated::Punctuated;
+use syn::{DeriveInput, GenericArgument, PathArguments, PathSegment, Type};
+
+lazy_static! {
+  static ref STYLE_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_style$").unwrap();
+  static ref COLOR_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_color$").unwrap();
+  static ref RADIUS_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_radius$").unwrap();
+}
 
 /// A field description.
 #[derive(Debug, Clone)]
@@ -67,15 +79,66 @@ fn get_struct_fields(ast_struct: syn::DataStruct) -> impl Iterator<Item = TokenS
 }
 
 fn generate_expression(field: StructField) -> TokenStream {
-  let _ftype = field.ftype;
+  let ftype = field.ftype;
   let name = field.name;
 
   let value_block = Ident::new(&format!("value_{}", name), Span::call_site());
   let enum_type = Ident::new(&name.to_string().to_pascal_case(), Span::call_site());
 
-  quote! {
-    if let Some(#value_block) = &self.#name {
-      properties.push(FlexStyle::#enum_type(#value_block.clone()));
+  let type_str = &*ftype.to_string();
+  let name_str = &*name.to_string();
+
+  match type_str {
+    "Background" => {
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          apperance.push(Apperance::Background(#value_block.clone()));
+        }
+      }
+    }
+
+    "BorderStyle" => {
+      let edge = STYLE_EDGE_RE.replace_all(name_str, "$edge");
+      let edge = edge.into_owned();
+      let edge = Ident::new(&*edge, Span::call_site());
+
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          border_styles.#edge.style = #value_block.clone();
+        }
+      }
+    }
+
+    "Color" => {
+      let edge = COLOR_EDGE_RE.replace_all(name_str, "$edge");
+      let edge = edge.into_owned();
+      let edge = Ident::new(&*edge, Span::call_site());
+
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          border_styles.#edge.color = #value_block.clone();
+        }
+      }
+    }
+
+    "i32" => {
+      let edge = RADIUS_EDGE_RE.replace_all(name_str, "$edge");
+      let edge = edge.into_owned();
+      let edge = Ident::new(&*edge, Span::call_site());
+
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          border_radius.#edge = #value_block.clone();
+        }
+      }
+    }
+
+    _ => {
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          layout.push(FlexStyle::#enum_type(#value_block.clone()));
+        }
+      }
     }
   }
 }
@@ -85,10 +148,19 @@ fn get_impl_trait_tokens(struct_id: Ident, data_struct: syn::DataStruct) -> Toke
 
   quote! {
     impl PrepareStyleExt for #struct_id {
-      fn get_prepared_layout(&self) -> Vec<FlexStyle> {
-        let mut properties = vec![];
+      fn get_prepared_styles(&self) -> (Vec<Apperance>, Vec<FlexStyle>) {
+        let mut apperance: Vec<Apperance> = vec![];
+        let mut layout: Vec<FlexStyle> = vec![];
+
+        let mut border_styles = BorderStyles::default();
+        let mut border_radius = BorderRadius::default();
+
         #(#expressions)*
-        properties
+
+        apperance.push(Apperance::BorderStyles(border_styles));
+        apperance.push(Apperance::BorderRadius(border_radius));
+
+        (apperance, layout)
       }
     }
   }

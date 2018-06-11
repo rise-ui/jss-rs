@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use serde_json;
 
 use parser::PrepareStyleExt;
-use properties::{Background, Gradient};
+use properties::{Apperance, Background, BorderRadius, BorderStyle, BorderStyles, Color};
 
 use yoga::{Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
 
@@ -163,6 +163,21 @@ pub struct ElementStyle {
 
   // Apperance Styles
   pub background: Option<Background>,
+
+  border_top_color: Option<Color>,
+  border_right_color: Option<Color>,
+  border_left_color: Option<Color>,
+  border_bottom_color: Option<Color>,
+
+  border_top_style: Option<BorderStyle>,
+  border_right_style: Option<BorderStyle>,
+  border_left_style: Option<BorderStyle>,
+  border_bottom_style: Option<BorderStyle>,
+
+  border_top_right_radius: Option<i32>,
+  border_top_left_radius: Option<i32>,
+  border_bottom_right_radius: Option<i32>,
+  border_bottom_left_radius: Option<i32>,
 }
 
 pub fn parse_json_style(json: String) -> Result<ElementStyle, Error> {

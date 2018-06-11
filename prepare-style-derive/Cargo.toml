@@ -6,10 +6,12 @@ authors = ["Anton Shramko <antonshramko@yandex.ru>"]
 [dependencies]
 syn = { version = "0.14", features = ["full"] }
 ordered-float = "0.5.0"
+enum_extract = "0.1"
+lazy_static = "1.0"
 proc-macro2 = "0.4"
 Inflector = "0.11"
 quote = "0.6"
-enum_extract = "0.1"
+regex = "1.0"
 
 [lib]
 proc-macro = true
