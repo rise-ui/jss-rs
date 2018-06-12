@@ -1,7 +1,9 @@
+mod output;
 mod style;
 mod traits;
 
 pub use self::style::ElementStyle;
+pub use self::output::*;
 pub use self::traits::*;
 
 use failure::Error;

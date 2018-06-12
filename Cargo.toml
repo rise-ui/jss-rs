@@ -14,10 +14,11 @@ palette = { version = "0.4", optional = true }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
 prepare-style-derive = { path = "./prepare-style-derive" }
 ordered-float = "0.5.0"
+css-color-parser = "*"
 failure_derive = "0.1"
 serde_derive = "1.0"
+lazy_static = "1.0"
 serde_json = "1.0"
 failure = "0.1"
 serde = "1.0"
 regex = "0.2"
-css-color-parser = "*"

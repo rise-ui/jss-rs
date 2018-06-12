@@ -133,6 +133,14 @@ fn generate_expression(field: StructField) -> TokenStream {
       }
     }
 
+    "Vec" => {
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          apperance.push(Apperance::Filter(#value_block.clone()));
+        }
+      }
+    }
+
     _ => {
       quote! {
         if let Some(#value_block) = &self.#name {

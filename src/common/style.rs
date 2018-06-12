@@ -1,9 +1,7 @@
-use ordered_float::OrderedFloat;
-
-use common::PrepareStyleExt;
-use properties::{Apperance, Background, BorderRadius, BorderStyle, BorderStyles, Color};
-
 use yoga::{Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
+use properties::{Apperance, Background, BorderRadius, BorderStyle, BorderStyles, Color, Filter};
+use ordered_float::OrderedFloat;
+use common::PrepareStyleExt;
 
 mod parse_unit {
   use serde::{Deserialize, Deserializer, Serializer};
@@ -162,18 +160,21 @@ pub struct ElementStyle {
   // Apperance Styles
   pub background: Option<Background>,
 
-  border_top_color: Option<Color>,
-  border_right_color: Option<Color>,
-  border_left_color: Option<Color>,
-  border_bottom_color: Option<Color>,
+  pub border_top_color: Option<Color>,
+  pub border_right_color: Option<Color>,
+  pub border_left_color: Option<Color>,
+  pub border_bottom_color: Option<Color>,
 
-  border_top_style: Option<BorderStyle>,
-  border_right_style: Option<BorderStyle>,
-  border_left_style: Option<BorderStyle>,
-  border_bottom_style: Option<BorderStyle>,
+  pub border_top_style: Option<BorderStyle>,
+  pub border_right_style: Option<BorderStyle>,
+  pub border_left_style: Option<BorderStyle>,
+  pub border_bottom_style: Option<BorderStyle>,
 
-  border_top_right_radius: Option<i32>,
-  border_top_left_radius: Option<i32>,
-  border_bottom_right_radius: Option<i32>,
-  border_bottom_left_radius: Option<i32>,
+  pub border_top_right_radius: Option<i32>,
+  pub border_top_left_radius: Option<i32>,
+  pub border_bottom_right_radius: Option<i32>,
+  pub border_bottom_left_radius: Option<i32>,
+
+  // Filters
+  pub filter: Option<Vec<Filter>>,
 }
