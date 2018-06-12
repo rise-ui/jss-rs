@@ -35,7 +35,7 @@ mod parse_unit {
   }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PrepareStyle)]
+#[derive(Serialize, Deserialize, Debug, Clone, PrepareStyle, MergeStyle)]
 #[serde(rename_all = "snake_case")]
 pub struct ElementStyle {
   // Layout Styles

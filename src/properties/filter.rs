@@ -63,7 +63,7 @@ impl Into<Filter> for String {
       let filter = FILTER_RE.replace_all(&*self, "$name");
       let value = match FILTER_RE.replace_all(&*self, "$value").parse::<f32>() {
         Ok(v) => v,
-        Err(e) => 0.0,
+        Err(_) => 0.0,
       };
 
       match &*filter {
