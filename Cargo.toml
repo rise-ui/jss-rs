@@ -8,11 +8,10 @@ default = []
 webrender_support = []
 
 [dependencies]
-webrender = { rev = "b9afd0189a48fbcdc4e7ada957d1604ecd0e8c13", git = "https://github.com/servo/webrender", optional = true }
+webrender = { rev = "2e381e0325f367429810099d5abf76e674f697ed", git = "https://github.com/servo/webrender", optional = true }
 palette = { version = "0.4", optional = true }
 
-# yoga = { git = "https://github.com/friktor/yoga-rs", features = ["serde_support"] }
-yoga = { path = "../yoga-rs", features = ["serde_support"] }
+yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
 prepare-style-derive = { path = "./prepare-style-derive" }
 ordered-float = "0.5.0"
 failure_derive = "0.1"
