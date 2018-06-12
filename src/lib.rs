@@ -19,10 +19,10 @@ extern crate regex;
 extern crate serde;
 extern crate yoga;
 
-mod parser;
+mod common;
 mod properties;
 
-pub use parser::*;
+pub use common::*;
 
 #[cfg(test)]
 mod tests {

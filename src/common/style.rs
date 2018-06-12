@@ -1,8 +1,6 @@
-use failure::Error;
 use ordered_float::OrderedFloat;
-use serde_json;
 
-use parser::PrepareStyleExt;
+use common::PrepareStyleExt;
 use properties::{Apperance, Background, BorderRadius, BorderStyle, BorderStyles, Color};
 
 use yoga::{Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
@@ -178,9 +176,4 @@ pub struct ElementStyle {
   border_top_left_radius: Option<i32>,
   border_bottom_right_radius: Option<i32>,
   border_bottom_left_radius: Option<i32>,
-}
-
-pub fn parse_json_style(json: String) -> Result<ElementStyle, Error> {
-  let style: ElementStyle = serde_json::from_str(&json)?;
-  Ok(style)
 }
