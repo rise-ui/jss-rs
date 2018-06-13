@@ -5,7 +5,12 @@ Implementation of JSS for Rust. Use css styles without css with identical proper
 ### Usage
 Add to your Cargo.toml.
 ``` toml
+[dependencies]
 jss = { git = "https://github.com/rise-ui/jss-rs" }
+```
+
+``` rust
+extern crate jss;
 ```
 
 #### Examples
