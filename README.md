@@ -2,6 +2,8 @@
 Implementation of JSS for Rust. Use css styles without css with identical properties.
 *Part of Rise-UI project.*
 
+### [Documentation](http://friktor.github.io/jss-rs/jss/index.html)
+
 ### Usage
 Add to your Cargo.toml.
 ``` toml

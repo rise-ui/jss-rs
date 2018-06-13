@@ -4,12 +4,12 @@
 //!
 //! ### Usage
 //! Add to your Cargo.toml.
-//! ``` toml
+//! ```toml
 //! [dependencies]
 //! jss = { git = "https://github.com/rise-ui/jss-rs" }
 //! ```
 //!
-//! ``` rust
+//! ```rust
 //! extern crate jss;
 //! ```
 //!
