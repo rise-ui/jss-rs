@@ -1,7 +1,6 @@
 use properties::Color;
 
-#[cfg(feature = "webrender_support")]
-use webrender::api as wr_api;
+use webrender::api::{self, LayoutSize};
 
 #[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
 pub struct BorderRadius {
@@ -9,6 +8,21 @@ pub struct BorderRadius {
   pub bottom_left: i32,
   pub top_right: i32,
   pub top_left: i32,
+}
+
+fn get_border_radius(size: i32) -> LayoutSize {
+  LayoutSize::new(size as f32, size as f32)
+}
+
+impl From<BorderRadius> for api::BorderRadius {
+  fn from(radius: BorderRadius) -> api::BorderRadius {
+    api::BorderRadius {
+      bottom_right: get_border_radius(radius.bottom_right),
+      bottom_left: get_border_radius(radius.bottom_left),
+      top_right: get_border_radius(radius.top_right),
+      top_left: get_border_radius(radius.top_left),
+    }
+  }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -49,22 +63,21 @@ pub enum BorderStyle {
   Outset,
 }
 
-#[cfg(feature = "webrender_support")]
-impl Into<wr_api::BorderStyle> for BorderStyle {
-  fn into(self) -> wr_api::BorderStyle {
+impl Into<api::BorderStyle> for BorderStyle {
+  fn into(self) -> api::BorderStyle {
     use self::BorderStyle::*;
 
     match self {
-      None => wr_api::BorderStyle::None,
-      Solid => wr_api::BorderStyle::Solid,
-      Double => wr_api::BorderStyle::Double,
-      Dotted => wr_api::BorderStyle::Dotted,
-      Dashed => wr_api::BorderStyle::Dashed,
-      Hidden => wr_api::BorderStyle::Hidden,
-      Groove => wr_api::BorderStyle::Groove,
-      Ridge => wr_api::BorderStyle::Ridge,
-      Inset => wr_api::BorderStyle::Inset,
-      Outset => wr_api::BorderStyle::Outset,
+      None => api::BorderStyle::None,
+      Solid => api::BorderStyle::Solid,
+      Double => api::BorderStyle::Double,
+      Dotted => api::BorderStyle::Dotted,
+      Dashed => api::BorderStyle::Dashed,
+      Hidden => api::BorderStyle::Hidden,
+      Groove => api::BorderStyle::Groove,
+      Ridge => api::BorderStyle::Ridge,
+      Inset => api::BorderStyle::Inset,
+      Outset => api::BorderStyle::Outset,
     }
   }
 }

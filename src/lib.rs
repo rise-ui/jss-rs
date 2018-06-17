@@ -52,27 +52,39 @@ extern crate test;
 // #[macro_use]
 // extern crate failure_derive;
 #[macro_use]
-extern crate lazy_static;
+extern crate prepare_style_derive;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
-extern crate prepare_style_derive;
-#[cfg(feature = "webrender_support")]
+extern crate lazy_static;
+
+// TODO: Next build as conditional compilation feature
 extern crate webrender;
 
-extern crate failure;
 extern crate ordered_float;
 extern crate serde_json;
+extern crate failure;
 
 extern crate css_color_parser;
 extern crate regex;
 extern crate serde;
 extern crate yoga;
 
-mod common;
-mod properties;
+pub mod common;
+pub mod properties;
 
-pub use common::*;
+pub use common::{
+  parse_json_stylesheet,
+  parse_json_style,
+  PrepareStyleExt,
+  ElementStyle,
+  Stylesheet,
+  Style,
+};
+
+pub use properties::{
+  Apperance
+};
 
 #[cfg(test)]
 mod tests {
@@ -86,7 +98,7 @@ mod tests {
     }"#;
 
     bench.iter(|| {
-      let parsed = parse_json_style(style.to_string()).unwrap();
+      let parsed = parse_json_style(style).unwrap();
       parsed.get_prepared_styles();
     });
   }

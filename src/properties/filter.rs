@@ -3,9 +3,13 @@ use serde::ser::{Serialize, Serializer};
 use serde_json::Value;
 use regex::Regex;
 
+use webrender::api as wr_api;
+
 lazy_static! {
-  static ref FILTER_RE: Regex =
-    { Regex::new(r"^(?P<name>brightness|grayscale|hueRotate|saturate|contrast|invert|sepia|blur)\((?P<value>\d+)\)$").unwrap() };
+  static ref FILTER_RE: Regex = {
+    Regex::new(r"^(?P<name>brightness|grayscale|hueRotate|saturate|contrast|invert|sepia|blur)\((?P<value>\d+)\)$")
+      .unwrap()
+  };
 }
 
 impl Serialize for Filter {
@@ -79,6 +83,24 @@ impl Into<Filter> for String {
       }
     } else {
       Filter::None
+    }
+  }
+}
+
+impl Into<wr_api::FilterOp> for Filter {
+  fn into(self) -> wr_api::FilterOp {
+    use self::Filter::*;
+
+    match self {
+      Brightness(v) => wr_api::FilterOp::Brightness(v),
+      Grayscale(v) => wr_api::FilterOp::Grayscale(v),
+      HueRotate(v) => wr_api::FilterOp::HueRotate(v),
+      Saturate(v) => wr_api::FilterOp::Saturate(v),
+      Contrast(v) => wr_api::FilterOp::Contrast(v),
+      Invert(v) => wr_api::FilterOp::Invert(v),
+      Sepia(v) => wr_api::FilterOp::Sepia(v),
+      Blur(v) => wr_api::FilterOp::Blur(v),
+      None => wr_api::FilterOp::Blur(0.),
     }
   }
 }

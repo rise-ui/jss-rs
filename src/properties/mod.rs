@@ -10,10 +10,10 @@ pub use self::cursor::*;
 pub use self::filter::*;
 pub use self::color::*;
 
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub enum Apperance {
-  Background(Background),
-  BorderRadius(BorderRadius),
-  BorderStyles(BorderStyles),
-  Filter(Vec<Filter>),
+#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
+pub struct Apperance {
+  pub border_radius: Option<BorderRadius>,
+  pub border_styles: Option<BorderStyles>,
+  pub background: Option<Background>,
+  pub filter: Option<Vec<Filter>>,
 }

@@ -24,7 +24,7 @@ fn generate_expression(field: StructField) -> TokenStream {
     "Background" => {
       quote! {
         if let Some(#value_block) = &self.#name {
-          apperance.push(Apperance::Background(#value_block.clone()));
+          apperance.background = Some(#value_block.clone());
         }
       }
     }
@@ -68,7 +68,7 @@ fn generate_expression(field: StructField) -> TokenStream {
     "Vec" => {
       quote! {
         if let Some(#value_block) = &self.#name {
-          apperance.push(Apperance::Filter(#value_block.clone()));
+          apperance.filter = Some(#value_block.clone());
         }
       }
     }
@@ -102,8 +102,8 @@ pub fn get_impl_trait_tokens(struct_id: Ident, data_struct: DataStruct) -> Token
 
   quote! {
     impl PrepareStyleExt for #struct_id {
-      fn get_prepared_styles(&self) -> (Vec<Apperance>, Vec<FlexStyle>) {
-        let mut apperance: Vec<Apperance> = vec![];
+      fn get_prepared_styles(&self) -> (Apperance, Vec<FlexStyle>) {
+        let mut apperance = Apperance::default();
         let mut layout: Vec<FlexStyle> = vec![];
 
         let mut border_styles = BorderStyles::default();
@@ -111,8 +111,8 @@ pub fn get_impl_trait_tokens(struct_id: Ident, data_struct: DataStruct) -> Token
 
         #(#expressions)*
 
-        apperance.push(Apperance::BorderStyles(border_styles));
-        apperance.push(Apperance::BorderRadius(border_radius));
+        apperance.border_styles = Some(border_styles);
+        apperance.border_radius = Some(border_radius);
 
         (apperance, layout)
       }

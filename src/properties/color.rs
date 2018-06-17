@@ -1,6 +1,3 @@
-#[cfg(feature = "webrender_support")]
-use palette;
-#[cfg(feature = "webrender_support")]
 use webrender::api::ColorF;
 
 use serde::de::{Deserialize, Deserializer};
@@ -78,14 +75,8 @@ impl From<String> for Color {
   }
 }
 
-#[cfg(feature = "webrender_support")]
-impl Into<ColorF> for Color {
-  fn into(self) -> ColorF {
-    use palette::rgb::Rgb;
-    use palette::Alpha;
-
-    let rgb = Alpha::<Rgb, _>::new_u8(self.red, self.green, self.blue, 255);
-    let color = ColorF::new(rgb.red, rgb.green, rgb.blue, self.alpha);
-    color
+impl From<Color> for ColorF {
+  fn from(color: Color) -> ColorF {
+    ColorF::new(color.red as f32 / 255., color.green as f32 / 255., color.blue as f32 / 255., color.alpha)
   }
 }

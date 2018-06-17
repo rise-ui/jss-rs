@@ -5,5 +5,5 @@ imports_indent = "Block"
 reorder_imports = false
 fn_single_line = false
 comment_width = 100
-max_width = 140
+max_width = 120
 tab_spaces = 2

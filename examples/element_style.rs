@@ -14,7 +14,7 @@ fn main() -> Result<(), Error> {
     ]
   }"#;
 
-  let result = parse_json_style(style.to_string())?;
+  let result = parse_json_style(style)?;
   println!("Style: \n{:#?}", result);
 
   let (apperance, layout) = result.get_prepared_styles();
