@@ -5,8 +5,8 @@ use regex::Regex;
 use std::rc::Rc;
 
 lazy_static! {
-  static ref ELEMENT_STATUS_RE: Regex = Regex::new(r"^(?P<name>[a-zA-Z]+):(?P<status>active|hover)$").unwrap();
-  static ref ELEMENT_NAME_RE: Regex = Regex::new(r"^[a-zA-Z]+$").unwrap();
+  static ref ELEMENT_STATUS_RE: Regex = Regex::new(r"^(?P<name>[a-zA-Z_]+):(?P<status>active|hover)$").unwrap();
+  static ref ELEMENT_NAME_RE: Regex = Regex::new(r"^[a-zA-Z_]+$").unwrap();
 }
 
 #[derive(Debug, Clone, Default)]
