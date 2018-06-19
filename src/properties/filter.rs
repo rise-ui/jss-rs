@@ -48,6 +48,8 @@ impl<'de> Deserialize<'de> for Filter {
   }
 }
 
+pub type Filters = Vec<Filter>;
+
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Filter {
   Brightness(f32),

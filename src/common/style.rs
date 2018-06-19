@@ -1,7 +1,28 @@
-use yoga::{Align, Display, FlexDirection, FlexStyle, Justify, Overflow, PositionType, StyleUnit, Wrap};
-use properties::{Apperance, Background, BorderRadius, BorderStyle, BorderStyles, Color, Filter};
 use ordered_float::OrderedFloat;
 use common::PrepareStyleExt;
+
+use yoga::{
+  Align,
+  Display,
+  FlexDirection,
+  FlexStyle,
+  Justify,
+  Overflow,
+  PositionType,
+  StyleUnit,
+  Wrap
+};
+
+use properties::{
+  BorderRadius,
+  BorderStyles,
+  BorderStyle,
+  Background,
+  Transforms,
+  Apperance,
+  Filters,
+  Color,
+};
 
 mod parse_unit {
   use serde::{Deserialize, Deserializer, Serializer};
@@ -159,7 +180,9 @@ pub struct ElementStyle {
 
   // Apperance Styles
   pub background: Option<Background>,
+  pub transform: Option<Transforms>,
 
+  // Borders
   pub border_top_color: Option<Color>,
   pub border_right_color: Option<Color>,
   pub border_left_color: Option<Color>,
@@ -176,5 +199,5 @@ pub struct ElementStyle {
   pub border_bottom_left_radius: Option<i32>,
 
   // Filters
-  pub filter: Option<Vec<Filter>>,
+  pub filter: Option<Filters>,
 }

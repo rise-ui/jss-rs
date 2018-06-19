@@ -65,10 +65,18 @@ fn generate_expression(field: StructField) -> TokenStream {
       }
     }
 
-    "Vec" => {
+    "Filters" => {
       quote! {
         if let Some(#value_block) = &self.#name {
           apperance.filter = Some(#value_block.clone());
+        }
+      }
+    }
+
+    "Transforms" => {
+      quote!{
+        if let Some(#value_block) = &self.#name {
+          apperance.transform = Some(#value_block.clone());
         }
       }
     }

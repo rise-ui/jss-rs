@@ -6,11 +6,17 @@ use jss::*;
 
 fn main() -> Result<(), Error> {
   let style = r#"{
-    "align_content": "center",
     "border_top_right_radius": 10,
     "border_top_style": "solid",
+    "align_content": "center",
+    
     "filter": [
       "blur(20)"
+    ],
+
+    "transform": [
+      ["translate", [10, 10]],
+      ["skew", [10, 10]]
     ]
   }"#;
 
