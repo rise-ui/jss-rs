@@ -57,6 +57,8 @@ extern crate prepare_style_derive;
 extern crate serde_derive;
 #[macro_use]
 extern crate lazy_static;
+#[macro_use]
+extern crate nom;
 
 // TODO: Next build as conditional compilation feature
 extern crate webrender;

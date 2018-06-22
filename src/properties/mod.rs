@@ -4,6 +4,7 @@ mod color;
 mod common;
 mod cursor;
 mod filter;
+mod parse;
 mod transform;
 
 pub use self::background::*;
