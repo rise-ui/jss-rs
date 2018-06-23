@@ -2,15 +2,15 @@ use nom::{alpha, digit, IResult};
 use std::str;
 
 #[derive(Debug, Clone)]
-struct FunctionRepr<'a, 'b, 'c> {
-  args: Vec<UnitRepr<'a, 'b>>,
-  name: &'c str,
+struct FunctionRepr {
+  args: Vec<UnitRepr>,
+  name: String,
 }
 
 #[derive(Debug, Clone)]
-struct UnitRepr<'a, 'b> {
-  value: &'a str,
-  unit: &'b str,
+struct UnitRepr {
+  value: String,
+  unit: String,
 }
 
 named!(varname<&str, &str>, ws!(alpha));
@@ -25,8 +25,8 @@ named!(unit<&[u8], UnitRepr>, do_parse!(
   value: digit    >>
   unit: unit_type >>
   (UnitRepr {
-    value: str::from_utf8(value).unwrap(),
-    unit
+    value: String::from_utf8_lossy(value).to_string(),
+    unit: unit.to_string()
   })
 ));
 
@@ -34,20 +34,20 @@ named!(fun_arguments<&[u8], Vec<UnitRepr>>,
   delimited!(char!('('), separated_list!(char!(','), unit), char!(')'))
 );
 
-fn format_func(name: &'a str, args: Vec<UnitRepr>) -> FunctionRepr {
+fn format_func(name: &str, args: Vec<UnitRepr>) -> FunctionRepr {
   FunctionRepr {
-    name,
+    name: name.to_string(),
     args,
   }
 }
 
-named!(fun_parse<&[u8], FunctionRepr>, do_parse!(
+named!(fun_parse<&str, FunctionRepr>, do_parse!(
   func_name: varname >>
   func_args: fun_arguments >>
   (format_func(func_name, func_args))
 ));
 
 fn test() {
-  let my_str = "(10px,10deg)";
-  println!("{:?}", fun_parse(my_str.as_bytes()));
+  let my_str = "func(10px,10deg)";
+  println!("{:?}", fun_parse(my_str));
 }
