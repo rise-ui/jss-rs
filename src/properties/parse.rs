@@ -1,19 +1,19 @@
-use nom::{alpha, digit, IResult};
+use nom::{alpha, digit};
 use std::str;
 
 #[derive(Debug, Clone)]
-struct FunctionRepr {
-  args: Vec<UnitRepr>,
-  name: String,
+pub struct FunctionRepr<'a, 'b, 'c> {
+  pub args: Vec<UnitRepr<'a, 'b>>,
+  pub name: &'c str,
 }
 
 #[derive(Debug, Clone)]
-struct UnitRepr {
-  value: String,
-  unit: String,
+pub struct UnitRepr<'a, 'b> {
+  pub value: &'a str,
+  pub unit: &'b str,
 }
 
-named!(varname<&str, &str>, ws!(alpha));
+named!(varname(&[u8]) -> &[u8], ws!(alpha));
 
 named!(unit_type<&[u8], &str>, alt!(
   tag!("deg") => { |_| "degrees" } |
@@ -21,33 +21,34 @@ named!(unit_type<&[u8], &str>, alt!(
   tag!("px")  => { |_| "point" }
 ));
 
-named!(unit<&[u8], UnitRepr>, do_parse!(
+named!(pub unit(&[u8]) -> UnitRepr, do_parse!(
   value: digit    >>
   unit: unit_type >>
   (UnitRepr {
-    value: String::from_utf8_lossy(value).to_string(),
-    unit: unit.to_string()
+    value: str::from_utf8(value).unwrap(),
+    unit: unit
   })
 ));
 
-named!(fun_arguments<&[u8], Vec<UnitRepr>>,
-  delimited!(char!('('), separated_list!(char!(','), unit), char!(')'))
+named!(pub fun_arguments(&[u8]) -> Vec<UnitRepr>,
+  delimited!(
+    char!('('),
+      separated_list!(char!(','), unit),
+    char!(')')
+  )
 );
 
-fn format_func(name: &str, args: Vec<UnitRepr>) -> FunctionRepr {
-  FunctionRepr {
-    name: name.to_string(),
+named!(pub fun_parse(&[u8]) -> FunctionRepr, do_parse!(
+  name: varname >>
+  args: fun_arguments >>
+  (FunctionRepr {
+    name: str::from_utf8(name).unwrap(),
     args,
-  }
-}
-
-named!(fun_parse<&str, FunctionRepr>, do_parse!(
-  func_name: varname >>
-  func_args: fun_arguments >>
-  (format_func(func_name, func_args))
+  })
 ));
 
-fn test() {
+#[test]
+fn test_func_parse() {
   let my_str = "func(10px,10deg)";
-  println!("{:?}", fun_parse(my_str));
+  println!("{:?}", fun_parse(my_str.as_bytes()));
 }

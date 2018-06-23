@@ -39,7 +39,7 @@
 //!     }
 //!   }"#;
 //!
-//!   let result = parse_json_stylesheet(style.to_string())?;
+//!   let result = parse_json_stylesheet(style)?;
 //!   println!("Stylesheet: \n{:#?}", result);
 //!
 //!   Ok(())
