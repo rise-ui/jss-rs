@@ -6,12 +6,34 @@ pub enum Angle {
   Radians(f32),
 }
 
+impl From<Angle> for String {
+  fn from(unit: Angle) -> String {
+    use self::Angle::*;
+
+    match unit {
+      Degrees(v) => format!("{}deg", v),
+      Radians(v) => format!("{}rad", v),
+    }
+  }
+}
+
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum SharedUnit {
   Percent(f32),
   Angle(Angle),
   Point(f32),
   None,
+}
+
+impl From<SharedUnit> for String {
+  fn from(unit: SharedUnit) -> String {
+    match unit {
+      SharedUnit::Percent(value) => format!("{}%", value),
+      SharedUnit::Point(value) => format!("{}px", value),
+      SharedUnit::Angle(angle) => angle.into(),
+      SharedUnit::None => "".to_string(),
+    }
+  }
 }
 
 impl<'a, 'b> From<UnitRepr<'a, 'b>> for SharedUnit {

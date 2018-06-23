@@ -1,3 +1,4 @@
+use css_color_parser::Color as CssColor;
 use webrender::api::ColorF;
 
 use serde::de::{Deserialize, Deserializer};
@@ -45,7 +46,7 @@ impl Color {
   }
 
   pub fn transparent() -> Color {
-    "rgba(0,0,0,0)".to_string().into()
+    "rgba(0,0,0,0)".into()
   }
 
   pub fn to_string(&self) -> String {
@@ -53,10 +54,19 @@ impl Color {
   }
 }
 
-impl From<String> for Color {
-  fn from(color: String) -> Color {
-    use css_color_parser::Color as CssColor;
+impl From<CssColor> for Color {
+  fn from(color: CssColor) -> Color {
+    Color {
+      alpha: color.a,
+      green: color.g,
+      blue: color.b,
+      red: color.r,
+    }
+  }
+}
 
+impl<'a> From<&'a str> for Color {
+  fn from(color: &str) -> Color {
     let default_color = CssColor {
       r: 0,
       g: 0,
@@ -64,14 +74,21 @@ impl From<String> for Color {
       a: 0.0,
     };
 
-    let css_color = color.parse::<CssColor>().unwrap_or(default_color);
+    let color = color.parse::<CssColor>().unwrap_or(default_color);
 
     Color {
-      alpha: css_color.a,
-      green: css_color.g,
-      blue: css_color.b,
-      red: css_color.r,
+      alpha: color.a,
+      green: color.g,
+      blue: color.b,
+      red: color.r,
     }
+  }
+}
+
+impl From<String> for Color {
+  fn from(color: String) -> Color {
+    let color = &*color;
+    color.into()
   }
 }
 
