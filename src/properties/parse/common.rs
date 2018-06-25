@@ -54,7 +54,6 @@ pub struct GradientStopRepr {
   pub offset: f32,
 }
 
-// @TODO: fix it for get color and worked by parser
 fn take_color(input: &[u8]) -> IResult<&[u8], CssColor> {
   let color = str::from_utf8(input.clone()).unwrap();
   println!("Slice is: {}", &color);
@@ -74,16 +73,26 @@ fn prepare_gradient_stop(color: CssColor, offset: &[u8]) -> GradientStopRepr {
 }
 
 named!(pub gradient_stop(&[u8]) -> GradientStopRepr, do_parse!(
-  color: take_color >>
+  color: map_res!(take_until!(" "), take_color) >>
   char!(' ')        >>
   offset: digit     >>
   char!('%')        >>
-  (prepare_gradient_stop(color, offset))
+  (prepare_gradient_stop(color.1, offset))
 ));
+
+// Tests of parse expressions
 
 #[test]
 fn test_gradient_stop_parse() {
-  let stop = "#FFF 10%";
-  let parsed = gradient_stop(stop.as_bytes());
-  println!("{:#?}", parsed);
+  let stop_hex = "#FFF 10%";
+  let parsed_hex = gradient_stop(stop_hex.as_bytes());
+  assert!(parsed_hex.is_ok(), true);
+
+  let stop_rgb = "rgb(10,10,10) 10%";
+  let parsed_rgb = gradient_stop(stop_rgb.as_bytes());
+  assert!(parsed_rgb.is_ok(), true);
+
+  let stop_rgba = "rgba(10,10,10,0.1) 10%";
+  let parsed_rgba = gradient_stop(stop_rgba.as_bytes());
+  assert!(parsed_rgba.is_ok(), true);
 }

@@ -21,9 +21,9 @@ impl From<Transform> for String {
     use self::Transform::*;
 
     match expr {
-      Translate(v) => format!("translate({}, {})", String::from(v.0), String::from(v.1)),
-      Rotate(v) => format!("rotate({}, {})", String::from(v.0), String::from(v.1)),
-      Skew(v) => format!("skew({}, {})", String::from(v.0), String::from(v.1)),
+      Translate(v) => format!("translate({},{})", String::from(v.0), String::from(v.1)),
+      Rotate(v) => format!("rotate({},{})", String::from(v.0), String::from(v.1)),
+      Skew(v) => format!("skew({},{})", String::from(v.0), String::from(v.1)),
       None => "".to_string(),
     }
   }
