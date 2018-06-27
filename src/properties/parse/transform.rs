@@ -27,8 +27,13 @@ named!(pub transform_parse(&[u8]) -> TransformFunction, do_parse!(
   })
 ));
 
-#[test]
-fn test_transform_function_parse() {
-  let my_str = "func(10px,10deg)";
-  println!("{:?}", transform_parse(my_str.as_bytes()));
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_transform_function_parse() {
+        let my_str = "func(10px,10deg)";
+        println!("{:?}", transform_parse(my_str.as_bytes()));
+    }
 }

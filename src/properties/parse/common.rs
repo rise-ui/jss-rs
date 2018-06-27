@@ -81,18 +81,28 @@ named!(pub gradient_stop(&[u8]) -> GradientStopRepr, do_parse!(
 ));
 
 // Tests of parse expressions
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[test]
-fn test_gradient_stop_parse() {
-  let stop_hex = "#FFF 10%";
-  let parsed_hex = gradient_stop(stop_hex.as_bytes());
-  assert!(parsed_hex.is_ok(), true);
+    #[test]
+    fn test_gradient_stop_parse_1() {
+        let stop_hex = "#FFF 10%";
+        let parsed_hex = gradient_stop(stop_hex.as_bytes());
+        assert!(parsed_hex.is_ok());
+    }
 
-  let stop_rgb = "rgb(10,10,10) 10%";
-  let parsed_rgb = gradient_stop(stop_rgb.as_bytes());
-  assert!(parsed_rgb.is_ok(), true);
+    #[test]
+    fn test_gradient_stop_parse_2() {
+        let stop_rgb = "rgb(10,10,10) 10%";
+        let parsed_rgb = gradient_stop(stop_rgb.as_bytes());
+        assert!(parsed_rgb.is_ok());
+    }
 
-  let stop_rgba = "rgba(10,10,10,0.1) 10%";
-  let parsed_rgba = gradient_stop(stop_rgba.as_bytes());
-  assert!(parsed_rgba.is_ok(), true);
+    #[test]
+    fn test_gradient_stop_parse_3() {
+        let stop_rgba = "rgba(10,10,10,0.1) 10%";
+        let parsed_rgba = gradient_stop(stop_rgba.as_bytes());
+        assert!(parsed_rgba.is_ok());
+    }
 }
