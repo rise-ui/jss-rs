@@ -4,7 +4,7 @@ use properties::Color;
 use std::str;
 
 // Unit representation and parser
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct UnitRepr<'a, 'b> {
   pub value: &'a str,
   pub unit: &'b str,
@@ -48,7 +48,7 @@ named!(pub angle(&[u8]) -> AngleRepr, do_parse!(
 ));
 
 // Stop representation and parse
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct GradientStopRepr {
   pub color: Color,
   pub offset: f32,
@@ -56,7 +56,6 @@ pub struct GradientStopRepr {
 
 fn take_color(input: &[u8]) -> IResult<&[u8], CssColor> {
   let color = str::from_utf8(input.clone()).unwrap();
-  println!("Slice is: {}", &color);
   let color = color.parse::<CssColor>().or(Err(Err::Incomplete(Needed::Unknown)))?;
   Ok((&[], color))
 }
@@ -83,26 +82,57 @@ named!(pub gradient_stop(&[u8]) -> GradientStopRepr, do_parse!(
 // Tests of parse expressions
 #[cfg(test)]
 mod tests {
-    use super::*;
+  use super::*;
 
-    #[test]
-    fn test_gradient_stop_parse_1() {
-        let stop_hex = "#FFF 10%";
-        let parsed_hex = gradient_stop(stop_hex.as_bytes());
-        assert!(parsed_hex.is_ok());
-    }
+  #[test]
+  fn gradient_stop_parse_hex() {
+    let stop_hex = "#FFF 10%";
+    let parsed_hex = gradient_stop(stop_hex.as_bytes());
+    let expected = GradientStopRepr {
+      color: Color {
+        red: 255,
+        green: 255,
+        blue: 255,
+        alpha: 1.0,
+      },
+      offset: 10.0,
+    };
+    assert_eq!(parsed_hex.unwrap().1, expected);
+  }
 
-    #[test]
-    fn test_gradient_stop_parse_2() {
-        let stop_rgb = "rgb(10,10,10) 10%";
-        let parsed_rgb = gradient_stop(stop_rgb.as_bytes());
-        assert!(parsed_rgb.is_ok());
-    }
+  #[test]
+  fn gradient_stop_parse_rgb() {
+    let stop_rgb = "rgb(10,10,10) 10%";
+    let parsed_rgb = gradient_stop(stop_rgb.as_bytes());
 
-    #[test]
-    fn test_gradient_stop_parse_3() {
-        let stop_rgba = "rgba(10,10,10,0.1) 10%";
-        let parsed_rgba = gradient_stop(stop_rgba.as_bytes());
-        assert!(parsed_rgba.is_ok());
-    }
+    let expected = GradientStopRepr {
+      color: Color {
+        red: 10,
+        green: 10,
+        blue: 10,
+        alpha: 1.0,
+      },
+      offset: 10.0,
+    };
+
+    assert_eq!(parsed_rgb.unwrap().1, expected);
+  }
+
+  #[test]
+  fn gradient_stop_parse_rgba() {
+    let stop_rgba = "rgba(10,10,10,0.1) 10%";
+    let parsed_rgba = gradient_stop(stop_rgba.as_bytes());
+
+    let expected = GradientStopRepr {
+      color: Color {
+        red: 10,
+        green: 10,
+        blue: 10,
+        alpha: 0.1,
+      },
+      offset: 10.0,
+    };
+
+    assert_eq!(parsed_rgba.unwrap().1, expected);
+  }
 }

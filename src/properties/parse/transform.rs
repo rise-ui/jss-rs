@@ -2,7 +2,7 @@ use properties::parse::{UnitRepr, unit};
 use nom::alpha;
 use std::str;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransformFunction<'a, 'b, 'c> {
   pub args: Vec<UnitRepr<'a, 'b>>,
   pub name: &'c str,
@@ -29,11 +29,26 @@ named!(pub transform_parse(&[u8]) -> TransformFunction, do_parse!(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+  use super::*;
 
-    #[test]
-    fn test_transform_function_parse() {
-        let my_str = "func(10px,10deg)";
-        println!("{:?}", transform_parse(my_str.as_bytes()));
-    }
+  #[test]
+  fn transform_function_parse() {
+    let my_str = "func(10px,10deg)";
+    let parsed = transform_parse(my_str.as_bytes()).expect("Can't parse transform").1;
+
+    let expected = TransformFunction {
+      args: vec![
+        UnitRepr {
+          value: "10",
+          unit: "point",
+        },
+        UnitRepr {
+          value: "10",
+          unit: "degrees",
+        },
+      ],
+      name: "func",
+    };
+    assert_eq!(parsed, expected);
+  }
 }
