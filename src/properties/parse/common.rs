@@ -5,29 +5,37 @@ use std::str;
 
 // Unit representation and parser
 #[derive(Debug, Clone, PartialEq)]
-pub struct UnitRepr<'a, 'b> {
+pub enum UnitRepr<'a, 'b> {
+  Length(LengthRepr<'a, 'b>),
+  Angle(AngleRepr<'a, 'b>),
+}
+
+named!(pub unit(&[u8]) -> UnitRepr, alt!(length | angle));
+
+// Length representation and parser
+#[derive(Debug, Clone, PartialEq)]
+pub struct LengthRepr<'a, 'b> {
   pub value: &'a str,
   pub unit: &'b str,
 }
 
-named!(unit_type<&[u8], &str>, alt!(
-  tag!("rad") => { |_| "radians" } |
-  tag!("deg") => { |_| "degrees" } |
+named!(length_type<&[u8], &str>, alt!(
   tag!("%")   => { |_| "percent" } |
+  tag!("n")   => { |_| "number" } | 
   tag!("px")  => { |_| "point" }
 ));
 
-named!(pub unit(&[u8]) -> UnitRepr, do_parse!(
-  value: digit    >>
-  unit: unit_type >>
-  (UnitRepr {
+named!(pub length(&[u8]) -> UnitRepr, do_parse!(
+  value: digit      >>
+  unit: length_type >>
+  (UnitRepr::Length(LengthRepr {
     value: str::from_utf8(value).unwrap(),
     unit
-  })
+  }))
 ));
 
 // Angle representation and parser
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct AngleRepr<'a, 'b> {
   pub value: &'a str,
   pub angle: &'b str,
@@ -38,13 +46,13 @@ named!(angle_type<&[u8], &str>, alt!(
   tag!("deg") => { |_| "degrees" }
 ));
 
-named!(pub angle(&[u8]) -> AngleRepr, do_parse!(
+named!(pub angle(&[u8]) -> UnitRepr, do_parse!(
   value: digit      >>
   angle: angle_type >>
-  (AngleRepr {
+  (UnitRepr::Angle(AngleRepr {
     value: str::from_utf8(value).unwrap(),
     angle
-  })
+  }))
 ));
 
 // Stop representation and parse

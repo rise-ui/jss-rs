@@ -1,4 +1,4 @@
-use properties::parse::{UnitRepr, unit};
+use properties::parse::{LengthRepr, AngleRepr, UnitRepr, unit};
 use nom::alpha;
 use std::str;
 
@@ -8,9 +8,9 @@ pub struct TransformFunction<'a, 'b, 'c> {
   pub name: &'c str,
 }
 
-named!(function_name(&[u8]) -> &[u8], ws!(alpha));
+named!(fn_name(&[u8]) -> &[u8], ws!(alpha));
 
-named!(fun_arguments(&[u8]) -> Vec<UnitRepr>,
+named!(args(&[u8]) -> Vec<UnitRepr>,
   delimited!(
     char!('('),
       separated_list!(char!(','), unit),
@@ -19,8 +19,8 @@ named!(fun_arguments(&[u8]) -> Vec<UnitRepr>,
 );
 
 named!(pub transform_parse(&[u8]) -> TransformFunction, do_parse!(
-  name: function_name >>
-  args: fun_arguments >>
+  name: fn_name >>
+  args: args    >>
   (TransformFunction {
     name: str::from_utf8(name).unwrap(),
     args,
@@ -38,14 +38,14 @@ mod tests {
 
     let expected = TransformFunction {
       args: vec![
-        UnitRepr {
+        UnitRepr::Length(LengthRepr {
           value: "10",
           unit: "point",
-        },
-        UnitRepr {
+        }),
+        UnitRepr::Angle(AngleRepr {
           value: "10",
-          unit: "degrees",
-        },
+          angle: "degrees",
+        }),
       ],
       name: "func",
     };

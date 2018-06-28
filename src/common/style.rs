@@ -180,7 +180,8 @@ pub struct ElementStyle {
 
   // Apperance Styles
   pub background: Option<Background>,
-  pub transform: Option<Transforms>,
+  // pub transform: Option<Transforms>,
+  pub filter: Option<Filters>,
 
   // Borders
   pub border_top_color: Option<Color>,
@@ -197,7 +198,4 @@ pub struct ElementStyle {
   pub border_top_left_radius: Option<i32>,
   pub border_bottom_right_radius: Option<i32>,
   pub border_bottom_left_radius: Option<i32>,
-
-  // Filters
-  pub filter: Option<Filters>,
 }
