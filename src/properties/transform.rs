@@ -1,8 +1,5 @@
-use properties::{Length, Angle};
-use properties::parse;
-use std::str;
-
-use serde::de::{Deserialize, Deserializer};
+use properties::{Length, Angle, SharedUnit, parse};
+use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use serde_json::Value;
 
@@ -16,85 +13,54 @@ pub enum Transform {
   None,
 }
 
-// impl From<Transform> for String {
-//   fn from(expr: Transform) -> String {
+// impl From<Transform> for (String, String, String) {
+//   fn from(transform: Transform) -> (String, String, String) {
 //     use self::Transform::*;
 
-//     match expr {
-//       Translate(v) => format!("translate({},{})", String::from(v.0), String::from(v.1)),
-//       Rotate(v) => format!("rotate({},{})", String::from(v.0), String::from(v.1)),
-//       Skew(v) => format!("skew({},{})", String::from(v.0), String::from(v.1)),
-//       None => "".to_string(),
+//     match {
+//       Translate()  
 //     }
 //   }
 // }
 
-// impl Serialize for Transform {
-//   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//   where
-//     S: Serializer,
-//   {
-//     let transform: String = self.clone().into();
-//     serializer.serialize_str(&*transform)
+// impl <'a>From<Transform> for &'a str {
+//   fn from(expr: Transform) -> &'a str {
+//     use self::Transform::*;
+
+//     let expr: (String, String) = expr.into();
+
+//     let slice = &*result;
+//     slice 
 //   }
 // }
 
-// // @TODO: adding warning or error of parse condition
-// impl<'de> Deserialize<'de> for Transform {
-//   fn deserialize<D>(deserializer: D) -> Result<Transform, D::Error>
-//   where
-//     D: Deserializer<'de>,
-//   {
-//     if let Value::String(transform) = Value::deserialize(deserializer)? {
-//       if let Ok(parsed) = parse::transform_parse(transform.as_bytes()) {
-//         let units: Vec<SharedUnit> = parsed.1.args.iter().cloned().map(Into::into).collect();
-//         let name = parsed.1.name;
-//         let size = units.len();
+impl Serialize for Transform {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: Serializer,
+  {
+    serializer.serialize_str(self.clone().into())
+  }
+}
 
-//         let params: (SharedUnit, SharedUnit) = {
-//           if size > 1 {
-//             (units[0], units[1])
-//           } else {
-//             (units[0], units[0])
-//           }
-//         };
+impl<'de> Deserialize<'de> for Transform {
+  fn deserialize<D>(deserializer: D) -> Result<Transform, D::Error>
+  where
+    D: Deserializer<'de>,
+  {
+    if let Value::String(transform) = Value::deserialize(deserializer)? {
+      let parsed = parse::transform_parse(transform.as_bytes()).map_err(de::Error::custom)?;
+      let parsed = parsed.1;
 
-//         let transform = match name {
-//           "translate" => Transform::Translate(params),
+      let name = parsed.name;
+      let args = parsed.args;
 
-//           // Extract only Angles value
-//           "rotate" | "skew" => {
-//             let params: (Angle, Angle) = {
-//               let first = if let SharedUnit::Angle(angle) = params.0 {
-//                 angle
-//               } else {
-//                 Angle::Degrees(0.)
-//               };
+      let units: Vec<SharedUnit> = args.iter().cloned().map(Into::into).collect();
 
-//               let second = if let SharedUnit::Angle(angle) = params.1 {
-//                 angle
-//               } else {
-//                 Angle::Degrees(0.0)
-//               };
 
-//               (first, second)
-//             };
-
-//             match name {
-//               "rotate" => Transform::Rotate(params),
-//               "skew" => Transform::Skew(params),
-//               _ => Transform::None
-//             }
-//           },
-//           _ => Transform::None
-//         };
-
-//         Ok(transform)
-//       } else {
-//         Ok(Transform::None)
-//       }
-//     } else {
-//       Ok(Transform::None)
-//     }
-//   }
-// }
+      Ok(Transform::None)
+    } else {
+      Ok(Transform::None)
+    }
+  }
+}

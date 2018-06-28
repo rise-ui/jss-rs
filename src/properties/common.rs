@@ -1,4 +1,4 @@
-use properties::parse::{self, UnitRepr};
+use properties::parse::{self, UnitRepr, AngleRepr, LengthRepr};
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Angle {
@@ -12,6 +12,33 @@ pub enum Length {
   Point(f32)
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
+pub enum SharedUnit {
+  Length(Length),
+  Angle(Angle),
+  None
+}
+
+impl From<Length> for String {
+  fn from(unit: Length) -> String {
+    match unit {
+      Length::Percent(value) => format!("{}%", value),
+      Length::Point(value) => format!("{}px", value)
+    }
+  }
+}
+
+impl<'a, 'b> From<LengthRepr<'a, 'b>> for SharedUnit {
+  fn from(u: LengthRepr) -> SharedUnit {
+    let value = u.value.parse::<f32>().unwrap_or(0.0);
+    match u.unit {
+      "percent" => SharedUnit::Length(Length::Percent(value)),
+      "point" => SharedUnit::Length(Length::Point(value)),
+      _ => SharedUnit::None,
+    }
+  }
+}
+
 impl From<Angle> for String {
   fn from(unit: Angle) -> String {
     use self::Angle::*;
@@ -23,49 +50,39 @@ impl From<Angle> for String {
   }
 }
 
-// #[derive(Debug, PartialEq, Copy, Clone)]
-// pub enum SharedUnit {
-//   Percent(f32),
-//   Angle(Angle),
-//   Point(f32),
-//   None,
-// }
+impl<'a, 'b> From<AngleRepr<'a, 'b>> for SharedUnit {
+  fn from(u: AngleRepr) -> SharedUnit {
+    let value = u.value.parse::<f32>().unwrap_or(0.0);
+    match u.angle {
+      "radians" => SharedUnit::Angle(Angle::Radians(value)),
+      "degrees" => SharedUnit::Angle(Angle::Degrees(value)),
+      _ => SharedUnit::None,
+    }
+  }
+}
 
-// impl From<Length> for String {
-//   fn from(unit: Length) -> String {
-//     match unit {
-//       Length::Percent(value) => format!("{}%", value),
-//       Length::Point(value) => format!("{}px", value)
-//     }
-//   }
-// }
+impl <'a, 'b> From<UnitRepr<'a, 'b>> for SharedUnit {
+  fn from(u: UnitRepr) -> SharedUnit {
+    match u {
+      UnitRepr::Length(length) => length.into(),
+      UnitRepr::Angle(angle) => angle.into(),
+    }
+  }
+} 
 
-// impl<'a, 'b> From<UnitRepr<'a, 'b>> for SharedUnit {
-//   fn from(u: UnitRepr) -> SharedUnit {
-//     let value = u.value.parse::<f32>().unwrap_or(0.0);
-//     match u.unit {
-//       "radians" => SharedUnit::Angle(Angle::Radians(value)),
-//       "degrees" => SharedUnit::Angle(Angle::Degrees(value)),
-//       "percent" => SharedUnit::Percent(value),
-//       "point" => SharedUnit::Point(value),
-//       _ => SharedUnit::None,
-//     }
-//   }
-// }
+impl<'a> From<&'a str> for SharedUnit {
+  fn from(s: &str) -> SharedUnit {
+    if let Ok(result) = parse::unit(s.as_bytes()) {
+      result.1.into()
+    } else {
+      SharedUnit::None
+    }
+  }
+}
 
-// impl<'a> From<&'a str> for SharedUnit {
-//   fn from(s: &str) -> SharedUnit {
-//     if let Ok(result) = parse::unit(s.as_bytes()) {
-//       result.1.into()
-//     } else {
-//       SharedUnit::None
-//     }
-//   }
-// }
-
-// impl From<String> for SharedUnit {
-//   fn from(s: String) -> SharedUnit {
-//     let slice = &*s;
-//     slice.into()
-//   }
-// }
+impl From<String> for SharedUnit {
+  fn from(s: String) -> SharedUnit {
+    let slice = &*s;
+    slice.into()
+  }
+}
