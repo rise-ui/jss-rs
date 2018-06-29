@@ -1,19 +1,10 @@
-use std::mem::{discriminant as mem_entity, Discriminant};
 use properties::{Length, Angle, SharedUnit, parse};
+use std::mem::discriminant as mem_entity;
 
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
+use properties::Transform;
 use serde_json::Value;
-
-pub type Transforms = Vec<Transform>;
-
-#[derive(Debug, PartialEq, Copy, Clone)]
-pub enum Transform {
-  Translate((Length, Length)),
-  Rotate((Angle, Angle)),
-  Skew((Angle, Angle)),
-  None,
-}
 
 fn valid_args_scheme(scheme: Vec<&str>, source: &Vec<SharedUnit>) -> bool {
   if scheme.len() == source.len() {
@@ -85,6 +76,7 @@ impl<'de> Deserialize<'de> for Transform {
     D: Deserializer<'de>,
   {
     if let Value::String(transform) = Value::deserialize(deserializer)? {
+      // @TODO: add next warning (ignore) if get errors
       let parsed = parse::transform_parse(transform.as_bytes()).map_err(de::Error::custom)?;
       let parsed = parsed.1;
 

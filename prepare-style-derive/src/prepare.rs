@@ -76,7 +76,7 @@ fn generate_expression(field: StructField) -> TokenStream {
     "Transforms" => {
       quote!{
         if let Some(#value_block) = &self.#name {
-          apperance.transform = Some(#value_block.clone());
+          transforms = #value_block.clone();
         }
       }
     }
@@ -113,14 +113,20 @@ pub fn get_impl_trait_tokens(struct_id: Ident, data_struct: DataStruct) -> Token
       fn get_prepared_styles(&self) -> (Apperance, Vec<FlexStyle>) {
         let mut apperance = Apperance::default();
         let mut layout: Vec<FlexStyle> = vec![];
+        let mut transforms = vec![];
 
         let mut border_styles = BorderStyles::default();
         let mut border_radius = BorderRadius::default();
 
         #(#expressions)*
 
+        transforms = transforms.iter().cloned()
+          .filter(|field| !field.is_none())
+          .collect();
+
         apperance.border_styles = Some(border_styles);
         apperance.border_radius = Some(border_radius);
+        apperance.transform = Some(transforms);
 
         (apperance, layout)
       }
