@@ -20,6 +20,6 @@ pub struct Apperance {
   pub border_radius: Option<BorderRadius>,
   pub border_styles: Option<BorderStyles>,
   pub background: Option<Background>,
-  // pub transform: Option<Transforms>,
+  pub transform: Option<Transforms>,
   pub filter: Option<Filters>,
 }

@@ -16,7 +16,7 @@ fn main() -> Result<(), Error> {
 
     "transform": [
       "translate(10px,10%)",
-      "rotate(40deg)"
+      "rotate(40deg,15rad)"
     ]
   }"#;
 

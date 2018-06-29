@@ -180,7 +180,7 @@ pub struct ElementStyle {
 
   // Apperance Styles
   pub background: Option<Background>,
-  // pub transform: Option<Transforms>,
+  pub transform: Option<Transforms>,
   pub filter: Option<Filters>,
 
   // Borders
