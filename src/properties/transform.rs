@@ -1,4 +1,6 @@
+use std::mem::{discriminant as mem_entity, Discriminant};
 use properties::{Length, Angle, SharedUnit, parse};
+
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use serde_json::Value;
@@ -13,33 +15,67 @@ pub enum Transform {
   None,
 }
 
-// impl From<Transform> for (String, String, String) {
-//   fn from(transform: Transform) -> (String, String, String) {
-//     use self::Transform::*;
+fn valid_args_scheme(scheme: Vec<&str>, source: &Vec<SharedUnit>) -> bool {
+  if scheme.len() == source.len() {
+    let mut matches: Vec<bool> = vec![];
 
-//     match {
-//       Translate()  
-//     }
-//   }
-// }
+    for (index, unit_type) in scheme.iter().enumerate() {
+      let entity = mem_entity(&source[index]);
 
-// impl <'a>From<Transform> for &'a str {
-//   fn from(expr: Transform) -> &'a str {
-//     use self::Transform::*;
+      match unit_type.clone() {
+        "length" => matches.push(mem_entity(&SharedUnit::Length(Length::Percent(1.0))) == entity),
+        "angle" => matches.push(mem_entity(&SharedUnit::Angle(Angle::Degrees(1.0))) == entity),
+        _ => matches.push(false)
+      }
+    }
 
-//     let expr: (String, String) = expr.into();
+    let position_unmatched = matches.iter().position(|matched| !matched);
+    position_unmatched.is_none()
+  } else {
+    false
+  }
+}
 
-//     let slice = &*result;
-//     slice 
-//   }
-// }
+fn extract_args_by_type(name: &str, source: &Vec<SharedUnit>) -> Transform {
+  match name {
+    "translate" => {
+      let x = extract!(SharedUnit::Length(_), source[0]).unwrap_or(Length::Point(0.));
+      let y = extract!(SharedUnit::Length(_), source[1]).unwrap_or(Length::Point(0.));
+      Transform::Translate((x, y))
+    },
+    "rotate" => {
+      let x = extract!(SharedUnit::Angle(_), source[0]).unwrap_or(Angle::Degrees(0.));
+      let y = extract!(SharedUnit::Angle(_), source[1]).unwrap_or(Angle::Degrees(0.));
+      Transform::Rotate((x, y))
+    },
+    "skew" => {
+      let x = extract!(SharedUnit::Angle(_), source[0]).unwrap_or(Angle::Degrees(0.));
+      let y = extract!(SharedUnit::Angle(_), source[1]).unwrap_or(Angle::Degrees(0.));
+      Transform::Skew((x, y))
+    },
+    _ => Transform::None
+  }
+}
+
+impl From<Transform> for String {
+  fn from(expr: Transform) -> String {
+    use self::Transform::*;
+
+    match expr {
+      Translate((x, y)) => format!("translate({},{})", String::from(x), String::from(y)),
+      Rotate((x, y)) => format!("rotate({},{})", String::from(x), String::from(y)),
+      Skew((x, y)) => format!("skew({},{})", String::from(x), String::from(y)),
+      None => format!("none"),
+    }
+  }
+}
 
 impl Serialize for Transform {
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
   where
     S: Serializer,
   {
-    serializer.serialize_str(self.clone().into())
+    serializer.serialize_str(&*String::from(self.clone()))
   }
 }
 
@@ -56,11 +92,48 @@ impl<'de> Deserialize<'de> for Transform {
       let args = parsed.args;
 
       let units: Vec<SharedUnit> = args.iter().cloned().map(Into::into).collect();
+      
+      let is_valid = match name {
+        "translate" => valid_args_scheme(vec!["length", "length"], &units),
+        "rotate" => valid_args_scheme(vec!["angle", "angle"], &units),
+        "skew" => valid_args_scheme(vec!["angle", "angle"], &units),
+        _ => false
+      }; 
 
-
-      Ok(Transform::None)
+      if is_valid {
+        Ok(extract_args_by_type(name, &units))
+      } else {
+        Ok(Transform::None)
+      }
     } else {
       Ok(Transform::None)
     }
+  }
+}
+
+
+// Tests of parse expressions
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn validate_args_scheme() {
+    let units = vec![SharedUnit::Length(Length::Point(1.)), SharedUnit::Length(Length::Point(1.))];
+    assert!(valid_args_scheme(vec!["length", "length"], &units), true);
+
+    let units = vec![SharedUnit::Length(Length::Point(1.)), SharedUnit::Angle(Angle::Degrees(1.))];
+    assert_eq!(valid_args_scheme(vec!["angle", "length"], &units), false);
+    assert!(valid_args_scheme(vec!["length", "angle"], &units), true);
+  }
+
+  #[test]
+  fn extract_transform_from_args() {
+    let units = vec![SharedUnit::Length(Length::Point(1.)), SharedUnit::Length(Length::Point(1.))];
+    let name = "translate";
+    let expected = Transform::Translate((Length::Point(1.), Length::Point(1.)));
+
+    let result = extract_args_by_type(name, &units);
+    assert_eq!(result, expected);
   }
 }

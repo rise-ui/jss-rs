@@ -59,6 +59,8 @@ extern crate serde_derive;
 extern crate lazy_static;
 #[macro_use]
 extern crate nom;
+#[macro_use]
+extern crate enum_extract;
 
 // TODO: Next build as conditional compilation feature
 extern crate webrender;
