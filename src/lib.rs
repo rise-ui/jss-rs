@@ -64,6 +64,7 @@ extern crate enum_extract;
 
 // TODO: Next build as conditional compilation feature
 extern crate webrender;
+extern crate euclid;
 
 extern crate ordered_float;
 extern crate serde_json;

@@ -1,29 +1,34 @@
 use properties::parse::{self, UnitRepr, AngleRepr, LengthRepr};
+use webrender::api::{PropertyBindingKey, LayoutTransform};
+use std::collections::HashMap;
+use euclid;
+
+pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Angle {
   Degrees(f32),
-  Radians(f32)
+  Radians(f32),
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Length {
   Percent(f32),
-  Point(f32)
+  Point(f32),
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum SharedUnit {
   Length(Length),
   Angle(Angle),
-  None
+  None,
 }
 
 impl From<Length> for String {
   fn from(unit: Length) -> String {
     match unit {
       Length::Percent(value) => format!("{}%", value),
-      Length::Point(value) => format!("{}px", value)
+      Length::Point(value) => format!("{}px", value),
     }
   }
 }
@@ -50,6 +55,15 @@ impl From<Angle> for String {
   }
 }
 
+impl From<Angle> for euclid::Angle<f32> {
+  fn from(angle: Angle) -> euclid::Angle<f32> {
+    match angle {
+      Angle::Radians(v) => euclid::Angle::radians(v.to_radians()),
+      Angle::Degrees(v) => euclid::Angle::degrees(v.to_degrees()),
+    }
+  }
+}
+
 impl<'a, 'b> From<AngleRepr<'a, 'b>> for SharedUnit {
   fn from(u: AngleRepr) -> SharedUnit {
     let value = u.value.parse::<f32>().unwrap_or(0.0);
@@ -61,14 +75,14 @@ impl<'a, 'b> From<AngleRepr<'a, 'b>> for SharedUnit {
   }
 }
 
-impl <'a, 'b> From<UnitRepr<'a, 'b>> for SharedUnit {
+impl<'a, 'b> From<UnitRepr<'a, 'b>> for SharedUnit {
   fn from(u: UnitRepr) -> SharedUnit {
     match u {
       UnitRepr::Length(length) => length.into(),
       UnitRepr::Angle(angle) => angle.into(),
     }
   }
-} 
+}
 
 impl<'a> From<&'a str> for SharedUnit {
   fn from(s: &str) -> SharedUnit {

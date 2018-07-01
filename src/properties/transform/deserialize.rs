@@ -16,7 +16,7 @@ fn valid_args_scheme(scheme: Vec<&str>, source: &Vec<SharedUnit>) -> bool {
       match unit_type.clone() {
         "length" => matches.push(mem_entity(&SharedUnit::Length(Length::Percent(1.0))) == entity),
         "angle" => matches.push(mem_entity(&SharedUnit::Angle(Angle::Degrees(1.0))) == entity),
-        _ => matches.push(false)
+        _ => matches.push(false),
       }
     }
 
@@ -33,18 +33,17 @@ fn extract_args_by_type(name: &str, source: &Vec<SharedUnit>) -> Transform {
       let x = extract!(SharedUnit::Length(_), source[0]).unwrap_or(Length::Point(0.));
       let y = extract!(SharedUnit::Length(_), source[1]).unwrap_or(Length::Point(0.));
       Transform::Translate((x, y))
-    },
+    }
     "rotate" => {
-      let x = extract!(SharedUnit::Angle(_), source[0]).unwrap_or(Angle::Degrees(0.));
-      let y = extract!(SharedUnit::Angle(_), source[1]).unwrap_or(Angle::Degrees(0.));
-      Transform::Rotate((x, y))
-    },
+      let angle = extract!(SharedUnit::Angle(_), source[0]).unwrap_or(Angle::Degrees(0.));
+      Transform::Rotate(angle)
+    }
     "skew" => {
       let x = extract!(SharedUnit::Angle(_), source[0]).unwrap_or(Angle::Degrees(0.));
       let y = extract!(SharedUnit::Angle(_), source[1]).unwrap_or(Angle::Degrees(0.));
       Transform::Skew((x, y))
-    },
-    _ => Transform::None
+    }
+    _ => Transform::None,
   }
 }
 
@@ -54,8 +53,8 @@ impl From<Transform> for String {
 
     match expr {
       Translate((x, y)) => format!("translate({},{})", String::from(x), String::from(y)),
-      Rotate((x, y)) => format!("rotate({},{})", String::from(x), String::from(y)),
       Skew((x, y)) => format!("skew({},{})", String::from(x), String::from(y)),
+      Rotate(rotate) => format!("rotate({})", String::from(rotate)),
       None => format!("none"),
     }
   }
@@ -84,13 +83,13 @@ impl<'de> Deserialize<'de> for Transform {
       let args = parsed.args;
 
       let units: Vec<SharedUnit> = args.iter().cloned().map(Into::into).collect();
-      
+
       let is_valid = match name {
         "translate" => valid_args_scheme(vec!["length", "length"], &units),
-        "rotate" => valid_args_scheme(vec!["angle", "angle"], &units),
         "skew" => valid_args_scheme(vec!["angle", "angle"], &units),
-        _ => false
-      }; 
+        "rotate" => valid_args_scheme(vec!["angle"], &units),
+        _ => false,
+      };
 
       if is_valid {
         Ok(extract_args_by_type(name, &units))
@@ -102,7 +101,6 @@ impl<'de> Deserialize<'de> for Transform {
     }
   }
 }
-
 
 // Tests of parse expressions
 #[cfg(test)]
