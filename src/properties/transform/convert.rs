@@ -24,7 +24,7 @@ pub fn make_translation(translate: (Length, Length)) -> LayoutTransform {
 
 pub fn make_rotation(angle: Angle, size: (f32, f32)) -> LayoutTransform {
   let angle: euclid::Angle<f32> = angle.into();
-  LayoutTransform::create_rotation(size.0 / 2., size.1 / 2., 0., angle)
+  LayoutTransform::create_rotation(0., 0., 1., angle)
 }
 
 pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {

@@ -58,8 +58,8 @@ impl From<Angle> for String {
 impl From<Angle> for euclid::Angle<f32> {
   fn from(angle: Angle) -> euclid::Angle<f32> {
     match angle {
-      Angle::Radians(v) => euclid::Angle::radians(v.to_radians()),
-      Angle::Degrees(v) => euclid::Angle::degrees(v.to_degrees()),
+      Angle::Radians(v) => euclid::Angle::radians(v),
+      Angle::Degrees(v) => euclid::Angle::degrees(v),
     }
   }
 }
