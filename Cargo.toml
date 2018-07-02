@@ -16,18 +16,18 @@ webrender_support = []
 [workspace]
 
 [dependencies]
-webrender = { rev = "2e381e0325f367429810099d5abf76e674f697ed", git = "https://github.com/servo/webrender" }
+webrender = { rev = "34a498f7e46c385a189299e7369e204e1cb2060c", git = "https://github.com/servo/webrender" }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
 prepare-style-derive = { path = "prepare-style-derive", version = "0.1.0" }
+serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
+serde = { version = "=1.0.66", features = ["rc"] }
 euclid = { version = "0.17", features = ["serde"] }
 ordered-float = "0.5.0"
 css-color-parser = "*"
 failure_derive = "0.1"
 enum_extract = "0.1"
-serde_derive = "1.0"
 lazy_static = "1.0"
 serde_json = "1.0"
 failure = "0.1"
-serde = "1.0"
 regex = "0.2"
 nom = "4.0"
