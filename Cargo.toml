@@ -16,7 +16,7 @@ webrender_support = []
 [workspace]
 
 [dependencies]
-webrender = { rev = "34a498f7e46c385a189299e7369e204e1cb2060c", git = "https://github.com/servo/webrender" }
+webrender = { rev = "b88c0ba7f511e452f2a26e0c0b3ae93a18fd8b1a", git = "https://github.com/servo/webrender" }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
 prepare-style-derive = { path = "prepare-style-derive", version = "0.1.0" }
 serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
