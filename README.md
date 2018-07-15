@@ -8,7 +8,7 @@ Implementation of JSS for Rust. Use css styles without css with identical proper
 Add to your Cargo.toml.
 ``` toml
 [dependencies]
-jss = { git = "https://github.com/rise-ui/jss-rs" }
+jss = "0.1"
 ```
 
 ``` rust
@@ -55,6 +55,6 @@ fn main() -> Result<(), Error> {
 - [x] Stylesheet with selectors by status aka "name:hover", "name:active" etc.
 - [x] Get formatted props for `yoga-rs` and collect `apperance` styles
 - [x] Convert to `webrender` types & layers as optional target (partially implemented)
-- [ ] Parsing `transform` property
+- [x] Parsing `transform` property
 - [ ] Parsing `media-query` property
 - [ ] Support `runtime checkers` & `middlewares` in runtime 

@@ -1,5 +1,5 @@
-use nom::{alpha, digit, IResult, Err, Needed};
 use css_color_parser::Color as CssColor;
+use nom::{digit, IResult, Err, Needed};
 use properties::Color;
 use std::str;
 

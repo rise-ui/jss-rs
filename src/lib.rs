@@ -6,7 +6,7 @@
 //! Add to your Cargo.toml.
 //! ```toml
 //! [dependencies]
-//! jss = { git = "https://github.com/rise-ui/jss-rs" }
+//! jss = "0.1"
 //! ```
 //!
 //! ```rust

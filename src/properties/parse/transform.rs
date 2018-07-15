@@ -1,4 +1,4 @@
-use properties::parse::{LengthRepr, AngleRepr, UnitRepr, unit};
+use properties::parse::{UnitRepr, unit};
 use nom::alpha;
 use std::str;
 
@@ -33,6 +33,8 @@ mod tests {
 
   #[test]
   fn transform_function_parse() {
+    use properties::parse::{LengthRepr, AngleRepr};
+
     let my_str = "func(10px,10deg)";
     let parsed = transform_parse(my_str.as_bytes()).expect("Can't parse transform").1;
 

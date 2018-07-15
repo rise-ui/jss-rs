@@ -1,6 +1,8 @@
 use properties::parse::{self, UnitRepr, AngleRepr, LengthRepr};
-use std::collections::HashMap;
 use euclid;
+
+#[cfg(feature = "webrender_support")]
+use std::collections::HashMap;
 
 #[cfg(feature = "webrender_support")]
 use webrender::api::{PropertyBindingKey, LayoutTransform};
