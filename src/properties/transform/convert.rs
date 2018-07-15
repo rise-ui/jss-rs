@@ -1,13 +1,14 @@
 #[cfg(feature = "webrender_support")]
-use webrender::api::{LayoutPrimitiveInfo, DisplayListBuilder, PropertyBindingKey, PropertyBinding, LayoutTransform};
+use properties::{Angle, Length, Transform, Transforms, PropertiesCollection};
 #[cfg(feature = "webrender_support")]
-use properties::{PropertiesCollection, Transforms, Length, Angle};
+use webrender::api::{DisplayListBuilder, LayoutPrimitiveInfo, LayoutTransform, PropertyBinding, PropertyBindingKey};
 #[cfg(feature = "webrender_support")]
-use std::f32::consts::PI;
+use std::collections::HashMap;
 #[cfg(feature = "webrender_support")]
 use euclid;
 
-use properties::Transform;
+#[cfg(feature = "webrender_support")]
+pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
 
 // @TODO: implement with convert sizes Length with percentage
 #[cfg(feature = "webrender_support")]
@@ -34,7 +35,7 @@ pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {
 
 #[cfg(feature = "webrender_support")]
 pub fn transforms_multiply(transforms: Transforms, sizes: (f32, f32)) -> Option<LayoutTransform> {
-  let transforms: Vec<LayoutTransform> = transforms.iter().map(|t| t.into_layout_transform(sizes)).collect();
+  let transforms: Vec<LayoutTransform> = transforms.iter().map(|t| into_transform3d(t.clone(), sizes)).collect();
 
   if transforms.len() > 0 {
     if transforms.len() > 1 {
@@ -78,18 +79,12 @@ pub fn transforms_push_to_builder(
   (builder, properties)
 }
 
-impl Transform {
-  pub fn is_none(&self) -> bool {
-    self.clone() == Transform::None
-  }
-
-  #[cfg(feature = "webrender_support")]
-  pub fn into_layout_transform(&self, size: (f32, f32)) -> LayoutTransform {
-    match &self {
-      Transform::Rotate(angle) => make_rotation(angle.clone(), size.clone()),
-      Transform::Translate(translate) => make_translation(translate.clone()),
-      Transform::Skew((x, y)) => make_skew(x.clone(), y.clone()),
-      _ => LayoutTransform::create_translation(0., 0., 0.),
-    }
+#[cfg(feature = "webrender_support")]
+pub fn into_transform3d(transform: Transform, size: (f32, f32)) -> LayoutTransform {
+  match transform {
+    Transform::Translate(translate) => make_translation(translate),
+    Transform::Rotate(angle) => make_rotation(angle, size),
+    Transform::Skew((x, y)) => make_skew(x, y),
+    _ => LayoutTransform::create_translation(0., 0., 0.),
   }
 }

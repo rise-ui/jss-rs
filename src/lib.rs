@@ -6,7 +6,7 @@
 //! Add to your Cargo.toml.
 //! ```toml
 //! [dependencies]
-//! jss = "0.1"
+//! jss = { git = "https://github.com/rise-ui/jss-rs" }
 //! ```
 //!
 //! ```rust
@@ -49,8 +49,9 @@
 #![feature(test)]
 extern crate test;
 
-// #[macro_use]
-// extern crate failure_derive;
+#[cfg(feature = "webrender_support")]
+extern crate webrender;
+
 #[macro_use]
 extern crate jss_derive;
 #[macro_use]
@@ -62,11 +63,7 @@ extern crate nom;
 #[macro_use]
 extern crate enum_extract;
 
-// TODO: Next build as conditional compilation feature
-#[cfg(feature = "webrender_support")]
-extern crate webrender;
 extern crate euclid;
-
 extern crate ordered_float;
 extern crate serde_json;
 extern crate failure;
@@ -79,6 +76,7 @@ extern crate yoga;
 pub mod common;
 pub mod properties;
 
+pub use properties::Apperance;
 pub use common::{
   parse_json_stylesheet,
   parse_json_style,
@@ -86,10 +84,6 @@ pub use common::{
   ElementStyle,
   Stylesheet,
   Style,
-};
-
-pub use properties::{
-  Apperance
 };
 
 #[cfg(test)]

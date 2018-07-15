@@ -11,15 +11,15 @@ categories = ["gui"]
 license = "MIT"
 
 [features]
-default = []
 webrender_support = []
+default = []
 
 [dependencies]
 webrender = { rev = "c540acf0990f8a0cbf9429e7085c7cc3b6901add", git = "https://github.com/servo/webrender", optional = true }
-yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
 serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
-serde = { version = "=1.0.66", features = ["rc"] }
+yoga = { version = "0.2", features = ["serde_support"] }
 euclid = { version = "0.17", features = ["serde"] }
+serde = { version = "=1.0.66", features = ["rc"] }
 css-color-parser = "0.1"
 ordered-float = "0.5.0"
 failure_derive = "0.1"

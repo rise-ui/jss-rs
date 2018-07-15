@@ -1,15 +1,6 @@
 use properties::parse::{self, UnitRepr, AngleRepr, LengthRepr};
 use euclid;
 
-#[cfg(feature = "webrender_support")]
-use std::collections::HashMap;
-
-#[cfg(feature = "webrender_support")]
-use webrender::api::{PropertyBindingKey, LayoutTransform};
-
-#[cfg(feature = "webrender_support")]
-pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
-
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Angle {
   Degrees(f32),

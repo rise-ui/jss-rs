@@ -1,7 +1,7 @@
+use properties::{Length, Angle};
 mod convert;
 mod deserialize;
 
-use properties::{Length, Angle};
 pub use self::deserialize::*;
 pub use self::convert::*;
 
@@ -13,4 +13,10 @@ pub enum Transform {
   Skew((Angle, Angle)),
   Rotate(Angle),
   None,
+}
+
+impl Transform {
+  pub fn is_none(&self) -> bool {
+    self.clone() == Transform::None
+  }
 }

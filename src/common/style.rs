@@ -1,5 +1,6 @@
 use ordered_float::OrderedFloat;
 use common::PrepareStyleExt;
+use common::unit as parse_unit;
 
 use yoga::{
   Align,
@@ -23,38 +24,6 @@ use properties::{
   Filters,
   Color,
 };
-
-mod parse_unit {
-  use serde::{Deserialize, Deserializer, Serializer};
-  use serde_json::Value;
-  use yoga::StyleUnit;
-
-  pub fn serialize<S>(date: &Option<StyleUnit>, s: S) -> Result<S::Ok, S::Error>
-  where
-    S: Serializer,
-  {
-    if let Some(ref d) = *date {
-      match &d {
-        StyleUnit::Percent(number) => return s.serialize_str(&*format!("{}%", number.into_inner() as i32)),
-        StyleUnit::Point(number) => return s.serialize_str(&*format!("{}px", number.into_inner() as i32)),
-        StyleUnit::Auto | StyleUnit::UndefinedValue => return s.serialize_str("auto"),
-      }
-    }
-
-    s.serialize_none()
-  }
-
-  pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<StyleUnit>, D::Error>
-  where
-    D: Deserializer<'de>,
-  {
-    let value = Value::deserialize(deserializer)?;
-    match value {
-      Value::String(unit_value) => Ok(Some(unit_value.into())),
-      _ => Ok(None),
-    }
-  }
-}
 
 pub type BorderWidth = OrderedFloat<f32>;
 pub type AspectRatio = OrderedFloat<f32>;
