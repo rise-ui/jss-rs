@@ -29,6 +29,7 @@ impl From<BorderRadius> for api::BorderRadius {
 pub struct Border {
   pub style: BorderStyle,
   pub color: Color,
+  pub width: f32,
 }
 
 impl Default for Border {
@@ -36,6 +37,16 @@ impl Default for Border {
     Border {
       style: BorderStyle::None,
       color: Color::transparent(),
+      width: 0.0,
+    }
+  }
+}
+
+impl From<Border> for api::BorderSide {
+  fn from(border: Border) -> api::BorderSide {
+    api::BorderSide {
+      color: border.color.into(),
+      style: border.style.into(),
     }
   }
 }
@@ -46,6 +57,32 @@ pub struct BorderStyles {
   pub right: Border,
   pub left: Border,
   pub top: Border,
+}
+
+impl From<BorderStyles> for api::BorderDetails {
+  fn from(border: BorderStyles) -> api::BorderDetails {
+    let sides = api::NormalBorder {
+      radius: api::BorderRadius::zero(),
+
+      bottom: border.bottom.into(),
+      right: border.right.into(),
+      left: border.left.into(),
+      top: border.top.into(),
+    };
+
+    api::BorderDetails::Normal(sides)
+  }
+}
+
+impl From<BorderStyles> for api::BorderWidths {
+  fn from(border: BorderStyles) -> api::BorderWidths {
+    api::BorderWidths {
+      bottom: border.bottom.width.clone(),
+      right: border.right.width.clone(),
+      left: border.left.width.clone(),
+      top: border.top.width.clone(),
+    }
+  }
 }
 
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]

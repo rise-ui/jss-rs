@@ -56,6 +56,12 @@ mod parse_unit {
   }
 }
 
+pub type BorderWidth = OrderedFloat<f32>;
+pub type AspectRatio = OrderedFloat<f32>;
+pub type FlexShrink = OrderedFloat<f32>;
+pub type FlexFactor = OrderedFloat<f32>;
+pub type FlexGrow = OrderedFloat<f32>;
+
 #[derive(Serialize, Deserialize, Debug, Clone, PrepareStyle, MergeStyle)]
 #[serde(rename_all = "snake_case")]
 pub struct ElementStyle {
@@ -70,19 +76,15 @@ pub struct ElementStyle {
   pub display: Option<Display>,
   pub overflow: Option<Overflow>,
 
-  pub aspect_ratio: Option<OrderedFloat<f32>>,
-  pub border_bottom: Option<OrderedFloat<f32>>,
-  pub border_right: Option<OrderedFloat<f32>>,
-  pub border_left: Option<OrderedFloat<f32>>,
-  pub border_top: Option<OrderedFloat<f32>>,
+  pub border_bottom: Option<BorderWidth>,
+  pub border_right: Option<BorderWidth>,
+  pub border_left: Option<BorderWidth>,
+  pub border_top: Option<BorderWidth>,
 
-  pub border_start: Option<OrderedFloat<f32>>,
-  pub border_end: Option<OrderedFloat<f32>>,
-  pub border: Option<OrderedFloat<f32>>,
-
-  pub flex_shrink: Option<OrderedFloat<f32>>,
-  pub flex_grow: Option<OrderedFloat<f32>>,
-  pub flex: Option<OrderedFloat<f32>>,
+  pub aspect_ratio: Option<AspectRatio>,
+  pub flex_shrink: Option<FlexShrink>,
+  pub flex_grow: Option<FlexGrow>,
+  pub flex: Option<FlexFactor>,
 
   #[serde(default)]
   #[serde(with = "parse_unit")]

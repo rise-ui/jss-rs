@@ -9,6 +9,7 @@ fn main() -> Result<(), Error> {
     "border_top_right_radius": 10,
     "border_top_style": "solid",
     "align_content": "center",
+    "border_top": 10,
     
     "filter": [
       "blur(20)"

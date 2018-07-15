@@ -8,6 +8,7 @@ lazy_static! {
   static ref RADIUS_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_radius$").unwrap();
   static ref STYLE_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_style$").unwrap();
   static ref COLOR_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)_color$").unwrap();
+  static ref BORDER_EDGE_RE: Regex = Regex::new(r"^border_(?P<edge>\w+)$").unwrap();
 }
 
 fn generate_expression(field: StructField) -> TokenStream {
@@ -25,6 +26,18 @@ fn generate_expression(field: StructField) -> TokenStream {
       quote! {
         if let Some(#value_block) = &self.#name {
           apperance.background = Some(#value_block.clone());
+        }
+      }
+    }
+
+    "BorderWidth" => {
+      let edge = BORDER_EDGE_RE.replace_all(name_str, "$edge");
+      let edge = edge.into_owned();
+      let edge = Ident::new(&*edge, Span::call_site());
+
+      quote! {
+        if let Some(#value_block) = &self.#name {
+          border_styles.#edge.width = #value_block.clone().into();
         }
       }
     }
