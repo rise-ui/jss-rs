@@ -1,32 +1,30 @@
+#[cfg(feature = "webrender_support")]
+use webrender::api::{LayoutPrimitiveInfo, DisplayListBuilder, PropertyBindingKey, PropertyBinding, LayoutTransform};
+#[cfg(feature = "webrender_support")]
+use properties::{PropertiesCollection, Transforms, Length, Angle};
+#[cfg(feature = "webrender_support")]
 use std::f32::consts::PI;
+#[cfg(feature = "webrender_support")]
 use euclid;
 
-use properties::{
-  PropertiesCollection,
-  Transforms,
-  Transform,
-  Length,
-  Angle,
-};
-
-use webrender::api::{
-  LayoutPrimitiveInfo,
-  DisplayListBuilder,
-  PropertyBindingKey,
-  PropertyBinding,
-  LayoutTransform,
-};
+use properties::Transform;
 
 // @TODO: implement with convert sizes Length with percentage
+#[cfg(feature = "webrender_support")]
 pub fn make_translation(translate: (Length, Length)) -> LayoutTransform {
   LayoutTransform::create_translation(0., 0., 0.)
 }
 
+#[cfg(feature = "webrender_support")]
 pub fn make_rotation(angle: Angle, size: (f32, f32)) -> LayoutTransform {
   let angle: euclid::Angle<f32> = angle.into();
+  let center_x = size.0 / 2.0;
+  let center_y = size.1 / 2.0;
+
   LayoutTransform::create_rotation(0., 0., 1., angle)
 }
 
+#[cfg(feature = "webrender_support")]
 pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {
   let alpha: euclid::Angle<f32> = x.into();
   let beta: euclid::Angle<f32> = y.into();
@@ -34,6 +32,7 @@ pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {
   LayoutTransform::create_skew(alpha, beta)
 }
 
+#[cfg(feature = "webrender_support")]
 pub fn transforms_multiply(transforms: Transforms, sizes: (f32, f32)) -> Option<LayoutTransform> {
   let transforms: Vec<LayoutTransform> = transforms.iter().map(|t| t.into_layout_transform(sizes)).collect();
 
@@ -53,6 +52,7 @@ pub fn transforms_multiply(transforms: Transforms, sizes: (f32, f32)) -> Option<
   }
 }
 
+#[cfg(feature = "webrender_support")]
 pub fn transforms_push_to_builder(
   container: &LayoutPrimitiveInfo,
   transforms: Transforms,
@@ -83,6 +83,7 @@ impl Transform {
     self.clone() == Transform::None
   }
 
+  #[cfg(feature = "webrender_support")]
   pub fn into_layout_transform(&self, size: (f32, f32)) -> LayoutTransform {
     match &self {
       Transform::Rotate(angle) => make_rotation(angle.clone(), size.clone()),

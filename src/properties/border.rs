@@ -1,5 +1,6 @@
 use properties::Color;
 
+#[cfg(feature = "webrender_support")]
 use webrender::api::{self, LayoutSize};
 
 #[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
@@ -10,10 +11,12 @@ pub struct BorderRadius {
   pub top_left: i32,
 }
 
+#[cfg(feature = "webrender_support")]
 fn get_border_radius(size: i32) -> LayoutSize {
   LayoutSize::new(size as f32, size as f32)
 }
 
+#[cfg(feature = "webrender_support")]
 impl From<BorderRadius> for api::BorderRadius {
   fn from(radius: BorderRadius) -> api::BorderRadius {
     api::BorderRadius {
@@ -42,6 +45,7 @@ impl Default for Border {
   }
 }
 
+#[cfg(feature = "webrender_support")]
 impl From<Border> for api::BorderSide {
   fn from(border: Border) -> api::BorderSide {
     api::BorderSide {
@@ -59,6 +63,7 @@ pub struct BorderStyles {
   pub top: Border,
 }
 
+#[cfg(feature = "webrender_support")]
 impl From<BorderStyles> for api::BorderDetails {
   fn from(border: BorderStyles) -> api::BorderDetails {
     let sides = api::NormalBorder {
@@ -74,6 +79,7 @@ impl From<BorderStyles> for api::BorderDetails {
   }
 }
 
+#[cfg(feature = "webrender_support")]
 impl From<BorderStyles> for api::BorderWidths {
   fn from(border: BorderStyles) -> api::BorderWidths {
     api::BorderWidths {
@@ -100,6 +106,7 @@ pub enum BorderStyle {
   Outset,
 }
 
+#[cfg(feature = "webrender_support")]
 impl Into<api::BorderStyle> for BorderStyle {
   fn into(self) -> api::BorderStyle {
     use self::BorderStyle::*;

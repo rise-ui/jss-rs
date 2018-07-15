@@ -63,6 +63,7 @@ extern crate nom;
 extern crate enum_extract;
 
 // TODO: Next build as conditional compilation feature
+#[cfg(feature = "webrender_support")]
 extern crate webrender;
 extern crate euclid;
 
