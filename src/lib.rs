@@ -52,7 +52,7 @@ extern crate test;
 // #[macro_use]
 // extern crate failure_derive;
 #[macro_use]
-extern crate prepare_style_derive;
+extern crate jss_derive;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]

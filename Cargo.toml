@@ -5,7 +5,7 @@ authors = ["Anton Shramko <antonshramko@yandex.ru>"]
 repository = "https://github.com/rise-ui/jss-rs"
 homepage = "https://github.com/rise-ui/jss-rs"
 description = "Rust implementation of JSS"
-keywords = ["gui", "layout", "yoga", "jss", "parsing"]
+keywords = ["gui", "layout", "yoga", "jss", "parsing", "rise-ui"]
 categories = ["gui"]
 license = "MIT"
 
@@ -13,15 +13,10 @@ license = "MIT"
 default = []
 webrender_support = []
 
-[workspace]
-members = [
-  "prepare-style-derive",
-]
-
 [dependencies]
 webrender = { rev = "c540acf0990f8a0cbf9429e7085c7cc3b6901add", git = "https://github.com/servo/webrender", optional = true }
+jss_derive = { git = "https://github.com/rise-ui/jss_derive", version = "0.1.0" }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", features = ["serde_support"] }
-prepare-style-derive = { path = "prepare-style-derive", version = "0.1.0" }
 serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
 serde = { version = "=1.0.66", features = ["rc"] }
 euclid = { version = "0.17", features = ["serde"] }
