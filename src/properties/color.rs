@@ -1,5 +1,5 @@
 use css_color_parser::Color as CssColor;
-#[cfg(feature = "webrender_support")]
+
 use webrender::api::ColorF;
 
 use serde::de::{Deserialize, Deserializer};
@@ -93,7 +93,6 @@ impl From<String> for Color {
   }
 }
 
-#[cfg(feature = "webrender_support")]
 impl From<Color> for ColorF {
   fn from(color: Color) -> ColorF {
     ColorF::new(color.red as f32 / 255., color.green as f32 / 255., color.blue as f32 / 255., color.alpha)

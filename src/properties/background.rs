@@ -1,8 +1,9 @@
 use properties::Color;
 use yoga::StyleUnit;
 
-#[cfg(feature = "webrender_support")]
-use webrender::api::{LayoutPrimitiveInfo, DisplayListBuilder, LayoutPoint, LayoutSize, ExtendMode, ColorF, self};
+use webrender::api::{
+  self, ColorF, DisplayListBuilder, ExtendMode, LayoutPoint, LayoutPrimitiveInfo, LayoutSize,
+};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -12,7 +13,6 @@ pub enum Background {
 }
 
 impl Background {
-  #[cfg(feature = "webrender_support")]
   pub fn push_to_builder(
     &self,
     mut builder: DisplayListBuilder,
@@ -47,7 +47,6 @@ pub struct GradientStop {
   pub color: Color,
 }
 
-#[cfg(feature = "webrender_support")]
 impl From<GradientStop> for api::GradientStop {
   fn from(stop: GradientStop) -> api::GradientStop {
     api::GradientStop {

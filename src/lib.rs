@@ -49,9 +49,6 @@
 #![feature(test)]
 extern crate test;
 
-#[cfg(feature = "webrender_support")]
-extern crate webrender;
-
 #[macro_use]
 extern crate jss_derive;
 #[macro_use]
@@ -64,9 +61,10 @@ extern crate nom;
 extern crate enum_extract;
 
 extern crate euclid;
+extern crate failure;
 extern crate ordered_float;
 extern crate serde_json;
-extern crate failure;
+extern crate webrender;
 
 extern crate css_color_parser;
 extern crate regex;
@@ -76,15 +74,10 @@ extern crate yoga;
 pub mod common;
 pub mod properties;
 
-pub use properties::Apperance;
 pub use common::{
-  parse_json_stylesheet,
-  parse_json_style,
-  PrepareStyleExt,
-  ElementStyle,
-  Stylesheet,
-  Style,
+  parse_json_style, parse_json_stylesheet, ElementStyle, PrepareStyleExt, Style, Stylesheet,
 };
+pub use properties::Apperance;
 
 #[cfg(test)]
 mod tests {

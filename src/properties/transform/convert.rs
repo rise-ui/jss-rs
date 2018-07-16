@@ -1,22 +1,22 @@
-#[cfg(feature = "webrender_support")]
-use properties::{Angle, Length, Transform, Transforms, PropertiesCollection};
-#[cfg(feature = "webrender_support")]
-use webrender::api::{DisplayListBuilder, LayoutPrimitiveInfo, LayoutTransform, PropertyBinding, PropertyBindingKey};
-#[cfg(feature = "webrender_support")]
+use properties::{Angle, Length, Transform, Transforms};
 use std::collections::HashMap;
-#[cfg(feature = "webrender_support")]
 use euclid;
 
-#[cfg(feature = "webrender_support")]
+use webrender::api::{
+  LayoutPrimitiveInfo,
+  DisplayListBuilder,
+  PropertyBindingKey,
+  LayoutTransform,
+  PropertyBinding,
+};
+
 pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
 
 // @TODO: implement with convert sizes Length with percentage
-#[cfg(feature = "webrender_support")]
 pub fn make_translation(translate: (Length, Length)) -> LayoutTransform {
   LayoutTransform::create_translation(0., 0., 0.)
 }
 
-#[cfg(feature = "webrender_support")]
 pub fn make_rotation(angle: Angle, size: (f32, f32)) -> LayoutTransform {
   let angle: euclid::Angle<f32> = angle.into();
   let center_x = size.0 / 2.0;
@@ -25,7 +25,6 @@ pub fn make_rotation(angle: Angle, size: (f32, f32)) -> LayoutTransform {
   LayoutTransform::create_rotation(0., 0., 1., angle)
 }
 
-#[cfg(feature = "webrender_support")]
 pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {
   let alpha: euclid::Angle<f32> = x.into();
   let beta: euclid::Angle<f32> = y.into();
@@ -33,7 +32,6 @@ pub fn make_skew(x: Angle, y: Angle) -> LayoutTransform {
   LayoutTransform::create_skew(alpha, beta)
 }
 
-#[cfg(feature = "webrender_support")]
 pub fn transforms_multiply(transforms: Transforms, sizes: (f32, f32)) -> Option<LayoutTransform> {
   let transforms: Vec<LayoutTransform> = transforms.iter().map(|t| into_transform3d(t.clone(), sizes)).collect();
 
@@ -53,7 +51,6 @@ pub fn transforms_multiply(transforms: Transforms, sizes: (f32, f32)) -> Option<
   }
 }
 
-#[cfg(feature = "webrender_support")]
 pub fn transforms_push_to_builder(
   container: &LayoutPrimitiveInfo,
   transforms: Transforms,
@@ -79,7 +76,6 @@ pub fn transforms_push_to_builder(
   (builder, properties)
 }
 
-#[cfg(feature = "webrender_support")]
 pub fn into_transform3d(transform: Transform, size: (f32, f32)) -> LayoutTransform {
   match transform {
     Transform::Translate(translate) => make_translation(translate),

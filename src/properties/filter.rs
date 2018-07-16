@@ -1,9 +1,8 @@
+use regex::Regex;
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use serde_json::Value;
-use regex::Regex;
 
-#[cfg(feature = "webrender_support")]
 use webrender::api;
 
 lazy_static! {
@@ -90,7 +89,6 @@ impl Into<Filter> for String {
   }
 }
 
-#[cfg(feature = "webrender_support")]
 impl Into<api::FilterOp> for Filter {
   fn into(self) -> api::FilterOp {
     use self::Filter::*;

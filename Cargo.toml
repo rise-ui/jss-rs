@@ -15,7 +15,7 @@ webrender_support = []
 default = []
 
 [dependencies]
-webrender = { rev = "c540acf0990f8a0cbf9429e7085c7cc3b6901add", git = "https://github.com/servo/webrender", optional = true }
+webrender = { rev = "c540acf0990f8a0cbf9429e7085c7cc3b6901add", git = "https://github.com/servo/webrender" }
 serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
 yoga = { version = "0.2", features = ["serde_support"] }
 euclid = { version = "0.17", features = ["serde"] }
