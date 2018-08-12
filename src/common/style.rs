@@ -14,6 +14,8 @@ lazy_static! {
 /// aka dimensions screen, element measures, variables, and other.
 #[derive(Debug, Clone, Default)]
 pub struct Context {
+  // Variables for preset before configurations
+  variables: HashMap<String, String>,
   // Layout props this container
   layout: Option<Layout>,
 }

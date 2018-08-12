@@ -1,21 +1,24 @@
-//! # JSS
+//! ## JSS Rust
 //! Implementation of JSS for Rust. Use css styles without css with identical properties.
 //! *Part of Rise-UI project.*
 //!
+//! ### [Documentation](http://friktor.github.io/jss-rs/jss/index.html)
+//!
 //! ### Usage
 //! Add to your Cargo.toml.
-//! ```toml
+//! ``` toml
 //! [dependencies]
 //! jss = { git = "https://github.com/rise-ui/jss-rs" }
 //! ```
 //!
-//! ```rust
+//! ``` rust
 //! extern crate jss;
 //! ```
 //!
 //! #### Examples
+//! Simple JSON element parsing example
+//!
 //! ``` rust
-//! // Simple stylesheet parsing example
 //! extern crate failure;
 //! extern crate jss;
 //!
@@ -24,24 +27,55 @@
 //!
 //! fn main() -> Result<(), Error> {
 //!   let style = r#"{
-//!     "element": {
-//!       "align_content": "center",
-//!       "border_top_right_radius": 10,
-//!       "border_top_style": "solid",
-//!       "filter": [
-//!         "blur(20)"
-//!       ]
-//!     },
+//!     "borderTopRightRadius": 10,
+//!     "borderTopStyle": "solid",
+//!     "alignContent": "center",
+//!     "borderTop": 10,
+//!     
+//!     "filter": [
+//!       "blur(20)"
+//!     ],
 //!
-//!     "element:hover": {
-//!       "align_content": "flex_start",
-//!       "background": "rgba(130,130,130,0)"
-//!     }
+//!     "transform": [
+//!       "translate(10px,10%)",
+//!       "rotate(40deg,15rad)"
+//!     ]
 //!   }"#;
 //!
-//!   let result = parse_json_stylesheet(style)?;
-//!   println!("Stylesheet: \n{:#?}", result);
+//!   let result = Style::parse_element(style, ParseOptions::default())?;
+//!   println!("{:#?}", result);
+//!   Ok(())
+//! }
+//! ```
 //!
+//! Or if you need YAML...
+//!
+//! ``` rust
+//! // Simple JSON element parsing example
+//! extern crate failure;
+//! extern crate jss;
+//!
+//! use failure::Error;
+//! use jss::*;
+//!
+//! fn main() -> Result<(), Error> {
+//!   let style = r#"---
+//! borderTopRightRadius: 10
+//! borderTopStyle: solid
+//! alignContent: center
+//! borderTop: 10
+//! filter:
+//! - blur(20)
+//! transform:
+//! - translate(10px,10%)
+//! - rotate(40deg,15rad)
+//! "#;
+//!
+//!   let mut options = ParseOptions::default();
+//!   options.from = ParseTarget::Yaml;
+//!
+//!   let result = Style::parse_element(style, options)?;
+//!   println!("{:#?}", result);
 //!   Ok(())
 //! }
 //! ```
