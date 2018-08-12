@@ -33,9 +33,7 @@ impl Default for ParseTarget {
   }
 }
 
-/// One level recursion inside with:
-/// * @media queries
-/// * status presudo classes: :hover, :active
+/// One level recursion inside with: @media queries, status presudo classes: :hover, :active.
 /// Default: Basic
 #[derive(Debug, Clone, Copy)]
 pub enum RecursiveType {
@@ -49,6 +47,7 @@ impl Default for RecursiveType {
   }
 }
 
+/// Options for parse style from uniform functions
 #[derive(Default, Debug, Clone, Copy)]
 pub struct ParseOptions {
   pub recursive: RecursiveType,

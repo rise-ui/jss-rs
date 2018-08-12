@@ -10,12 +10,16 @@ lazy_static! {
   static ref ELEMENT_NAME_RE: Regex = Regex::new(r"^[a-zA-Z_]+$").unwrap();
 }
 
+/// Context with other needed info - for parse and prepares,
+/// aka dimensions screen, element measures, variables, and other.
 #[derive(Debug, Clone, Default)]
 pub struct Context {
   // Layout props this container
   layout: Option<Layout>,
 }
 
+/// Style element, with all element status, and context`s,
+/// with implementations of traits for parse unions of one element
 #[derive(Debug, Clone, Default)]
 pub struct Style {
   // Block Status properties

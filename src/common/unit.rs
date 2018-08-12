@@ -1,3 +1,5 @@
+/// Mod serealize/deserialize for StyleUnit by css properties aka "10%" and "5px"
+/// Adopted from servo sources for serde
 use serde::{Deserialize, Deserializer, Serializer};
 use serde_json::Value;
 use yoga::StyleUnit;

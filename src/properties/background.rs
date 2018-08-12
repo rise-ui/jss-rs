@@ -1,9 +1,7 @@
 use properties::Color;
 use yoga::StyleUnit;
 
-use webrender::api::{
-  self, ColorF, DisplayListBuilder, ExtendMode, LayoutPoint, LayoutPrimitiveInfo, LayoutSize,
-};
+use webrender::api::{self, ColorF, DisplayListBuilder, ExtendMode, LayoutPoint, LayoutPrimitiveInfo, LayoutSize};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 #[serde(untagged)]

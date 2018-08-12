@@ -32,6 +32,11 @@ type FlexGrow = OrderedFloat<f32>;
 type BorderColor = Color;
 type BorderRadius = i32;
 
+/// Style properties struct with all css properties,
+/// by default allow to raw serialize/deserialize with serde.
+/// All elements wrap over Option<T> for support optional field.
+/// Also implements derive macro for Add<T> operator for merge properties,
+/// and custom macros for relative parse & prepares for styles
 #[derive(Serialize, Deserialize, Debug, Default, Clone, Prepare, Merge, CustomParse)]
 #[serde(rename_all = "kebab-case")]
 pub struct StyleProperties {
