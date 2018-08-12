@@ -1,4 +1,6 @@
 ## JSS Rust
+[![Build Status](https://travis-ci.org/rise-ui/jss-rs.svg?branch=master)](https://travis-ci.org/rise-ui/jss-rs)
+
 Implementation of JSS for Rust. Use css styles without css with identical properties.
 *Part of Rise-UI project.*
 
