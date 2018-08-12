@@ -1,8 +1,14 @@
+extern crate serde_json;
 extern crate failure;
 extern crate jss;
 
 use failure::Error;
 use jss::*;
+
+/*
+@Description: this example how to parse raw dirty ElementStyle struct with serde
+Is not full valid and prepared jss parser, only struct
+*/
 
 fn main() -> Result<(), Error> {
   let style = r#"{
@@ -21,7 +27,7 @@ fn main() -> Result<(), Error> {
     ]
   }"#;
 
-  let result = parse_json_style(style)?;
+  let result: StyleProperties = serde_json::from_str(style)?;
   println!("Style: \n{:#?}", result);
 
   let (apperance, layout) = result.get_prepared_styles();

@@ -46,27 +46,34 @@
 //! }
 //! ```
 
+#![feature(extern_prelude)]
 #![feature(test)]
 extern crate test;
 
 #[macro_use]
-extern crate jss_derive;
+extern crate failure_derive;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
+extern crate enum_extract;
+#[macro_use]
+extern crate jss_derive;
+#[macro_use]
 extern crate lazy_static;
 #[macro_use]
-extern crate nom;
-#[macro_use]
-extern crate enum_extract;
-
-extern crate euclid;
 extern crate failure;
-extern crate ordered_float;
-extern crate serde_json;
-extern crate webrender;
+#[macro_use]
+extern crate maplit;
+#[macro_use]
+extern crate nom;
 
 extern crate css_color_parser;
+extern crate ordered_float;
+extern crate serde_yaml;
+extern crate serde_json;
+extern crate webrender;
+extern crate inflector;
+extern crate euclid;
 extern crate regex;
 extern crate serde;
 extern crate yoga;
@@ -74,25 +81,5 @@ extern crate yoga;
 pub mod common;
 pub mod properties;
 
-pub use common::{
-  parse_json_style, parse_json_stylesheet, ElementStyle, PrepareStyleExt, Style, Stylesheet,
-};
 pub use properties::Apperance;
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-  use test::Bencher;
-
-  #[bench]
-  fn parse_and_prepare(bench: &mut Bencher) {
-    let style = r#"{
-      "align_content": "center"
-    }"#;
-
-    bench.iter(|| {
-      let parsed = parse_json_style(style).unwrap();
-      parsed.get_prepared_styles();
-    });
-  }
-}
+pub use common::*;

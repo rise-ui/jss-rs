@@ -1,10 +1,10 @@
 mod parse;
+mod properties;
 mod style;
-mod stylesheet;
 mod traits;
 pub mod unit;
 
-pub use self::style::ElementStyle;
-pub use self::stylesheet::*;
+pub use self::properties::*;
 pub use self::traits::*;
+pub use self::style::*;
 pub use self::parse::*;

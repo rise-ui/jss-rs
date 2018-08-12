@@ -86,7 +86,7 @@ impl From<BorderStyles> for api::BorderWidths {
 }
 
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "kebab-case")]
 pub enum BorderStyle {
   None,
   Solid,
