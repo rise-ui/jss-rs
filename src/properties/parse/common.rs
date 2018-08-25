@@ -1,7 +1,10 @@
+use nom::{digit, IResult, Err, Needed, alpha};
 use css_color_parser::Color as CssColor;
-use nom::{digit, IResult, Err, Needed};
 use properties::Color;
 use std::str;
+
+// Function name
+named!(pub fn_name(&[u8]) -> &[u8], ws!(alpha));
 
 // Unit representation and parser
 #[derive(Debug, Clone, PartialEq)]

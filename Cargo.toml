@@ -1,39 +1,29 @@
 [package]
-name = "jss"
-version = "0.1.0"
+keywords = ["gui", "layout", "yoga", "jss", "parsing", "rise-ui"]
 authors = ["Anton Shramko <antonshramko@yandex.ru>"]
 repository = "https://github.com/rise-ui/jss-rs"
 homepage = "https://github.com/rise-ui/jss-rs"
 description = "Rust implementation of JSS"
-keywords = ["gui", "layout", "yoga", "jss", "parsing", "rise-ui"]
-readme = "README.md"
 categories = ["gui"]
+readme = "README.md"
+version = "0.1.0"
 license = "MIT"
-
-[features]
-webrender_support = []
-default = []
+name = "jss"
 
 [dependencies]
-webrender = { rev = "c540acf0990f8a0cbf9429e7085c7cc3b6901add", git = "https://github.com/servo/webrender" }
-serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
-euclid = { version = "0.17", features = ["serde"] }
-serde = { version = "=1.0.66", features = ["rc"] }
-css-color-parser = "0.1"
+serde_derive = { version = "1.0.73", features = ["deserialize_in_place"] }
+yoga = { version = "0.2", features = ["serde_support"] }
+euclid = { version = "0.19.0", features = ["serde"] }
+serde = { version = "1.0.73", features = ["rc"] }
+css-color-parser = "0.1.2"
+failure_derive = "0.1.2"
 ordered-float = "0.5.0"
-failure_derive = "0.1"
-serde_yaml = "0.7.5"
-enum_extract = "0.1"
-lazy_static = "1.0"
-Inflector = "0.11"
-serde_json = "1.0"
-failure = "0.1"
-maplit = "1.0"
-regex = "0.2"
-nom = "4.0"
-
-jss_derive = { path = "./jss_derive", version = "0.1.0" }
-# jss_derive = "0.1.0"
-
-yoga = { version = "0.2", features = ["serde_support"], path = "../yoga-rs" }
-# yoga = { version = "0.2", features = ["serde_support"] }
+enum_extract = "0.1.1"
+lazy_static = "1.1.0"
+serde_json = "1.0.26"
+serde_yaml = "0.8.0"
+Inflector = "0.11.3"
+failure = "0.1.2"
+maplit = "1.0.1"
+regex = "1.0.2"
+nom = "4.0.0"

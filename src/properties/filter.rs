@@ -1,52 +1,7 @@
-use regex::Regex;
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
+use properties::parse::filter_parse;
 use serde_json::Value;
-
-use webrender::api;
-
-lazy_static! {
-  static ref FILTER_RE: Regex = {
-    Regex::new(r"^(?P<name>brightness|grayscale|hueRotate|saturate|contrast|invert|sepia|blur)\((?P<value>\d+)\)$")
-      .unwrap()
-  };
-}
-
-impl Serialize for Filter {
-  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-  where
-    S: Serializer,
-  {
-    use self::Filter::*;
-
-    let result = match *self {
-      Brightness(value) => format!("brightness({})", value),
-      Grayscale(value) => format!("grayscale({})", value),
-      HueRotate(value) => format!("hueRotate({})", value),
-      Saturate(value) => format!("saturate({})", value),
-      Contrast(value) => format!("contrast({})", value),
-      Invert(value) => format!("invert({})", value),
-      Sepia(value) => format!("sepia({})", value),
-      Blur(value) => format!("blur({})", value),
-      None => "none".to_string(),
-    };
-
-    serializer.serialize_str(&*result)
-  }
-}
-
-impl<'de> Deserialize<'de> for Filter {
-  fn deserialize<D>(deserializer: D) -> Result<Filter, D::Error>
-  where
-    D: Deserializer<'de>,
-  {
-    let value = Value::deserialize(deserializer)?;
-    match value {
-      Value::String(filter) => Ok(filter.into()),
-      _ => Ok(Filter::None),
-    }
-  }
-}
 
 pub type Filters = Vec<Filter>;
 
@@ -63,46 +18,49 @@ pub enum Filter {
   None,
 }
 
-impl Into<Filter> for String {
-  fn into(self) -> Filter {
-    if FILTER_RE.is_match(&*self) {
-      let filter = FILTER_RE.replace_all(&*self, "$name");
-      let value = match FILTER_RE.replace_all(&*self, "$value").parse::<f32>() {
-        Ok(v) => v,
-        Err(_) => 0.0,
-      };
-
-      match &*filter {
-        "brightness" => Filter::Brightness(value),
-        "grayscale" => Filter::Grayscale(value),
-        "hueRotate" => Filter::HueRotate(value),
-        "saturate" => Filter::Saturate(value),
-        "contrast" => Filter::Contrast(value),
-        "invert" => Filter::Invert(value),
-        "sepia" => Filter::Sepia(value),
-        "blur" => Filter::Blur(value),
-        _ => Filter::None,
-      }
-    } else {
-      Filter::None
-    }
+impl Serialize for Filter {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: Serializer,
+  {
+    serializer.serialize_str(String::from(*self).as_str())
   }
 }
 
-impl Into<api::FilterOp> for Filter {
-  fn into(self) -> api::FilterOp {
-    use self::Filter::*;
+impl<'de> Deserialize<'de> for Filter {
+  fn deserialize<D>(deserializer: D) -> Result<Filter, D::Error>
+  where
+    D: Deserializer<'de>,
+  { 
+    let filter = extract!(Value::String(_), Value::deserialize(deserializer)?)
+      .and_then(|filter| Some(Filter::from(filter)))
+      .unwrap_or(Filter::None);
 
-    match self {
-      Brightness(v) => api::FilterOp::Brightness(v),
-      Grayscale(v) => api::FilterOp::Grayscale(v),
-      HueRotate(v) => api::FilterOp::HueRotate(v),
-      Saturate(v) => api::FilterOp::Saturate(v),
-      Contrast(v) => api::FilterOp::Contrast(v),
-      Invert(v) => api::FilterOp::Invert(v),
-      Sepia(v) => api::FilterOp::Sepia(v),
-      Blur(v) => api::FilterOp::Blur(v),
-      None => api::FilterOp::Blur(0.),
+    Ok(filter)
+  }
+}
+
+impl From<String> for Filter {
+  fn from(source: String) -> Filter {
+    filter_parse(source.as_bytes())
+      .and_then(|parsed| Ok(Filter::from(parsed.1)))
+      .unwrap_or(Filter::None)
+  }
+}
+
+impl From<Filter> for String {
+  fn from(source: Filter) -> String {
+    use self::Filter::*;
+    match source {
+      Brightness(v) => format!("brightness({})", v as u32),
+      Grayscale(v) => format!("grayscale({})", v as u32),
+      HueRotate(v) => format!("hueRotate({})", v as u32),
+      Saturate(v) => format!("saturate({})", v as u32),
+      Contrast(v) => format!("contrast({})", v as u32),
+      Invert(v) => format!("invert({})", v as u32),
+      Sepia(v) => format!("sepia({})", v as u32),
+      Blur(v) => format!("blur({})", v as u32),
+      None => "none".to_string(),
     }
   }
 }

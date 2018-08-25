@@ -1,7 +1,5 @@
 use css_color_parser::Color as CssColor;
 
-use webrender::api::ColorF;
-
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use serde_json::Value;
@@ -28,8 +26,7 @@ impl<'de> Deserialize<'de> for Color {
   where
     D: Deserializer<'de>,
   {
-    let value = Value::deserialize(deserializer)?;
-    match value {
+    match Value::deserialize(deserializer)? {
       Value::String(color) => Ok(color.into()),
       _ => Ok(Color::transparent()),
     }
@@ -90,11 +87,5 @@ impl From<String> for Color {
   fn from(color: String) -> Color {
     let color = &*color;
     color.into()
-  }
-}
-
-impl From<Color> for ColorF {
-  fn from(color: Color) -> ColorF {
-    ColorF::new(color.red as f32 / 255., color.green as f32 / 255., color.blue as f32 / 255., color.alpha)
   }
 }

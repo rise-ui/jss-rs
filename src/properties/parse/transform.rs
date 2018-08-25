@@ -1,4 +1,4 @@
-use properties::parse::{UnitRepr, unit};
+use properties::parse::{UnitRepr, unit, fn_name};
 use nom::alpha;
 use std::str;
 
@@ -7,8 +7,6 @@ pub struct TransformFunction<'a, 'b, 'c> {
   pub args: Vec<UnitRepr<'a, 'b>>,
   pub name: &'c str,
 }
-
-named!(fn_name(&[u8]) -> &[u8], ws!(alpha));
 
 named!(args(&[u8]) -> Vec<UnitRepr>,
   delimited!(

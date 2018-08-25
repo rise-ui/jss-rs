@@ -1,8 +1,12 @@
-use properties::parse::{AngleRepr, /* angle, */
-GradientStopRepr, /* gradient_stop */
+use properties::parse::{
+  GradientStopRepr,
+  gradient_stop,
+  AngleRepr,
+  angle,
 };
-// use nom::alpha;
-// use std::str;
+
+use nom::alpha;
+use std::str;
 
 #[derive(Debug, Clone)]
 pub struct GradientFunction<'a, 'b> {
@@ -13,7 +17,7 @@ pub struct GradientFunction<'a, 'b> {
 // named!(fun_separated(&[u8]) -> GradientFunction, do_parse!(
 //   angle: angle >>
 //   char!(',') >>
-//   stops: map_res!(take_until!(")", separated_list!(char!(","), gradient_stop))) >>
+//   stops: map_res!(take_until!(char!(b")")), separated_list!(char!(b","), gradient_stop)) >>
 //   (GradientFunction {
 //     angle,
 //     stops
