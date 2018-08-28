@@ -1,5 +1,6 @@
 use types::parser::PropertyCase;
 use serde_json;
+use serde_yaml;
 
 #[derive(Debug, Fail)]
 pub enum PropertyError {
@@ -30,6 +31,17 @@ pub enum ParseError {
   #[fail(display = "invalid JSON value for property '{}': {:?}", property, error)]
   InvalidJSONValue {
     error: serde_json::Error,
+    property: String,
+  },
+
+  #[fail(display = "invalid YAML: {:?}", error)]
+  InvalidYAML {
+    error: serde_yaml::Error,
+  },
+
+  #[fail(display = "invalid YAML value for property '{}': {:?}", property, error)]
+  InvalidYAMLValue {
+    error: serde_yaml::Error,
     property: String,
   },
 

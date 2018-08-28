@@ -1,3 +1,6 @@
+use types::parser::PropertyCase;
+use inflector::Inflector;
+
 lazy_static! {
   static ref APPERANCE_KEYS: Vec<&'static str> = vec![ 
     "background", "transform", "filter", "border_top_color", "border_right_color", "border_left_color",
@@ -23,4 +26,13 @@ pub fn apperance_keys_contains(name: &str) -> bool {
 
 pub fn layout_keys_contains(name: &str) -> bool {
   LAYOUT_KEYS.contains(&name)
+}
+
+pub fn is_valid_case(key: &String, case: PropertyCase) -> bool {
+  match case {
+    PropertyCase::Snake => key.is_snake_case(),
+    PropertyCase::Kebab => key.is_kebab_case(),
+    PropertyCase::Camel => key.is_camel_case(),
+    PropertyCase::Ignore => true
+  }
 }

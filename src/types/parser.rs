@@ -1,3 +1,12 @@
+use types::{Style, ParseError};
+
+/// Result with styles and parse warnings 
+#[derive(Debug)]
+pub struct ParseResult {
+  pub warnings: Vec<ParseError>,
+  pub style: Style,
+}
+
 /// What format of properties keys to use and check when parsing
 /// Current allowed: snake_case, camelCase, kebab-case or ignore case
 /// Default: camelCase

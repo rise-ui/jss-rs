@@ -7,7 +7,7 @@ use properties::unit;
 /// Also implements derive macro for Add<T> operator for merge properties,
 /// and custom macros for relative parse & prepares for styles
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
-#[derive(ImplPropertySetters)]
+#[derive(ImplPropertySetters, ImplStyleParser)]
 #[serde(rename_all = "kebab-case")]
 pub struct StyleProperties {
   // Layout Styles
