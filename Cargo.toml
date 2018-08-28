@@ -12,7 +12,8 @@ name = "jss"
 
 [dependencies]
 serde_derive = { version = "1.0.73", features = ["deserialize_in_place"] }
-jss_derive = { path = "./jss_derive", version = "0.1.0" }
+jss_derive = { git = "https://github.com/rise-ui/jss_derive", version = "0.1.0", branch="refactoring" }
+# jss_derive = { path = "./jss_derive", version = "0.1.0" }
 yoga = { version = "0.2", features = ["serde_support"] }
 euclid = { version = "0.19.0", features = ["serde"] }
 serde = { version = "1.0.73", features = ["rc"] }
