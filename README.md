@@ -85,7 +85,7 @@ transform:
 ### Roadmap
 - [x] Parsing `filters`, `color`, `unit` and other properties from CSS3
 - [x] Stylesheet with selectors by status aka "name:hover", "name:active" etc.
-- [x] Get formatted props for `yoga-rs` and collect `apperance` styles
+- [x] Get formatted props for `yoga-rs` and collect `appearance` styles
 - [x] Convert to `webrender` types & layers as optional target (partially implemented)
 - [x] Parsing `transform` property
 - [ ] Parsing `media-query` property

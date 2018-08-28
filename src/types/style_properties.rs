@@ -4,7 +4,7 @@ use properties;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum Apperance {
+pub enum Appearance {
   Background(Background),
   Transforms(Transforms),
   Filters(Filters),
@@ -37,11 +37,11 @@ pub enum Layout {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PropertyValue {
-  Apperance(Apperance),
+  Appearance(Appearance),
   Layout(Layout),
 }
 
-pub type PropertiesApperance = PropertiesStore<Apperance>;
+pub type PropertiesApperance = PropertiesStore<Appearance>;
 pub type PropertiesLayout = PropertiesStore<FlexStyle>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -49,12 +49,12 @@ pub struct PropertiesStore<T>(pub HashMap<String, T>);
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Properties {
-  pub apperance: PropertiesApperance,
+  pub appearance: PropertiesApperance,
   pub layout: PropertiesLayout,
 }
 
 /* _______________________Generic macro impl`s______________________ */
-impl_union_property_conversion!(Apperance);
+impl_union_property_conversion!(Appearance);
 impl_union_property_conversion!(Layout);
 
 /* ___________________Impl Traits & Conversions_____________________ */

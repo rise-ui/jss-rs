@@ -15,7 +15,7 @@ macro_rules! impl_union_property_conversion {
 }
 
 // @TODO: fix convertions for usage with types
-// unwraped of Apperance or Layout enum
+// unwraped of Appearance or Layout enum
 // Like: fn(Align::Center) instead of PropertyValue::Layout(Layout::Align::Center)
 macro_rules! impl_partial_union_property_conversion {
   ($child:ident, $parent:ident) => {

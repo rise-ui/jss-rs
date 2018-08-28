@@ -125,7 +125,7 @@ pub struct StyleProperties {
   pub border_left_width: Option<BorderWidth>,
   pub border_top_width: Option<BorderWidth>,
 
-  // Apperance Styles
+  // Appearance Styles
   pub background: Option<Background>,
   pub transform: Option<Transforms>,
   pub filter: Option<Filters>,

@@ -8,8 +8,8 @@ use jss::types::*;
 fn main() -> Result<(), failure::Error> {
   let mut properties = Properties::default();
   
-  properties.set_style("background", PropertyValue::Apperance(
-    Apperance::Background(Background::Color(
+  properties.set_style("background", PropertyValue::Appearance(
+    Appearance::Background(Background::Color(
       Color::transparent()
     ))
   ))?;
