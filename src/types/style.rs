@@ -1,242 +1,99 @@
+use types::parser::{ParseOptions, PropertyCase, RecursiveType};
+use types::{Properties, ParseError, PropertyValue};
+use traits::{TParseStyle, TStyle};
 use std::collections::HashMap;
-use types::property_types::*;
-use types::PropertyError;
 use inflector::Inflector;
-use traits::TStyle;
+use yoga::Layout;
 
-lazy_static! {
-  static ref APPERANCE_KEYS: Vec<&'static str> = vec![
-    "background",
-    "transform",
-    "filter",
-    "border_top_color",
-    "border_right_color",
-    "border_left_color",
-    "border_bottom_color",
-    "border_top_style",
-    "border_right_style",
-    "border_left_style",
-    "border_bottom_style",
-    "border_top_right_radius",
-    "border_top_left_radius",
-    "border_bottom_right_radius",
-    "border_bottom_left_radius",
-  ];
-  static ref LAYOUT_KEYS: Vec<&'static str> = vec![
-    "flex_direction",
-    "justify_content",
-    "position",
-    "align_content",
-    "align_items",
-    "align_self",
-    "flex_wrap",
-    "display",
-    "overflow",
-    "aspect_ratio",
-    "flex_shrink",
-    "flex_grow",
-    "flex",
-    "bottom",
-    "end",
-    "flex_basis",
-    "height",
-    "left",
-    "margin",
-    "margin_bottom",
-    "margin_end",
-    "margin_horizontal",
-    "margin_left",
-    "margin_right",
-    "margin_start",
-    "margin_top",
-    "margin_vertical",
-    "max_height",
-    "max_width",
-    "min_height",
-    "min_width",
-    "padding",
-    "padding_bottom",
-    "padding_end",
-    "padding_horizontal",
-    "padding_left",
-    "padding_right",
-    "padding_start",
-    "padding_top",
-    "padding_vertical",
-    "right",
-    "start",
-    "top",
-    "width",
-    "border_bottom_width",
-    "border_right_width",
-    "border_left_width",
-    "border_top_width",
-  ];
+/// Context with other needed info - for parse and prepares,
+/// aka dimensions screen, element measures, variables, and other.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Context {
+  // Variables for preset before configurations
+  variables: HashMap<String, String>,
+  // Layout props this container
+  layout: Option<Layout>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Apperance {
-  BorderRadius(BorderRadius),
-  BorderColor(BorderColor),
-  BorderStyle(BorderStyle),
-  Background(Background),
-  Transforms(Transforms),
-  Filters(Filters),
-  Auto,
+/// Style element, with all element status, and context`s,
+/// with implementations of traits for parse unions of one element
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Style {
+  // States of properties as :hover, :active, etc..
+  pub states: HashMap<String, Properties>,
+
+  // Context
+  pub context: Context,
 }
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Layout {
-  FlexDirection(FlexDirection),
-  PositionType(PositionType),
-  AspectRatio(AspectRatio),
-  BorderWidth(BorderWidth),
-  FlexShrink(FlexShrink),
-  FlexFactor(FlexFactor),
-  StyleUnit(StyleUnit),
-  Overflow(Overflow),
-  FlexGrow(FlexGrow),
-  Display(Display),
-  Justify(Justify),
-  Align(Align),
-  Wrap(Wrap),
-}
+/* _______________________________________________________________________ */
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum PropertyValue {
-  Apperance(Apperance),
-  Layout(Layout),
-}
-
-pub type PropertiesApperance = PropertiesStore<Apperance>;
-pub type PropertiesLayout = PropertiesStore<Layout>;
-
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct PropertiesStore<T>(HashMap<String, T>);
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct Properties {
-  apperance: PropertiesApperance,
-  layout: PropertiesLayout,
-}
-
-/* _____________________________________________________________________ */
-
-impl TStyle for Properties {
-  fn get_apperance_style(&self, name: &str) -> Option<&Apperance> {
-    self.apperance.0.get(name)
+// Trait for relative parse element style
+impl TParseStyle for Style {
+  // Uniform function for parse element
+  fn parse_element(source: &str, options: ParseOptions) -> Result<Style, ParseError> {
+    unimplemented!()
   }
+  
+  // Parse element on JSON
+  fn parse_json_element(source: &str, recursive: RecursiveType, case_style: PropertyCase) -> Result<Style, ParseError> {
+    use serde_json::{Value, from_value, from_str};
+    use self::ParseError::*;
+    
+    let properties: HashMap<String, Value> = from_str(source).map_err(|error| InvalidJSON { error })?;
+    let mut properties_default = Properties::default();
+    let mut style = Style::default();
 
-  fn get_layout_style(&self, name: &str) -> Option<&Layout> {
-    self.layout.0.get(name)
-  }
+    for (key, value) in properties {
+      let action_prefix = &key[..1];
+      
+      match action_prefix {
+        // States like :hover, :active
+        ":" => {}
+        // Nested insides
+        "$" => {},
+        // actions handlers
+        "@" => {},
+        // Otherwise standard properties
+        _ => {
+          let is_valid_case = match case_style {
+            PropertyCase::Snake => key.is_snake_case(),
+            PropertyCase::Kebab => key.is_kebab_case(),
+            PropertyCase::Camel => key.is_camel_case(),
+            PropertyCase::Ignore => true
+          };
 
-  fn set_style(&mut self, name: &str, property: PropertyValue) -> Result<(), PropertyError> {
-    if APPERANCE_KEYS.contains(&name) {
-      self.set_apperance_style(name, extract!(PropertyValue::Apperance(_), property))
-    } else if LAYOUT_KEYS.contains(&name) {
-      self.set_layout_style(name, extract!(PropertyValue::Layout(_), property))
-    } else {
-      Err(PropertyError::InvalidKey {
-        key: name.to_string(),
-      })
-    }
-  }
+          if is_valid_case {
+            let property_key = {
+              let mut src = key.to_camel_case();
+              let f = &src[0..1].to_uppercase();
 
-  fn set_apperance_style(&mut self, name: &str, property: Option<Apperance>) -> Result<(), PropertyError> {
-    if property.is_none() {
-      if let Some(removed) = self.apperance.0.remove(name) {
-        // @TODO: debug log inside this
+              src.replace_range(..1, f);
+              src
+            };
+            
+            let property: PropertyValue = from_value(value)
+              .map_err(|error| InvalidJSONValue { error, property: key.clone() })?;
+
+
+            println!("'{}': {:#?}", property_key, property);
+
+            // @TODO: add support for uniform styles like: border-radius, border-style, etc..
+            properties_default.set_style(property_key.as_str(), property)
+              .map_err(|error| ErrorPasteProperty { error, property: key.clone() })?;
+          }          
+        }
       }
-
-      return Ok(());
     }
 
-    let property = property.unwrap();
-    style_setters!((self, name, property, Apperance, apperance) {
-      Background: Background,
-      Transform: Transforms,
-      Filter: Filters,
+    // Insert default properties to default state
+    style.states.insert("default".to_string(), properties_default);
 
-      BorderTopColor: BorderColor,
-      BorderRightColor: BorderColor,
-      BorderLeftColor: BorderColor,
-      BorderBottomColor: BorderColor,
-
-      BorderTopStyle: BorderStyle,
-      BorderRightStyle: BorderStyle,
-      BorderLeftStyle: BorderStyle,
-      BorderBottomStyle: BorderStyle,
-
-      BorderTopRightRadius: BorderRadius,
-      BorderTopLeftRadius: BorderRadius,
-      BorderBottomRightRadius: BorderRadius,
-      BorderBottomLeftRadius: BorderRadius
-    })
+    Ok(style)
   }
 
-  fn set_layout_style(&mut self, name: &str, property: Option<Layout>) -> Result<(), PropertyError> {
-    if property.is_none() {
-      if let Some(removed) = self.layout.0.remove(name) {
-        // @TODO: debug log inside this
-      }
-
-      return Ok(());
-    }
-
-    let property = property.unwrap();
-    style_setters!((self, name, property, Layout, layout) {
-      FlexDirection: FlexDirection,
-      JustifyContent: Justify,
-      Position: PositionType,
-      AlignContent: Align,
-      AlignItems: Align,
-      AlignSelf: Align,
-      FlexWrap: Wrap,
-      Display: Display,
-      Overflow: Overflow,
-
-      AspectRatio: AspectRatio,
-      FlexShrink: FlexShrink,
-      FlexGrow: FlexGrow,
-      Flex: FlexFactor,
-
-      Bottom: StyleUnit,
-      End: StyleUnit,
-      FlexBasis: StyleUnit,
-      Height: StyleUnit,
-      Left: StyleUnit,
-      Margin: StyleUnit,
-      MarginBottom: StyleUnit,
-      MarginEnd: StyleUnit,
-      MarginHorizontal: StyleUnit,
-      MarginLeft: StyleUnit,
-      MarginRight: StyleUnit,
-      MarginStart: StyleUnit,
-      MarginTop: StyleUnit,
-      MarginVertical: StyleUnit,
-      MaxHeight: StyleUnit,
-      MaxWidth: StyleUnit,
-      MinHeight: StyleUnit,
-      MinWidth: StyleUnit,
-      Padding: StyleUnit,
-      PaddingBottom: StyleUnit,
-      PaddingEnd: StyleUnit,
-      PaddingHorizontal: StyleUnit,
-      PaddingLeft: StyleUnit,
-      PaddingRight: StyleUnit,
-      PaddingStart: StyleUnit,
-      PaddingTop: StyleUnit,
-      PaddingVertical: StyleUnit,
-      Right: StyleUnit,
-      Start: StyleUnit,
-      Top: StyleUnit,
-      Width: StyleUnit,
-
-      BorderBottomWidth: BorderWidth,
-      BorderRightWidth: BorderWidth,
-      BorderLeftWidth: BorderWidth,
-      BorderTopWidth: BorderWidth
-    })
+  // Parse element on YAML
+  fn parse_yaml_element(source: &str, recursive: RecursiveType, style: PropertyCase) -> Result<Style, ParseError> {
+    unimplemented!()
   }
 }

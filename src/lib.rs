@@ -1,4 +1,3 @@
-#![feature(conservative_impl_trait)]
 #![feature(concat_idents)]
 #![feature(never_type)]
 #![feature(try_from)]
@@ -7,6 +6,8 @@
 extern crate failure_derive;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate jss_derive;
 
 #[macro_use]
 extern crate enum_extract;
@@ -32,8 +33,8 @@ extern crate maplit;
 extern crate regex;
 extern crate yoga;
 
-mod parser;
-mod properties;
-mod traits;
-mod types;
-mod utils;
+pub mod parser;
+pub mod properties;
+pub mod traits;
+pub mod types;
+pub mod utils;
