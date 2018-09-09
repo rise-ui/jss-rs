@@ -6,14 +6,13 @@ use jss::traits::*;
 use jss::types::*;
 
 fn main() -> Result<(), failure::Error> {
-  let mut properties = Properties::default();
-  
-  properties.set_style("background", PropertyValue::Appearance(
-    Appearance::Background(Background::Color(
-      Color::transparent()
-    ))
-  ))?;
+    let mut properties = Properties::default();
 
-  println!("{:#?}", properties);
-  Ok(())
+    properties.set_style(
+        "background",
+        PropertyValue::Appearance(Appearance::Background(Background::Color(Color::transparent()))),
+    )?;
+
+    println!("{:#?}", properties);
+    Ok(())
 }

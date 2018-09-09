@@ -102,6 +102,7 @@ extern crate nom;
 #[macro_use]
 mod macros;
 
+extern crate erased_serde;
 extern crate serde_json;
 extern crate serde_yaml;
 extern crate serde;
@@ -114,6 +115,7 @@ extern crate inflector;
 extern crate maplit;
 extern crate regex;
 extern crate yoga;
+extern crate eval;
 
 pub mod parser;
 pub mod properties;

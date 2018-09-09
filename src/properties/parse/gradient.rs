@@ -10,8 +10,8 @@ use std::str;
 
 #[derive(Debug, Clone)]
 pub struct GradientFunction<'a, 'b> {
-  pub stops: Vec<GradientStopRepr>,
-  pub angle: AngleRepr<'a, 'b>,
+    pub stops: Vec<GradientStopRepr>,
+    pub angle: AngleRepr<'a, 'b>,
 }
 
 // named!(fun_separated(&[u8]) -> GradientFunction, do_parse!(

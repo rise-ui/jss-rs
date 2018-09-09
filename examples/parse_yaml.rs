@@ -5,7 +5,7 @@ use jss::traits::*;
 use jss::types::*;
 
 fn main() -> Result<(), failure::Error> {
-  let source = r#"
+    let source = r#"
 ---
 borderTopRightRadius: 10
 borderTopStyle: solid
@@ -18,8 +18,8 @@ transform:
 - rotate(40deg,15rad)
   "#;
 
-  let style = Style::parse_yaml_element(source, parser::RecursiveType::Basic, parser::PropertyCase::Camel)?;
-  println!("{:#?}", style);
+    let style = Style::parse_yaml_element(source, parser::RecursiveType::Basic, parser::PropertyCase::Camel)?;
+    println!("{:#?}", style);
 
-  Ok(())
+    Ok(())
 }
