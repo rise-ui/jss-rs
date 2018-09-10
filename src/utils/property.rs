@@ -78,12 +78,3 @@ pub fn apperance_keys_contains(name: &str) -> bool {
 pub fn layout_keys_contains(name: &str) -> bool {
     LAYOUT_KEYS.contains(&name)
 }
-
-pub fn is_valid_case(key: &String, case: Case) -> bool {
-    match case {
-        Case::Snake => key.is_snake_case(),
-        Case::Kebab => key.is_kebab_case(),
-        Case::Camel => key.is_camel_case(),
-        Case::Ignore => true,
-    }
-}

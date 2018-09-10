@@ -14,21 +14,11 @@ macro_rules! impl_union_property_conversion {
     };
 }
 
-// @TODO: fix convertions for usage with types
-// unwraped of Appearance or Layout enum
-// Like: fn(Align::Center) instead of PropertyValue::Layout(Layout::Align::Center)
-macro_rules! impl_partial_union_property_conversion {
-    ($child:ident, $parent:ident) => {
-        impl From<$child> for $parent {
-            fn from(value: $child) -> $parent {
-                $parent::$child(value)
-            }
-        }
-
-        impl From<$child> for Option<$parent> {
-            fn from(value: $child) -> Option<$parent> {
-                Some($parent::$child(value))
-            }
-        }
+macro_rules! make_initial_style_states {
+    ($style:ident, [$($state:ident),*]) => {
+        use types::Properties;
+        $(
+            $style.states.insert(stringify!($state).to_string(), Properties::default());
+        )*
     };
 }

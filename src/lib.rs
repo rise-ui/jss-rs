@@ -80,6 +80,8 @@
 //! }
 //! ```
 
+#![feature(custom_attribute)]
+#![feature(tool_attributes)]
 #![feature(concat_idents)]
 #![feature(never_type)]
 #![feature(try_from)]

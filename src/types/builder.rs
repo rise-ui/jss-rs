@@ -1,57 +1,48 @@
 /// Style Builder
-use types::{Style, Properties, ParseError, Case, SourceFormat};
-use traits::TParseMiddleware;
-
 use std::collections::HashMap;
-use std::any::{Any, TypeId};
+use traits::TParseMiddleware;
+use utils::generic_erase;
+use std::boxed::Box;
 
-use erased_serde::{self, Deserializer};
-use serde_json;
-use serde_yaml;
+use types::{
+    DefaultParseMiddleware,
+    PropertyParseType,
+    PropertyKeyInfo,
+    SourceFormat,
+    ParseError,
+    Style,
+    Case,
+};
 
-// let data: DeStruct = erased_serde::deserialize(Box::leak(formats)).unwrap();
-
-fn generic_erase(source: &str, source_type: SourceFormat) -> Result<Box<Deserializer>, ParseError> {
-    use self::SourceFormat::*;
-    use self::ParseError::*;
-
-    match source_type {
-        Yaml => serde_yaml::from_str::<serde_yaml::Value>(source)
-            .map_err(|error| InvalidSource {
-                source_type,
-                error: error.into(),
-            }).and_then(|yaml| {
-                let erased: Box<Deserializer> = Box::new(Deserializer::erase(yaml));
-                Ok(erased)
-            }),
-        Json => serde_json::from_str::<serde_json::Value>(source)
-            .map_err(|error| InvalidSource {
-                source_type,
-                error: error.into(),
-            }).and_then(|json| {
-                let erased: Box<Deserializer> = Box::new(Deserializer::erase(json));
-                Ok(erased)
-            }),
-    }
-}
-
-pub struct StyleBuilder<'a, P>
-where
-    P: TParseMiddleware,
-{
+pub struct StyleBuilder<'a> {
     /// Custom started from "@"
-    custom_middlewares: HashMap<String, P>,
-    default_middleware: P,
+    custom_middlewares: HashMap<String, Box<TParseMiddleware>>,
+    //expression_middleware: Box<TParseMiddleware>,
+    default_middleware: Box<TParseMiddleware>,
 
     source_type: SourceFormat,
     source: &'a str,
     case: Case,
 }
 
-impl<'a, P> StyleBuilder<'a, P>
-where
-    P: TParseMiddleware,
-{
+impl<'a> Default for StyleBuilder<'a> {
+    fn default() -> StyleBuilder<'a> {
+        StyleBuilder {
+            default_middleware: Box::new(DefaultParseMiddleware {}),
+            custom_middlewares: HashMap::default(),
+            source_type: SourceFormat::Json,
+            case: Case::Ignore,
+            source: "{}",
+        }
+    }
+}
+
+impl<'a> StyleBuilder<'a> {
+    pub fn middleware(mut self, middleware: Box<TParseMiddleware>) -> Self {
+        self.custom_middlewares.insert(middleware.name(), middleware);
+        self
+    }
+
     pub fn case(mut self, case: Case) -> Self {
         self.case = case;
         self
@@ -67,13 +58,30 @@ where
         self
     }
 
-    pub fn parse(mut self) -> Result<(), ParseError> {
-        let mut properties_default = Properties::default();
+    #[rustfmt::skip]
+    pub fn parse(mut self) -> Result<Style, ParseError> {
         let mut style = Style::default();
-
+        make_initial_style_states!(style, [default, active, hover]);
         let erased = generic_erase(self.source, self.source_type)?;
-        let map: HashMap<String, &[u8]> = erased_serde::deserialize(Box::leak(erased)).unwrap();
 
-        Ok(())
+        for (key, value) in erased {
+            match key.key_type {
+                PropertyParseType::Default => {
+                    self.default_middleware.process_value(key, value, &mut style)?;
+                }
+
+                PropertyParseType::Expression => {
+                    //self.expression_middleware.process_value(key, value, &mut style)?;
+                }
+
+                PropertyParseType::Custom => {
+                    self.custom_middlewares.get_mut(&key.name)
+                        .ok_or(ParseError::MissingMiddleware { name: key.name.clone() })
+                        .and_then(|middleware| middleware.process_value(key, value, &mut style))?;
+                }
+            }
+        }
+
+        Ok(style)
     }
 }

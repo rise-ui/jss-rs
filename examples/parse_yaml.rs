@@ -18,7 +18,7 @@ transform:
 - rotate(40deg,15rad)
   "#;
 
-    let style = Style::parse_yaml_element(source, parser::RecursiveType::Basic, parser::Case::Camel)?;
+    let style = StyleBuilder::default().source(source).source_type(SourceFormat::Yaml).parse()?;
     println!("{:#?}", style);
 
     Ok(())

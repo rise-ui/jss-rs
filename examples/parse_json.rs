@@ -15,7 +15,6 @@ fn main() -> Result<(), failure::Error> {
     "filter": [
       "blur(20)"
     ],
-
     "transform": [
       "translate(10px,10%)",
       "rotate(40deg,15rad)"
@@ -23,7 +22,7 @@ fn main() -> Result<(), failure::Error> {
   }
   "#;
 
-    let style = Style::parse_json_element(source, parser::RecursiveType::Basic, parser::Case::Camel)?;
+    let style = StyleBuilder::default().source(source).parse()?;
     println!("{:#?}", style);
 
     Ok(())

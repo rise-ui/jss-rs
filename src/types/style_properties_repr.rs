@@ -1,13 +1,13 @@
 use types::property_types::*;
 use properties::unit;
+use erased_serde::{Deserializer, deserialize};
 
 /// Style properties struct with all css properties,
 /// by default allow to raw serialize/deserialize with serde.
 /// All elements wrap over Option<T> for support optional field.
 /// Also implements derive macro for Add<T> operator for merge properties,
 /// and custom macros for relative parse & prepares for styles
-#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
-// #[derive(ImplStyleParser, ImplPropertySetters)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, ImplPropertySetters, ImplStyleParser)]
 #[serde(rename_all = "kebab-case")]
 pub struct StyleProperties {
     // Layout Styles
