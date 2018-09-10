@@ -24,61 +24,61 @@ Simple JSON element parsing example
 extern crate failure;
 extern crate jss;
 
-use failure::Error;
-use jss::*;
+use jss::traits::*;
+use jss::types::*;
 
-fn main() -> Result<(), Error> {
-  let style = r#"{
+fn main() -> Result<(), failure::Error> {
+    let source = r#"
+  {
     "borderTopRightRadius": 10,
     "borderTopStyle": "solid",
     "alignContent": "center",
-    "borderTop": 10,
+    "borderTopWidth": 10,
     
     "filter": [
       "blur(20)"
     ],
-
     "transform": [
       "translate(10px,10%)",
       "rotate(40deg,15rad)"
     ]
-  }"#;
+  }
+  "#;
 
-  let result = Style::parse_element(style, ParseOptions::default())?;
-  println!("{:#?}", result);
-  Ok(())
+    let style = StyleBuilder::default().source(source).parse()?;
+    println!("{:#?}", style);
+
+    Ok(())
 }
 ```
 
 Or if you need YAML...
 
 ``` rust
-// Simple JSON element parsing example
 extern crate failure;
 extern crate jss;
 
-use failure::Error;
-use jss::*;
+use jss::traits::*;
+use jss::types::*;
 
-fn main() -> Result<(), Error> {
-  let style = r#"---
+fn main() -> Result<(), failure::Error> {
+    let source = r#"
+---
 borderTopRightRadius: 10
 borderTopStyle: solid
 alignContent: center
-borderTop: 10
+borderTopWidth: 10
 filter:
 - blur(20)
 transform:
 - translate(10px,10%)
 - rotate(40deg,15rad)
-"#;
+  "#;
 
-  let mut options = ParseOptions::default();
-  options.from = SourceFormat::Yaml;
+    let style = StyleBuilder::default().source(source).source_type(SourceFormat::Yaml).parse()?;
+    println!("{:#?}", style);
 
-  let result = Style::parse_element(style, options)?;
-  println!("{:#?}", result);
-  Ok(())
+    Ok(())
 }
 ```
 
@@ -87,6 +87,9 @@ transform:
 - [x] Stylesheet with selectors by status aka "name:hover", "name:active" etc.
 - [x] Get formatted props for `yoga-rs` and collect `appearance` styles
 - [x] Convert to `webrender` types & layers as optional target (partially implemented)
+- [x] Middlewares
+  - [x] Parsing Middleware
+  - [ ] Runtime Middleware (WIP)
+- [ ] Runtime calculator like as `calc()` function in css3
 - [x] Parsing `transform` property
-- [ ] Parsing `media-query` property
-- [ ] Support `runtime checkers` & `middlewares` in runtime 
+- [ ] Parsing `media-query` property 

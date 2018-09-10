@@ -21,62 +21,62 @@
 //! ``` rust
 //! extern crate failure;
 //! extern crate jss;
-//!
-//! use failure::Error;
-//! use jss::*;
-//!
-//! fn main() -> Result<(), Error> {
-//!   let style = r#"{
+//! 
+//! use jss::traits::*;
+//! use jss::types::*;
+//! 
+//! fn main() -> Result<(), failure::Error> {
+//!     let source = r#"
+//!   {
 //!     "borderTopRightRadius": 10,
 //!     "borderTopStyle": "solid",
 //!     "alignContent": "center",
-//!     "borderTop": 10,
+//!     "borderTopWidth": 10,
 //!     
 //!     "filter": [
 //!       "blur(20)"
 //!     ],
-//!
 //!     "transform": [
 //!       "translate(10px,10%)",
 //!       "rotate(40deg,15rad)"
 //!     ]
-//!   }"#;
-//!
-//!   let result = Style::parse_element(style, ParseOptions::default())?;
-//!   println!("{:#?}", result);
-//!   Ok(())
+//!   }
+//!   "#;
+//! 
+//!     let style = StyleBuilder::default().source(source).parse()?;
+//!     println!("{:#?}", style);
+//! 
+//!     Ok(())
 //! }
 //! ```
 //!
 //! Or if you need YAML...
 //!
 //! ``` rust
-//! // Simple JSON element parsing example
 //! extern crate failure;
 //! extern crate jss;
-//!
-//! use failure::Error;
-//! use jss::*;
-//!
-//! fn main() -> Result<(), Error> {
-//!   let style = r#"---
+//! 
+//! use jss::traits::*;
+//! use jss::types::*;
+//! 
+//! fn main() -> Result<(), failure::Error> {
+//!     let source = r#"
+//! ---
 //! borderTopRightRadius: 10
 //! borderTopStyle: solid
 //! alignContent: center
-//! borderTop: 10
+//! borderTopWidth: 10
 //! filter:
 //! - blur(20)
 //! transform:
 //! - translate(10px,10%)
 //! - rotate(40deg,15rad)
-//! "#;
-//!
-//!   let mut options = ParseOptions::default();
-//!   options.from = SourceFormat::Yaml;
-//!
-//!   let result = Style::parse_element(style, options)?;
-//!   println!("{:#?}", result);
-//!   Ok(())
+//!   "#;
+//! 
+//!     let style = StyleBuilder::default().source(source).source_type(SourceFormat::Yaml).parse()?;
+//!     println!("{:#?}", style);
+//! 
+//!     Ok(())
 //! }
 //! ```
 
