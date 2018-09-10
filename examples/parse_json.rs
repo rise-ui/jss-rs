@@ -23,7 +23,7 @@ fn main() -> Result<(), failure::Error> {
   }
   "#;
 
-    let style = Style::parse_json_element(source, parser::RecursiveType::Basic, parser::PropertyCase::Camel)?;
+    let style = Style::parse_json_element(source, parser::RecursiveType::Basic, parser::Case::Camel)?;
     println!("{:#?}", style);
 
     Ok(())

@@ -15,6 +15,7 @@ pub enum Filter {
     Invert(f32),
     Sepia(f32),
     Blur(f32),
+    None,
 }
 
 impl Serialize for Filter {
@@ -31,12 +32,7 @@ impl<'de> Deserialize<'de> for Filter {
     where
         D: Deserializer<'de>,
     {
-        let filter = String::deserialize(deserializer)
-            .and_then(|filter| Some(Filter::from(filter)))
-        de::Error::custom
-            .unwrap_or(Filter::None);
-
-        Ok(filter)
+        String::deserialize(deserializer).map_err(de::Error::custom).and_then(|filter| Ok(Filter::from(filter)))
     }
 }
 

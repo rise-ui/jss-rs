@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use types::property_types::*;
-use types::CalcExpr;
-use properties;
+use eval::Expr;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -32,9 +31,10 @@ pub enum Layout {
     Display(Display),
     Justify(Justify),
     Align(Align),
+    Wrap(Wrap),
 
     // Calculator expression (for runtime value)
-    CalcExpr(CalcExpr),
+    CalcExpr(Expr),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

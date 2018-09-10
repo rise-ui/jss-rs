@@ -6,7 +6,8 @@ use properties::unit;
 /// All elements wrap over Option<T> for support optional field.
 /// Also implements derive macro for Add<T> operator for merge properties,
 /// and custom macros for relative parse & prepares for styles
-#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq, ImplPropertySetters, ImplStyleParser)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
+// #[derive(ImplStyleParser, ImplPropertySetters)]
 #[serde(rename_all = "kebab-case")]
 pub struct StyleProperties {
     // Layout Styles

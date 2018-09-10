@@ -1,61 +1,39 @@
 use types::{Style, ParseError};
 
-/// Result with styles and parse warnings
-#[derive(Debug)]
-pub struct ParseResult {
-    pub warnings: Vec<ParseError>,
-    pub style: Style,
-}
-
 /// What format of properties keys to use and check when parsing
 /// Current allowed: snake_case, camelCase, kebab-case or ignore case
 /// Default: camelCase
 #[derive(Debug, Clone, Copy)]
-pub enum PropertyCase {
+pub enum Case {
     Ignore,
     Snake,
     Kebab,
     Camel,
 }
 
-impl Default for PropertyCase {
+impl Default for Case {
     fn default() -> Self {
-        PropertyCase::Camel
+        Case::Camel
     }
 }
 
 /// From what data format to parse, currently available: JSON, YAML
 /// Default: JSON
 #[derive(Debug, Clone, Copy)]
-pub enum ParseTarget {
+pub enum SourceFormat {
     Json,
     Yaml,
 }
 
-impl Default for ParseTarget {
+impl Default for SourceFormat {
     fn default() -> Self {
-        ParseTarget::Json
-    }
-}
-
-/// One level recursion inside with: @media queries, status presudo classes: :hover, :active.
-/// Default: Basic
-#[derive(Debug, Clone, Copy)]
-pub enum RecursiveType {
-    Basic,
-    Never,
-}
-
-impl Default for RecursiveType {
-    fn default() -> Self {
-        RecursiveType::Basic
+        SourceFormat::Json
     }
 }
 
 /// Options for parse style from uniform functions
 #[derive(Default, Debug, Clone, Copy)]
 pub struct ParseOptions {
-    pub recursive: RecursiveType,
-    pub style: PropertyCase,
-    pub from: ParseTarget,
+    pub from: SourceFormat,
+    pub style: Case,
 }

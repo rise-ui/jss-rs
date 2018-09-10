@@ -1,5 +1,5 @@
-use types::parser::PropertyCase;
 use inflector::Inflector;
+use types::Case;
 
 lazy_static! {
     static ref APPERANCE_KEYS: Vec<&'static str> = vec![
@@ -79,11 +79,11 @@ pub fn layout_keys_contains(name: &str) -> bool {
     LAYOUT_KEYS.contains(&name)
 }
 
-pub fn is_valid_case(key: &String, case: PropertyCase) -> bool {
+pub fn is_valid_case(key: &String, case: Case) -> bool {
     match case {
-        PropertyCase::Snake => key.is_snake_case(),
-        PropertyCase::Kebab => key.is_kebab_case(),
-        PropertyCase::Camel => key.is_camel_case(),
-        PropertyCase::Ignore => true,
+        Case::Snake => key.is_snake_case(),
+        Case::Kebab => key.is_kebab_case(),
+        Case::Camel => key.is_camel_case(),
+        Case::Ignore => true,
     }
 }

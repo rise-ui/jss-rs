@@ -72,7 +72,7 @@
 //! "#;
 //!
 //!   let mut options = ParseOptions::default();
-//!   options.from = ParseTarget::Yaml;
+//!   options.from = SourceFormat::Yaml;
 //!
 //!   let result = Style::parse_element(style, options)?;
 //!   println!("{:#?}", result);
@@ -105,6 +105,7 @@ mod macros;
 extern crate erased_serde;
 extern crate serde_json;
 extern crate serde_yaml;
+extern crate yaml_rust;
 extern crate serde;
 
 extern crate ordered_float;

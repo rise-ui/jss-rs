@@ -1,4 +1,6 @@
-use types::parser::PropertyCase;
+use types::parser::{Case, SourceFormat};
+
+use failure::Error;
 use serde_json;
 use serde_yaml;
 
@@ -19,35 +21,31 @@ pub enum PropertyError {
 pub enum ParseError {
     #[fail(display = "invalid property '{}' case, need: {:?}", key, case)]
     InvalidKeyCase {
-        case: PropertyCase,
+        case: Case,
         key: String,
     },
 
-    #[fail(display = "invalid JSON: {:?}", error)]
-    InvalidJSON {
-        error: serde_json::Error,
+    #[fail(display = "invalid {:?}: {:?}", source_type, error)]
+    InvalidSource {
+        source_type: SourceFormat,
+        error: Error,
     },
 
-    #[fail(display = "invalid JSON value for property '{}': {:?}", property, error)]
-    InvalidJSONValue {
-        error: serde_json::Error,
+    #[fail(display = "invalid {:?} value for property '{}': {:?}", source_type, property, error)]
+    InvalidValue {
+        source_type: SourceFormat,
         property: String,
-    },
-
-    #[fail(display = "invalid YAML: {:?}", error)]
-    InvalidYAML {
-        error: serde_yaml::Error,
-    },
-
-    #[fail(display = "invalid YAML value for property '{}': {:?}", property, error)]
-    InvalidYAMLValue {
-        error: serde_yaml::Error,
-        property: String,
+        error: Error,
     },
 
     #[fail(display = "error with set property '{}': {:?}", property, error)]
     ErrorPasteProperty {
         error: PropertyError,
         property: String,
+    },
+
+    #[fail(display = "error: '{}'", error)]
+    CustomError {
+        error: String,
     },
 }

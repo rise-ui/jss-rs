@@ -1,8 +1,5 @@
-use types::parser::{ParseOptions, PropertyCase, RecursiveType};
-use types::{Properties, ParseError, PropertyValue};
-use traits::{TParseStyle, TStyle};
 use std::collections::HashMap;
-use inflector::Inflector;
+use types::Properties;
 use yoga::Layout;
 
 /// Context with other needed info - for parse and prepares,

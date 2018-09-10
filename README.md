@@ -74,7 +74,7 @@ transform:
 "#;
 
   let mut options = ParseOptions::default();
-  options.from = ParseTarget::Yaml;
+  options.from = SourceFormat::Yaml;
 
   let result = Style::parse_element(style, options)?;
   println!("{:#?}", result);
