@@ -1,8 +1,6 @@
 use types::parser::{Case, SourceFormat};
-
 use failure::Error;
-use serde_json;
-use serde_yaml;
+use eval;
 
 #[derive(Debug, Fail, PartialEq)]
 pub enum PropertyError {
@@ -22,6 +20,17 @@ pub enum PropertyError {
         case: Case,
         key: String,
     },
+
+    #[fail(display = "invalid expression '{}': {:?}", key, error)]
+    InvalidExpression {
+        error: eval::Error,
+        key: String, 
+    },
+
+    #[fail(display = "unknown '{}' key (or not associated with `FlexStyle` properties)", key)]
+    SharedUnitConvert {
+        key: String,
+    }
 }
 
 #[derive(Debug, Fail)]

@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use types::property_types::*;
+use types::SharedUnit;
 use eval::Expr;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -25,7 +26,6 @@ pub enum Layout {
     BorderWidth(BorderWidth),
     FlexShrink(FlexShrink),
     FlexFactor(FlexFactor),
-    StyleUnit(StyleUnit),
     Overflow(Overflow),
     FlexGrow(FlexGrow),
     Display(Display),
@@ -33,8 +33,8 @@ pub enum Layout {
     Align(Align),
     Wrap(Wrap),
 
-    // Calculator expression (for runtime value)
-    CalcExpr(Expr),
+    // Shared Unit
+    SharedUnit(SharedUnit),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -44,15 +44,24 @@ pub enum PropertyValue {
     Layout(Layout),
 }
 
+/// Link type for appearance `PropertiesStore`
 pub type PropertiesApperance = PropertiesStore<Appearance>;
+/// Link type for layout `PropertiesStore`
 pub type PropertiesLayout = PropertiesStore<FlexStyle>;
+/// Link type for calc expressions `PropertiesStore`
+pub type PropertiesExpressions = PropertiesStore<Expr>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PropertiesStore<T>(pub HashMap<String, T>);
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Properties {
+    /// Runtime Layout Calc Expressions (returned value for StyleUnit)
+    pub expressions: PropertiesExpressions,
+
+    /// Appearance properties store
     pub appearance: PropertiesApperance,
+    /// Layout properties store with yoga `FlexStyle`
     pub layout: PropertiesLayout,
 }
 

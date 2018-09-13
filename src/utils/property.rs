@@ -1,6 +1,3 @@
-use inflector::Inflector;
-use types::Case;
-
 lazy_static! {
     static ref APPERANCE_KEYS: Vec<&'static str> = vec![
         "background",

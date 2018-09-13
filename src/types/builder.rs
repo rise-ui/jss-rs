@@ -7,7 +7,6 @@ use std::boxed::Box;
 use types::{
     DefaultParseMiddleware,
     PropertyParseType,
-    PropertyKeyInfo,
     SourceFormat,
     ParseError,
     Style,

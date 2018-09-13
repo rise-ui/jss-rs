@@ -1,6 +1,6 @@
-use types::property_types::*;
-use properties::unit;
 use erased_serde::{Deserializer, deserialize};
+use types::property_types::*;
+use types::SharedUnit;
 
 /// Style properties struct with all css properties,
 /// by default allow to raw serialize/deserialize with serde.
@@ -26,99 +26,37 @@ pub struct StyleProperties {
     pub flex_grow: Option<FlexGrow>,
     pub flex: Option<FlexFactor>,
 
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub bottom: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub end: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub flex_basis: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub height: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub left: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_bottom: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_end: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_horizontal: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_left: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_right: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_start: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_top: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub margin_vertical: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub max_height: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub max_width: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub min_height: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub min_width: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_bottom: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_end: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_horizontal: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_left: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_right: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_start: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_top: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub padding_vertical: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub right: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub start: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub top: Option<StyleUnit>,
-    #[serde(default)]
-    #[serde(with = "unit")]
-    pub width: Option<StyleUnit>,
+    pub bottom: Option<SharedUnit>,
+    pub end: Option<SharedUnit>,
+    pub flex_basis: Option<SharedUnit>,
+    pub height: Option<SharedUnit>,
+    pub left: Option<SharedUnit>,
+    pub margin: Option<SharedUnit>,
+    pub margin_bottom: Option<SharedUnit>,
+    pub margin_end: Option<SharedUnit>,
+    pub margin_horizontal: Option<SharedUnit>,
+    pub margin_left: Option<SharedUnit>,
+    pub margin_right: Option<SharedUnit>,
+    pub margin_start: Option<SharedUnit>,
+    pub margin_top: Option<SharedUnit>,
+    pub margin_vertical: Option<SharedUnit>,
+    pub max_height: Option<SharedUnit>,
+    pub max_width: Option<SharedUnit>,
+    pub min_height: Option<SharedUnit>,
+    pub min_width: Option<SharedUnit>,
+    pub padding: Option<SharedUnit>,
+    pub padding_bottom: Option<SharedUnit>,
+    pub padding_end: Option<SharedUnit>,
+    pub padding_horizontal: Option<SharedUnit>,
+    pub padding_left: Option<SharedUnit>,
+    pub padding_right: Option<SharedUnit>,
+    pub padding_start: Option<SharedUnit>,
+    pub padding_top: Option<SharedUnit>,
+    pub padding_vertical: Option<SharedUnit>,
+    pub right: Option<SharedUnit>,
+    pub start: Option<SharedUnit>,
+    pub top: Option<SharedUnit>,
+    pub width: Option<SharedUnit>,
 
     pub border_bottom_width: Option<BorderWidth>,
     pub border_right_width: Option<BorderWidth>,

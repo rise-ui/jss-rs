@@ -1,7 +1,6 @@
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use properties::parse::filter_parse;
-use serde_json::Value;
 
 pub type Filters = Vec<Filter>;
 

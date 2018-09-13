@@ -1,7 +1,6 @@
 extern crate failure;
 extern crate jss;
 
-use jss::traits::*;
 use jss::types::*;
 
 fn main() -> Result<(), failure::Error> {
