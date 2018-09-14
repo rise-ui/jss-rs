@@ -3,6 +3,7 @@ use types::property_types::*;
 use types::SharedUnit;
 use eval::Expr;
 
+/// Values for appearance styles properties
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Appearance {
@@ -17,6 +18,7 @@ pub enum Appearance {
     Auto,
 }
 
+/// Values for layout styles properties
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Layout {
@@ -37,6 +39,7 @@ pub enum Layout {
     SharedUnit(SharedUnit),
 }
 
+/// Values for union of appearance and layout
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PropertyValue {
