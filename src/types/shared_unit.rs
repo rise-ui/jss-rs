@@ -1,4 +1,5 @@
 use yoga::{FlexStyle, StyleUnit};
+use std::convert::TryInto;
 use types::PropertyError;
 use eval::Expr;
 
@@ -10,7 +11,8 @@ pub enum SharedUnit {
     CalcExpr(Expr),
 }
 
-pub fn shared_unit_to_flexstyle(key: String, value: StyleUnit) -> Result<FlexStyle, PropertyError> {
+/// Convertor: create FlexStyle by property key and unit value
+pub fn pair_to_flex(key: String, value: StyleUnit) -> Result<FlexStyle, PropertyError> {
     match key.as_str() {
         "bottom" => Ok(FlexStyle::Bottom(value)),
         "end" => Ok(FlexStyle::End(value)),
@@ -43,6 +45,8 @@ pub fn shared_unit_to_flexstyle(key: String, value: StyleUnit) -> Result<FlexSty
         "start" => Ok(FlexStyle::Start(value)),
         "top" => Ok(FlexStyle::Top(value)),
         "width" => Ok(FlexStyle::Width(value)),
-        _ => Err(PropertyError::SharedUnitConvert { key })
+        _ => Err(PropertyError::SharedUnitConvert {
+            key,
+        }),
     }
 }

@@ -24,13 +24,13 @@ pub enum PropertyError {
     #[fail(display = "invalid expression '{}': {:?}", key, error)]
     InvalidExpression {
         error: eval::Error,
-        key: String, 
+        key: String,
     },
 
     #[fail(display = "unknown '{}' key (or not associated with `FlexStyle` properties)", key)]
     SharedUnitConvert {
         key: String,
-    }
+    },
 }
 
 #[derive(Debug, Fail)]
@@ -73,5 +73,20 @@ pub enum ParseError {
     #[fail(display = "missing state key `{}` in style", name)]
     StateMissing {
         name: String,
+    },
+}
+
+#[derive(Debug, Fail)]
+pub enum ProcessingError {
+    #[fail(display = "failed run expression for `{}` in style: {:#?}", property, error)]
+    ExecFailed {
+        error: eval::Error,
+        property: String,
+    },
+
+    #[fail(display = "invalid type `{}` - expected {}", property, expected)]
+    InvalidType {
+        property: String,
+        expected: String,
     },
 }

@@ -29,7 +29,7 @@ impl PropertyKeyInfo {
             "~" => Ok(PropertyParseType::Expression),
             "@" => Ok(PropertyParseType::Custom),
             _ => {
-                let snake_key = key.to_snake_case(); 
+                let snake_key = key.to_snake_case();
 
                 if apperance_keys_contains(snake_key.as_str()) || layout_keys_contains(snake_key.as_str()) {
                     Ok(PropertyParseType::Default)

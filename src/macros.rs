@@ -14,6 +14,16 @@ macro_rules! impl_union_property_conversion {
     };
 }
 
+macro_rules! impl_into_for_yoga_property {
+    ($src:ident, $target:ident) => {
+        impl From<$src> for $target {
+            fn from(source: $src) -> $target {
+                $target::$src(source)
+            }
+        }
+    };
+}
+
 macro_rules! make_initial_style_states {
     ($style:ident, [$($state:ident),*]) => {
         use types::Properties;
