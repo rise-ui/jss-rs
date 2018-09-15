@@ -9,22 +9,22 @@ pub type BorderColor = Color;
 pub type BorderRadius = i32;
 
 pub use yoga::{
-  PositionType,
-  FlexDirection,
-  StyleUnit,
-  FlexStyle,
-  Overflow,
-  Display,
-  Justify,
-  Align,
-  Wrap
+    PositionType,
+    FlexDirection,
+    StyleUnit,
+    FlexStyle,
+    Overflow,
+    Display,
+    Justify,
+    Align,
+    Wrap
 };
 
 pub use properties::{
-  BorderStyles,
-  BorderStyle,
-  Background,
-  Transforms,
-  Filters,
-  Color,
+    BorderStyles,
+    BorderStyle,
+    Background,
+    Transforms,
+    Filters,
+    Color,
 };

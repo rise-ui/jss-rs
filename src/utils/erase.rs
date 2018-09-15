@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use serde_json;
 use serde_yaml;
 
+/// Parser that return erased deserialize object, by different source type
 pub fn generic_erase(
     source: &str,
     source_type: SourceFormat,

@@ -1,6 +1,26 @@
 use erased_serde::{Deserializer, deserialize};
-use types::property_types::*;
 use types::SharedUnit;
+
+use super::common::{
+    FlexDirection,
+    BorderRadius,
+    PositionType,
+    BorderStyle,
+    BorderWidth,
+    AspectRatio,
+    BorderColor,
+    FlexFactor,
+    FlexShrink,
+    Background,
+    Transforms,
+    Overflow,
+    FlexGrow,
+    Display,
+    Justify,
+    Filters,
+    Align,
+    Wrap,
+};
 
 /// Style properties struct with all css properties,
 /// by default allow to raw serialize/deserialize with serde.

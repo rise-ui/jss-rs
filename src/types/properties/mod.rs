@@ -1,5 +1,10 @@
+mod common;
+mod repr;
+
+pub use self::repr::get_reflect_property_type;
+use self::common::*;
+
 use std::collections::HashMap;
-use types::property_types::*;
 use types::SharedUnit;
 use eval::Expr;
 
@@ -54,9 +59,11 @@ pub type PropertiesLayout = PropertiesStore<FlexStyle>;
 /// Link type for calc expressions `PropertiesStore`
 pub type PropertiesExpressions = PropertiesStore<Expr>;
 
+/// Properties storage generic type
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PropertiesStore<T>(pub HashMap<String, T>);
 
+/// All properties of styles of different types.
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Properties {
     /// Runtime Layout Calc Expressions (returned value for StyleUnit)

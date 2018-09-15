@@ -1,8 +1,9 @@
 use yoga::{FlexStyle, StyleUnit};
-use std::convert::TryInto;
 use types::PropertyError;
 use eval::Expr;
 
+/// Basic SharedUnit for unit based fields
+/// contains variant for exact value or runtime expression
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SharedUnit {
     /// Default Yoga Unit

@@ -2,6 +2,7 @@ use types::parser::{Case, SourceFormat};
 use failure::Error;
 use eval;
 
+/// Errors associated with the properties of style
 #[derive(Debug, Fail, PartialEq)]
 pub enum PropertyError {
     #[fail(display = "invalid property type for {} - expected {}", property, expected)]
@@ -33,6 +34,7 @@ pub enum PropertyError {
     },
 }
 
+/// Errors associated with style parsing
 #[derive(Debug, Fail)]
 pub enum ParseError {
     #[fail(display = "invalid {:?}: {:?}", source_type, error)]
@@ -76,6 +78,7 @@ pub enum ParseError {
     },
 }
 
+/// Errors associated with the finalized calculation of properties
 #[derive(Debug, Fail)]
 pub enum ProcessingError {
     #[fail(display = "failed run expression for `{}` in style: {:#?}", property, error)]

@@ -68,10 +68,12 @@ lazy_static! {
     ];
 }
 
+/// checking for a property in a group "appearance"
 pub fn apperance_keys_contains(name: &str) -> bool {
     APPERANCE_KEYS.contains(&name)
 }
 
+/// checking for a property in a group "layout"
 pub fn layout_keys_contains(name: &str) -> bool {
     LAYOUT_KEYS.contains(&name)
 }

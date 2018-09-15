@@ -2,6 +2,7 @@ use utils::{apperance_keys_contains, layout_keys_contains};
 use types::{Case, PropertyError};
 use inflector::Inflector;
 
+/// Middleware enum with property type of current style field
 #[derive(Clone, Debug, PartialEq)]
 pub enum PropertyParseType {
     /// Calculator expression parser. For properties that use calc in runtime. Key started from "~"

@@ -1,3 +1,6 @@
+//! Property setters without runtime type-checking
+//! *Warning*: Be careful when using: functions allow you to change properties
+//! without checking - which can lead to untracked errors during execution.
 use yoga::FlexStyle;
 
 use types::{
@@ -20,14 +23,17 @@ macro_rules! default_setter {
     };
 }
 
+/// Set basic appearance property without check
 pub fn set_appearance_without_check(properties: &mut Properties, key: String, value: Appearance) {
     default_setter!(properties, appearance, key, value);
 }
 
+/// Set basic layout property without check
 pub fn set_layout_without_check(properties: &mut Properties, key: String, value: FlexStyle) {
     default_setter!(properties, layout, key, value);
 }
 
+/// Set shared layout property without check (expression or exact unit)
 pub fn set_layout_unit_without_check(
     properties: &mut Properties,
     key: String,
@@ -68,7 +74,7 @@ pub fn set_layout_unit_without_check(
     }
 }
 
-// Create expected type error by property key
+/// Create expected type error by property key
 pub fn expected_type_error(property: String) -> PropertyError {
     PropertyError::InvalidType {
         expected: get_reflect_property_type(property.as_str()).to_string(),
