@@ -115,12 +115,13 @@ extern crate ordered_float;
 extern crate euclid;
 
 extern crate css_color_parser;
+extern crate webrender;
 extern crate inflector;
 extern crate regex;
 extern crate yoga;
 extern crate eval;
 
-pub mod convert;
+mod convert;
 pub mod parser;
 pub mod properties;
 pub mod traits;

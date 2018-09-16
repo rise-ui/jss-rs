@@ -90,12 +90,12 @@ impl TStyleContext for Context {
     fn set_dimension(&mut self, entry_type: DimensionType, dimension: Option<Dimension>) {
         match entry_type {
             DimensionType::Current => {
-                set_dimension_variable(self, "self".to_string(), &dimension);
+                set_dimension_variable(self, "$self".to_string(), &dimension);
                 self.dimensions.current = dimension;
             },
 
             DimensionType::Parent => {
-                set_dimension_variable(self, "parent".to_string(), &dimension);
+                set_dimension_variable(self, "$parent".to_string(), &dimension);
                 self.dimensions.parent = dimension;
             }
         }

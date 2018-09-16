@@ -10,13 +10,17 @@ version = "0.1.0"
 license = "MIT"
 name = "jss"
 
+[features]
+default = []
+
 [dependencies]
+webrender = { git = "https://github.com/servo/webrender", ref = "9156a4465f6ad715a0206cdd9a7e9a6f0385fbd6" }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", branch = "enum-case", features = ["serde_support"] }
 jss_derive = { git = "https://github.com/rise-ui/jss_derive", version = "0.1.0" }
 eval = { git = "https://github.com/friktor/eval", branch = "ordering-n-serde" }
-serde_derive = { version = "1.0.73", features = ["deserialize_in_place"] }
+serde_derive = { version = "=1.0.66", features = ["deserialize_in_place"] }
 euclid = { version = "0.19.0", features = ["serde"] }
-serde = { version = "1.0.73", features = ["rc"] }
+serde = { version = "=1.0.66", features = ["rc"] }
 css-color-parser = "0.1.2"
 failure_derive = "0.1.2"
 ordered-float = "0.5.0"
