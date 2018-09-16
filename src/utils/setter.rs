@@ -54,22 +54,21 @@ pub fn set_layout_unit_without_check(
             })
         }
 
-        SharedUnit::CalcExpr(expr) => {
+        SharedUnit::CalcExpr(expression) => {
             properties.layout.0.remove(&key).is_some();
 
-            expr.compile()
+            let expression = if !expression.get_compiled().is_some() {
+              expression.compile()
                 .map_err(|error| PropertyError::InvalidExpression {
                     key: key.clone(),
                     error,
-                }).and_then(|expr| {
-                    if let Some(item) = properties.expressions.0.get_mut(&key) {
-                        *item = expr;
-                        return Ok(());
-                    }
+                })?  
+            } else {
+                expression
+            };
 
-                    properties.expressions.0.insert(key, expr).is_some();
-                    Ok(())
-                })
+            properties.expressions.0.insert(key, expression).is_some();
+            Ok(())
         }
     }
 }
