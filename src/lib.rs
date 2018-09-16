@@ -101,6 +101,8 @@ extern crate failure;
 #[macro_use]
 extern crate nom;
 #[macro_use]
+extern crate maplit;
+#[macro_use]
 mod macros;
 
 extern crate erased_serde;
@@ -114,7 +116,6 @@ extern crate euclid;
 
 extern crate css_color_parser;
 extern crate inflector;
-extern crate maplit;
 extern crate regex;
 extern crate yoga;
 extern crate eval;

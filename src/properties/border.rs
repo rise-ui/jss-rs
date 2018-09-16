@@ -1,4 +1,7 @@
+use types::{Appearance, PropertyValue};
 use properties::Color;
+
+impl_union_into_appearance!(BorderStyle);
 
 #[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
 pub struct BorderRadius {

@@ -1,5 +1,8 @@
+use types::{Appearance, PropertyValue};
 use properties::Color;
 use yoga::StyleUnit;
+
+impl_union_into_appearance!(Background);
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 #[serde(untagged)]

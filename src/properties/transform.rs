@@ -1,9 +1,11 @@
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
+use types::{Appearance, PropertyValue};
 use properties::parse::transform_parse;
 use properties::{Length, Angle};
 use serde_json::Value;
 
+impl_union_into_appearance!(Transforms);
 pub type Transforms = Vec<Transform>;
 
 #[derive(Debug, PartialEq, Copy, Clone)]

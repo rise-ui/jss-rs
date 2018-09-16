@@ -5,6 +5,7 @@ use types::{
     ProcessingError,
     PropertyError,
     PropertyValue,
+    DimensionType,
     Appearance,
     Variable,
     Layout,
@@ -26,7 +27,7 @@ pub trait TStyle: Debug + PartialEq + Clone {
 /// set variables for runtime calculation and other data needed in runtime
 pub trait TStyleContext: Debug + PartialEq + Clone {
     /// Set dimensions with size and position node on layout
-    fn set_dimensions(&mut self, Option<Dimensions>);
+    fn set_dimension(&mut self, DimensionType, Option<Dimensions>);
     /// Set variables for runtime calculator
     /// after apply you can use that var inside calc expression
     fn set_variable(&mut self, String, Variable);
@@ -40,6 +41,7 @@ pub trait TStyleContext: Debug + PartialEq + Clone {
 /// middlewares, expressions, custom functions and other things.
 /// That return processed properties and warning errors
 pub trait TStyleCollect: Debug + PartialEq + Clone {
+    /// Collect finalize layout styles with calculate expressions
     fn collect_layout_style(&self) -> (Vec<FlexStyle>, Vec<ProcessingError>);
 }
 
@@ -48,5 +50,5 @@ pub trait TStyleCollect: Debug + PartialEq + Clone {
 /// states ordering by prority - each subsequent state overlaps the properties
 /// of the previous state by key/value properties
 pub trait TStyleStates: Debug + PartialEq + Clone {
-    fn set_states(&mut self, Vec<String>);
+    fn enable_states(&mut self, Vec<String>);
 }

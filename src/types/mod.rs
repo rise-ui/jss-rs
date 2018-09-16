@@ -8,6 +8,7 @@ mod style;
 mod properties;
 mod stylesheet;
 mod variables;
+pub mod values;
 
 pub use self::middlewares::*;
 pub use self::shared_unit::*;

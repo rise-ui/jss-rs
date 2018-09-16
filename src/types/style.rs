@@ -1,4 +1,4 @@
-use yoga::{FlexStyle, StyleUnit, Layout as Dimensions};
+use yoga::{FlexStyle, StyleUnit, Layout as Dimension};
 use ordered_float::OrderedFloat;
 use std::collections::HashMap;
 use serde_json::Value;
@@ -18,6 +18,19 @@ use traits::{
     TStyleStates,
 };
 
+/// Style dimensions context
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct DimensionsContext {
+    pub current: Option<Dimension>,
+    pub parent: Option<Dimension>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum DimensionType {
+    Current,
+    Parent,
+}
+
 /// Context with other needed info - for parse and prepares,
 /// aka dimensions screen, element measures, variables, and other.
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -25,7 +38,7 @@ pub struct Context {
     // Variables for preset before configurations
     pub variables: HashMap<String, Variable>,
     // Layout props this container
-    pub dimensions: Option<Dimensions>,
+    pub dimensions: DimensionsContext,
 }
 
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -51,9 +64,41 @@ pub struct Style {
 }
 
 /* _______________________________________________________________________ */
+fn set_dimension_variable(context: &mut Context, name: String, dimension: &Option<Dimension>) {
+    extract!(Some(_), dimension)
+        .and_then(|dimension| {
+            let self_variable = hashmap!{
+                "bottom" => dimension.bottom(),
+                "right" => dimension.right(),
+                "left" => dimension.left(),
+                "top" => dimension.top(),
+                "height" => dimension.height(),
+                "width" => dimension.width(),
+            }
+                .into_iter()
+                .map(|(k, v)| (k.to_string(), v))
+                .collect::<HashMap<String, f32>>();
+
+            context.set_variable(name, Variable::Map(self_variable));
+            Some(())
+        })
+        .is_some();
+}
+
+
 impl TStyleContext for Context {
-    fn set_dimensions(&mut self, dimensions: Option<Dimensions>) {
-        self.dimensions = dimensions;
+    fn set_dimension(&mut self, entry_type: DimensionType, dimension: Option<Dimension>) {
+        match entry_type {
+            DimensionType::Current => {
+                set_dimension_variable(self, "self".to_string(), &dimension);
+                self.dimensions.current = dimension;
+            },
+
+            DimensionType::Parent => {
+                set_dimension_variable(self, "parent".to_string(), &dimension);
+                self.dimensions.parent = dimension;
+            }
+        }
     }
 
     fn set_variable(&mut self, name: String, value: Variable) {
@@ -72,7 +117,7 @@ impl TStyleContext for Context {
 
 impl TStyleStates for Style {
     // @todo: adding check for state exists
-    fn set_states(&mut self, states: Vec<String>) {
+    fn enable_states(&mut self, states: Vec<String>) {
         self.enabled_states = states;
     }
 }

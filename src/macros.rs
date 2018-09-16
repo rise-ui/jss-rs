@@ -5,10 +5,38 @@ macro_rules! impl_union_property_conversion {
                 PropertyValue::$src(value)
             }
         }
+    };
+}
 
-        impl From<$src> for Option<PropertyValue> {
-            fn from(value: $src) -> Option<PropertyValue> {
-                Some(PropertyValue::$src(value))
+macro_rules! impl_union_into_appearance {
+    ($src:ident) => {
+        impl From<$src> for Appearance {
+            fn from(value: $src) -> Appearance {
+                Appearance::$src(value)
+            }
+        }
+
+        impl From<$src> for PropertyValue {
+            fn from(value: $src) -> PropertyValue {
+                let appearance: Appearance = value.into();
+                PropertyValue::Appearance(appearance)
+            }
+        }
+    };
+}
+
+macro_rules! impl_union_into_layout {
+    ($src:ident) => {
+        impl From<$src> for Layout {
+            fn from(value: $src) -> Layout {
+                Layout::$src(value)
+            }
+        }
+
+        impl From<$src> for PropertyValue {
+            fn from(value: $src) -> PropertyValue {
+                let layout: Layout = value.into();
+                PropertyValue::Layout(layout)
             }
         }
     };

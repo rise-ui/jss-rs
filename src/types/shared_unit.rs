@@ -1,6 +1,8 @@
+use types::{PropertyError, Layout, PropertyValue};
 use yoga::{FlexStyle, StyleUnit};
-use types::PropertyError;
 use eval::Expr;
+
+impl_union_into_layout!(SharedUnit);
 
 /// Basic SharedUnit for unit based fields
 /// contains variant for exact value or runtime expression

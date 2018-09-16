@@ -1,6 +1,9 @@
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
+use types::{Appearance, PropertyValue};
 use properties::parse::filter_parse;
+
+impl_union_into_appearance!(Filters);
 
 pub type Filters = Vec<Filter>;
 

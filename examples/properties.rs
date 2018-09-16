@@ -1,27 +1,39 @@
 extern crate failure;
+extern crate eval;
 extern crate jss;
 
+use jss::types::{Properties, Style, DimensionType};
+use jss::types::values::{CalcExpr, Dimensions};
 use jss::properties::{Background, Color};
 use jss::traits::*;
-use jss::types::*;
+use eval::Expr;
 
 fn main() -> Result<(), failure::Error> {
     let mut properties = Properties::default();
     let mut style = Style::default();
 
-    // let dimensions = 
-    // style.context.set_variable("layout");
+    let current = Dimensions::new(10.,10.,10.,10., 480., 480.);
+    let parent = Dimensions::new(0.,0.,0.,0., 500., 500.);
 
-    // properties.set_style(
-    //     "background",
-    //     Appearance::Background(Background::Color(Color::transparent())),
-    // )?;
+    // Set dimensions info to style element
+    style.context.set_dimension(DimensionType::Current, Some(current));
+    style.context.set_dimension(DimensionType::Parent, Some(parent));
 
-    // properties.set_style(
-    //     "width",
-    //     SharedUnit::CalcExpr()
-    // )?;
+    // Set properties
+    properties.set_style("background", Background::Color(Color::transparent()))?;
+    // Calculated expression
+    properties.set_style("height", CalcExpr(Expr::new("parent.width + 10")))?;
 
-    println!("{:#?}", properties);
+    // Insert properties as new state of style
+    style.states.insert("default".to_string(), properties);
+    // Set enabled states
+    style.enable_states(vec![ "default".to_string() ]);
+    println!("Source: {:#?}", style);
+
+    // Collect layout properties as FlexStyle with calculate expressions
+    let (layout, collect_errors) = style.collect_layout_style();
+    println!("Layout: {:#?}", layout);
+    println!("Errors: {:#?}", collect_errors);
+
     Ok(())
 }
