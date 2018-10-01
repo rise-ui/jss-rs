@@ -63,6 +63,11 @@ pub struct Style {
     pub enabled_states: Vec<String>,
 }
 
+/// Default context representation for Parsing Trait
+/// Trait `TParseStyleMiddleware` implemented in jss_derive as proc-macro
+#[derive(Debug, Clone)]
+pub struct ParseStyleMiddleware {}
+
 /* _______________________________________________________________________ */
 fn set_dimension_variable(context: &mut Context, name: String, dimension: &Option<Dimension>) {
     extract!(Some(_), dimension)
@@ -75,9 +80,9 @@ fn set_dimension_variable(context: &mut Context, name: String, dimension: &Optio
                 "height" => dimension.height(),
                 "width" => dimension.width(),
             }
-                .into_iter()
-                .map(|(k, v)| (k.to_string(), v))
-                .collect::<HashMap<String, f32>>();
+            .into_iter()
+            .map(|(k, v)| (k.to_string(), v))
+            .collect::<HashMap<String, f32>>();
 
             context.set_variable(name, Variable::Map(self_variable));
             Some(())
@@ -85,14 +90,13 @@ fn set_dimension_variable(context: &mut Context, name: String, dimension: &Optio
         .is_some();
 }
 
-
 impl TStyleContext for Context {
     fn set_dimension(&mut self, entry_type: DimensionType, dimension: Option<Dimension>) {
         match entry_type {
             DimensionType::Current => {
                 set_dimension_variable(self, "$self".to_string(), &dimension);
                 self.dimensions.current = dimension;
-            },
+            }
 
             DimensionType::Parent => {
                 set_dimension_variable(self, "$parent".to_string(), &dimension);
@@ -178,10 +182,12 @@ impl TStyleCollect for Style {
 
                             pair_to_flex(property.clone(), StyleUnit::Point(number))
                                 .map_err(|_| make_type_error("valid unit by key"))
-                        }).and_then(|flex_style| {
+                        })
+                        .and_then(|flex_style| {
                             layout_styles.push(flex_style);
                             Ok(())
-                        }).is_ok();
+                        })
+                        .is_ok();
                 }
             }
         }

@@ -26,31 +26,23 @@ impl Serialize for SharedUnit {
         S: Serializer,
     {
         match self {
-            SharedUnit::StyleUnit(unit) => {
-                match unit {
-                    StyleUnit::Point(number) => {
-                        let result = format!("{}%", number);
-                        serializer.serialize_str(result.as_str())
-                    }
-
-                    StyleUnit::Percent(percent) => {
-                        let result = format!("{}%", percent);
-                        serializer.serialize_str(result.as_str())
-                    }
-                    
-                    StyleUnit::Auto => {
-                        serializer.serialize_str("auto")
-                    }
-
-                    StyleUnit::UndefinedValue => {
-                        serializer.serialize_str("undefined")
-                    }
+            SharedUnit::StyleUnit(unit) => match unit {
+                StyleUnit::Point(number) => {
+                    let result = format!("{}px", number);
+                    serializer.serialize_str(result.as_str())
                 }
-            }
 
-            SharedUnit::CalcExpr(expression) => {
-                expression.serialize(serializer)
-            }
+                StyleUnit::Percent(percent) => {
+                    let result = format!("{}%", percent);
+                    serializer.serialize_str(result.as_str())
+                }
+
+                StyleUnit::Auto => serializer.serialize_str("auto"),
+
+                StyleUnit::UndefinedValue => serializer.serialize_str("undefined"),
+            },
+
+            SharedUnit::CalcExpr(expression) => expression.serialize(serializer),
         }
     }
 }
@@ -67,14 +59,14 @@ impl<'de> Deserialize<'de> for SharedUnit {
                         let shared_unit = SharedUnit::StyleUnit(unit);
                         Ok(shared_unit)
                     } else {
-                        let expression = Expr::new(value).compile()
-                        
-                        .map_err(|error| de::Error::custom(ParseError::PropertyError {
-                            error: PropertyError::InvalidExpression {
-                                key: "SharedUnit".to_string(),
-                                error,
-                            }
-                        }))?;
+                        let expression = Expr::new(value).compile().map_err(|error| {
+                            de::Error::custom(ParseError::PropertyError {
+                                error: PropertyError::InvalidExpression {
+                                    key: "SharedUnit".to_string(),
+                                    error,
+                                },
+                            })
+                        })?;
 
                         Ok(SharedUnit::CalcExpr(expression))
                     }
@@ -82,32 +74,32 @@ impl<'de> Deserialize<'de> for SharedUnit {
                     Err(de::Error::custom(ParseError::PropertyError {
                         error: PropertyError::InvalidType {
                             expected: "non empty value".to_string(),
-                            property: "SharedUnit".to_string()
-                        }
+                            property: "SharedUnit".to_string(),
+                        },
                     }))
                 }
-            },
+            }
 
             Value::Number(value) => {
-                let point = value.as_f64().ok_or_else(|| de::Error::custom(ParseError::PropertyError {
-                    error: PropertyError::InvalidType {
-                        expected: "float or integer".to_string(),
-                        property: "SharedUnit".to_string(),
-                    }
-                }))?;
+                let point = value.as_f64().ok_or_else(|| {
+                    de::Error::custom(ParseError::PropertyError {
+                        error: PropertyError::InvalidType {
+                            expected: "float or integer".to_string(),
+                            property: "SharedUnit".to_string(),
+                        },
+                    })
+                })?;
 
                 let point: OrderedFloat<f32> = (point as f32).into();
                 Ok(SharedUnit::StyleUnit(StyleUnit::Point(point)))
-            },
-
-            _ => {
-                Err(de::Error::custom(ParseError::PropertyError {
-                    error: PropertyError::InvalidType {
-                        expected: "number or expression string".to_string(),
-                        property: "SharedUnit".to_string(),
-                    }
-                }))
             }
+
+            _ => Err(de::Error::custom(ParseError::PropertyError {
+                error: PropertyError::InvalidType {
+                    expected: "number or expression string".to_string(),
+                    property: "SharedUnit".to_string(),
+                },
+            })),
         }
     }
 }
@@ -197,7 +189,7 @@ pub fn parse_length(mut value: &str) -> Option<StyleUnit> {
     value = &value[..end_index];
 
     let result: Result<f32, _> = FromStr::from_str(value);
-    
+
     if found_percent {
         result.ok().and_then(|number| {
             let unit = StyleUnit::Percent((number / 100.0).into());

@@ -23,6 +23,7 @@ euclid = { version = "0.19.0", features = ["serde"] }
 serde = { version = "=1.0.66", features = ["rc"] }
 css-color-parser = "0.1.2"
 failure_derive = "0.1.2"
+interpolation = "0.1.0"
 ordered-float = "0.5.0"
 enum_extract = "0.1.1"
 lazy_static = "1.1.0"
@@ -37,3 +38,6 @@ regex = "1.0.2"
 nom = "4.0.0"
 
 # jss_derive = { path = "../jss_derive", version = "0.1.0" }
+
+[dev-dependencies]
+rand = "0.5.5"

@@ -1,16 +1,16 @@
 //! All common functional types
 mod builder;
 mod errors;
-mod middlewares;
+mod property_key;
 mod parser;
+mod properties;
 mod shared_unit;
 mod style;
-mod properties;
 mod stylesheet;
-mod variables;
 pub mod values;
+mod variables;
 
-pub use self::middlewares::*;
+pub use self::property_key::*;
 pub use self::shared_unit::*;
 pub use self::stylesheet::*;
 pub use self::variables::*;

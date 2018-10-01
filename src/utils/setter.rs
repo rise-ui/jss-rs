@@ -58,11 +58,10 @@ pub fn set_layout_unit_without_check(
             properties.layout.0.remove(&key).is_some();
 
             let expression = if !expression.get_compiled().is_some() {
-              expression.compile()
-                .map_err(|error| PropertyError::InvalidExpression {
+                expression.compile().map_err(|error| PropertyError::InvalidExpression {
                     key: key.clone(),
                     error,
-                })?  
+                })?
             } else {
                 expression
             };

@@ -21,7 +21,7 @@ fn main() -> Result<(), failure::Error> {
   }
   "#;
 
-    let style = StyleBuilder::default().source(source).parse()?;
+    let style = StyleBuilder::default().parse_from_str(source)?;
     println!("{:#?}", style);
 
     Ok(())

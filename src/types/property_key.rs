@@ -13,6 +13,17 @@ pub enum PropertyParseType {
     Custom,
 }
 
+/// Middleware enum with property type of current stylesheet field
+#[derive(Clone, Debug, PartialEq)]
+pub enum FieldParseType {
+    /// Stylesheet global variable started from "$"
+    Variable,
+    /// Default parser middleware. Key without prefix for standart style name
+    Default,
+    /// Custom parser middleware. Key started from "@"
+    Custom,
+}
+
 /// Expanded info about property key - needed middleware, case, etc..
 #[derive(Clone, Debug, PartialEq)]
 pub struct PropertyKeyInfo {
@@ -57,10 +68,35 @@ impl PropertyKeyInfo {
     }
 }
 
-/// Default context representation for Parsing Trait
-/// Trait `TParseMiddleware` implemented in jss_derive as proc-macro
-#[derive(Debug, Clone)]
-pub struct DefaultParseMiddleware {}
+pub struct StylesheetFieldInfo {
+    pub key_type: FieldParseType,
+    pub source: String,
+    pub name: String,
+    pub case: Case,
+}
+
+impl StylesheetFieldInfo {
+    pub fn new(key: &str) -> StylesheetFieldInfo {
+        let prefix = match &key[..1] {
+            "$" => FieldParseType::Variable,
+            "@" => FieldParseType::Custom,
+            _ => FieldParseType::Default,
+        };
+
+        let name = if prefix != FieldParseType::Default {
+            key[1..].to_string()
+        } else {
+            key.to_string()
+        };
+
+        StylesheetFieldInfo {
+            case: Case::new(name.as_str()),
+            source: key.to_string(),
+            key_type: prefix,
+            name,
+        }
+    } 
+}
 
 #[cfg(test)]
 mod tests {
