@@ -22,7 +22,7 @@ pub use self::style::*;
 pub use self::properties::{
     get_reflect_property_type,
     PropertiesExpressions,
-    PropertiesApperance,
+    Propertiesappearance,
     PropertiesLayout,
     PropertiesStore,
     PropertyValue,

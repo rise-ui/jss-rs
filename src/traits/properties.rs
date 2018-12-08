@@ -14,7 +14,7 @@ use types::{
 /// Operation over component - set and remove style properties
 pub trait TStyle: Debug + PartialEq + Clone {
     /// Set appearance styles such like `Background`, `BorderStyle` etc..
-    fn set_apperance_style<T: Into<Appearance>>(&mut self, &str, T) -> Result<(), PropertyError>;
+    fn set_appearance_style<T: Into<Appearance>>(&mut self, &str, T) -> Result<(), PropertyError>;
     /// Set layout styles such like Flex properties, `Margin`, `Padding` etc..
     fn set_layout_style<T: Into<Layout>>(&mut self, &str, T) -> Result<(), PropertyError>;
     /// Unified setter for any property

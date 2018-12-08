@@ -1,4 +1,4 @@
-use utils::{apperance_keys_contains, layout_keys_contains};
+use utils::{appearance_keys_contains, layout_keys_contains};
 use types::{Case, PropertyError};
 use inflector::Inflector;
 
@@ -43,7 +43,7 @@ impl PropertyKeyInfo {
             _ => {
                 let snake_key = key.to_snake_case();
 
-                if apperance_keys_contains(snake_key.as_str()) || layout_keys_contains(snake_key.as_str()) {
+                if appearance_keys_contains(snake_key.as_str()) || layout_keys_contains(snake_key.as_str()) {
                     Ok(PropertyParseType::Default)
                 } else {
                     Err(PropertyError::InvalidKey {

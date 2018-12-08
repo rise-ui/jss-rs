@@ -1,5 +1,5 @@
 lazy_static! {
-    static ref APPERANCE_KEYS: Vec<&'static str> = vec![
+    static ref appearance_KEYS: Vec<&'static str> = vec![
         "background",
         "transform",
         "filter",
@@ -69,8 +69,8 @@ lazy_static! {
 }
 
 /// checking for a property in a group "appearance"
-pub fn apperance_keys_contains(name: &str) -> bool {
-    APPERANCE_KEYS.contains(&name)
+pub fn appearance_keys_contains(name: &str) -> bool {
+    appearance_KEYS.contains(&name)
 }
 
 /// checking for a property in a group "layout"
