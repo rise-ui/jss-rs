@@ -13,6 +13,7 @@ pub enum Background {
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct GradientStop {
+    // Percentage offset
     pub offset: f32,
     pub color: Color,
 }

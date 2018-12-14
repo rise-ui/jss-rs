@@ -1,9 +1,9 @@
 //! All common functional types
 mod builder;
 mod errors;
-mod property_key;
 mod parser;
 mod properties;
+mod property_key;
 mod shared_unit;
 mod style;
 mod stylesheet;
@@ -22,7 +22,7 @@ pub use self::style::*;
 pub use self::properties::{
     get_reflect_property_type,
     PropertiesExpressions,
-    Propertiesappearance,
+    PropertiesAppearance,
     PropertiesLayout,
     PropertiesStore,
     PropertyValue,

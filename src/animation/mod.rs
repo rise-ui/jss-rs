@@ -1,10 +1,10 @@
 //! Animations module for create simple tick based animations for one or more properties
- 
+
 use std::collections::HashMap;
 use std::hash::Hash;
 
-mod easing;
 mod action;
+mod easing;
 mod errors;
 mod task;
 
@@ -16,14 +16,22 @@ pub use self::task::*;
 
 /// Aniumations simple queue with transition state
 #[derive(Clone, Debug, Default)]
-pub struct Animation<T, S> where T: Eq + Clone + Hash, S: Eq + Clone + Hash {
+pub struct Animation<T, S>
+where
+    T: Eq + Clone + Hash,
+    S: Eq + Clone + Hash,
+{
     /// Single transformation tasks
-    singles: HashMap<S, SingleTask>, 
+    singles: HashMap<S, SingleTask>,
     /// Complex tasks for transition properties
     tasks: HashMap<T, Task>,
 }
 
-impl <T, S>Animation<T, S> where T: Eq + Clone + Hash, S: Eq + Clone + Hash {
+impl<T, S> Animation<T, S>
+where
+    T: Eq + Clone + Hash,
+    S: Eq + Clone + Hash,
+{
     pub fn push_task(&mut self, key: T, task: Task) {
         self.tasks.insert(key, task).is_some();
     }

@@ -70,7 +70,7 @@ impl StylesheetBuilder {
     pub fn parse_from_str(&mut self, source: &str) -> Result<Stylesheet, ParseError> {
         let erased = generic_erase(source, self.source_type)?;
         let mut stylesheet = Stylesheet::default();
-        
+
         let options = StylesheetOptions {
             source_type: self.source_type,
             case: self.case,
@@ -78,21 +78,24 @@ impl StylesheetBuilder {
 
         for (key, value) in erased {
             let key = StylesheetFieldInfo::new(key.as_str());
-            
+
             match key.key_type {
                 FieldParseType::Variable => {
                     // @todo: handle this
-                },
+                }
 
                 FieldParseType::Custom => {
-                    self.custom_middlewares.get_mut(&key.name)
-                        .ok_or(ParseError::MissingMiddleware { name: key.name.clone() })
+                    self.custom_middlewares
+                        .get_mut(&key.name)
+                        .ok_or(ParseError::MissingMiddleware {
+                            name: key.name.clone(),
+                        })
                         .and_then(|middleware| middleware.process_value(key, value, &mut stylesheet, options))?;
-                },
+                }
 
                 FieldParseType::Default => {
                     self.default_middleware.process_value(key, value, &mut stylesheet, options)?;
-                },
+                }
             }
         }
 

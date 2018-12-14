@@ -34,6 +34,7 @@ serde_yaml = "0.8"
 yaml-rust = "0.4"
 failure = "0.1.2"
 maplit = "1.0.1"
+palette = "0.4"
 regex = "1.0.2"
 nom = "4.0.0"
 

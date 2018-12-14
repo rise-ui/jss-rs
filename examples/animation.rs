@@ -24,8 +24,8 @@ fn main() -> Result<(), failure::Error> {
     let mut animation: Animation<String, String> = Animation::default();
     let mut rng = thread_rng();
 
-    // Properties for transitions by action(-s) 
-    let properties: HashMap<String, StyleUnit> = hashmap!{
+    // Properties for transitions by action(-s)
+    let properties: HashMap<String, StyleUnit> = hashmap! {
         "border_top".to_string() => Point(50.0.into()),
         "height".to_string() => Point(20.0.into()),
         "width".to_string() => Point(20.0.into()),
@@ -34,7 +34,7 @@ fn main() -> Result<(), failure::Error> {
     // Elapsed by frame (fps)
     let mut frame_elapsed = Instant::now();
     let task_name = "my_task".to_string();
-    
+
     let task_one = Task {
         properties: TaskProperties {
             // initial state of transitions
@@ -46,11 +46,15 @@ fn main() -> Result<(), failure::Error> {
         // Queue of transition actions
         queue: VecDeque::from(vec![
             // Basic linear transition with target properties, with 10sec duration and easing
-            Action::Basic(ActionBasic::new(hashmap!{
-                "border_top".to_string() => Point(150.0.into()),
-                "height".to_string() => Point(100.0.into()),
-                "width".to_string() => Point(100.0.into()),
-            }, 10000, Easing::Basic(EaseFunction::BounceIn)))
+            Action::Basic(ActionBasic::new(
+                hashmap! {
+                    "border_top".to_string() => Point(150.0.into()),
+                    "height".to_string() => Point(100.0.into()),
+                    "width".to_string() => Point(100.0.into()),
+                },
+                10000,
+                Easing::Basic(EaseFunction::BounceIn),
+            )),
         ]),
 
         // Status of task
@@ -59,7 +63,7 @@ fn main() -> Result<(), failure::Error> {
 
     // Push new task with actions to animation eventloop queue
     animation.push_task(task_name.clone(), task_one);
-    
+
     loop {
         // Generate random wait fps rate
         let simulate_frame_rate: u64 = rng.gen_range(14000, 20000);

@@ -95,7 +95,7 @@ impl StylesheetFieldInfo {
             key_type: prefix,
             name,
         }
-    } 
+    }
 }
 
 #[cfg(test)]

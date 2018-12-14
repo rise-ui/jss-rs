@@ -62,7 +62,7 @@ impl fmt::Debug for Easing {
                 };
 
                 format!("EaseFunction({})", func)
-            },
+            }
         };
 
         f.write_str(message.as_str())

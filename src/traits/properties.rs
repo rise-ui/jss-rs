@@ -1,4 +1,5 @@
 use yoga::{FlexStyle, Layout as Dimensions};
+use types::PropertiesAppearance;
 use std::fmt::Debug;
 
 use types::{
@@ -43,6 +44,7 @@ pub trait TStyleContext: Debug + PartialEq + Clone {
 pub trait TStyleCollect: Debug + PartialEq + Clone {
     /// Collect finalize layout styles with calculate expressions
     fn collect_layout_style(&self) -> (Vec<FlexStyle>, Vec<ProcessingError>);
+    fn collect_appearance_style(&self) -> (PropertiesAppearance, Vec<ProcessingError>);
 }
 
 /// Enabled states of current style, for create valid style by enabled states

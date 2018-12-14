@@ -1,12 +1,5 @@
 use ordered_float::OrderedFloat;
-
-pub type BorderWidth = OrderedFloat<f32>;
-pub type AspectRatio = OrderedFloat<f32>;
-pub type FlexShrink = OrderedFloat<f32>;
-pub type FlexFactor = OrderedFloat<f32>;
-pub type FlexGrow = OrderedFloat<f32>;
-pub type BorderColor = Color;
-pub type BorderRadius = i32;
+use types::SharedUnit;
 
 pub use yoga::{
     PositionType,
@@ -28,3 +21,11 @@ pub use properties::{
     Filters,
     Color,
 };
+
+pub type BorderWidth = OrderedFloat<f32>;
+pub type AspectRatio = OrderedFloat<f32>;
+pub type FlexShrink = OrderedFloat<f32>;
+pub type FlexFactor = OrderedFloat<f32>;
+pub type FlexGrow = OrderedFloat<f32>;
+pub type BorderRadius = SharedUnit;
+pub type BorderColor = Color;

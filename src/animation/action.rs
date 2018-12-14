@@ -19,7 +19,7 @@ pub enum Action {
 #[derive(Clone, Debug)]
 pub struct ActionBasic {
     target: HashMap<String, StyleUnit>,
-    easing: Easing, 
+    easing: Easing,
     finished: bool,
     forever: bool,
     duration: u32,
@@ -54,15 +54,15 @@ impl Action {
         match self {
             Basic(action) => {
                 action.next(properties, delta_time);
-            },
+            }
             Delay(delay) => {
                 delay.next(delta_time);
-            },
+            }
             Parallel(actions) => {
                 for action in actions.iter_mut() {
                     action.next(properties, delta_time);
                 }
-            },
+            }
         }
 
         Ok(self.finished())
@@ -95,8 +95,7 @@ impl ActionBasic {
             let progress = self.elapsed / self.duration as f32;
 
             for (key, end_unit) in self.target.iter() {
-                let start_unit = properties.started.get(key)
-                    .ok_or(MissingProperty(key.clone()))?;
+                let start_unit = properties.started.get(key).ok_or(MissingProperty(key.clone()))?;
 
                 let start = extract_unit_value(&start_unit);
                 let end = extract_unit_value(&end_unit);

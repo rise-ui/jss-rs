@@ -40,10 +40,9 @@ impl Default for StyleBuilder {
 }
 
 fn get_property_key(key: String) -> Result<PropertyKeyInfo, ParseError> {
-    PropertyKeyInfo::new(key.as_str())
-        .map_err(|error| ParseError::PropertyError {
-            error,
-        })
+    PropertyKeyInfo::new(key.as_str()).map_err(|error| ParseError::PropertyError {
+        error,
+    })
 }
 
 fn valid_case(info: &PropertyKeyInfo, case: Case) -> Result<(), ParseError> {
@@ -54,7 +53,7 @@ fn valid_case(info: &PropertyKeyInfo, case: Case) -> Result<(), ParseError> {
             error: PropertyError::InvalidKeyCase {
                 key: info.name.clone(),
                 case,
-            }
+            },
         })
     }
 }
@@ -102,7 +101,7 @@ impl StyleBuilder {
         for (key, value) in map {
             let key_info = get_property_key(key)?;
             valid_case(&key_info, self.case)?;
-            
+
             let value = Box::new(Deserializer::erase(value));
             erased.push((key_info, value));
         }

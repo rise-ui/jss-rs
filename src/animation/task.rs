@@ -11,10 +11,10 @@ pub struct TaskProperties {
     pub worked: HashMap<String, StyleUnit>,
 }
 
-/// Task is named queue of linear actions - stored and runned in main `Animation` instance 
+/// Task is named queue of linear actions - stored and runned in main `Animation` instance
 #[derive(Clone, Debug)]
 pub struct Task {
-    pub properties: TaskProperties, 
+    pub properties: TaskProperties,
     pub queue: VecDeque<Action>,
     pub finished: bool,
 }
@@ -26,7 +26,7 @@ pub struct SingleTask {
     pub finished: bool,
     pub duration: u32,
     pub elapsed: u32,
-    pub target: f32, 
+    pub target: f32,
     pub start: f32,
 }
 

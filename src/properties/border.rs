@@ -1,14 +1,26 @@
-use types::{Appearance, PropertyValue};
+use types::{Appearance, PropertyValue, SharedUnit};
 use properties::Color;
+use yoga::StyleUnit;
 
 impl_union_into_appearance!(BorderStyle);
 
-#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct BorderRadius {
-    pub bottom_right: i32,
-    pub bottom_left: i32,
-    pub top_right: i32,
-    pub top_left: i32,
+    pub bottom_right: SharedUnit,
+    pub bottom_left: SharedUnit,
+    pub top_right: SharedUnit,
+    pub top_left: SharedUnit,
+}
+
+impl Default for BorderRadius {
+    fn default() -> BorderRadius {
+        BorderRadius {
+            bottom_right: SharedUnit::StyleUnit(StyleUnit::Point(0.0.into())),
+            bottom_left: SharedUnit::StyleUnit(StyleUnit::Point(0.0.into())),
+            top_right: SharedUnit::StyleUnit(StyleUnit::Point(0.0.into())),
+            top_left: SharedUnit::StyleUnit(StyleUnit::Point(0.0.into())),
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

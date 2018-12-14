@@ -53,7 +53,7 @@ pub enum PropertyValue {
 }
 
 /// Link type for appearance `PropertiesStore`
-pub type Propertiesappearance = PropertiesStore<Appearance>;
+pub type PropertiesAppearance = PropertiesStore<Appearance>;
 /// Link type for layout `PropertiesStore`
 pub type PropertiesLayout = PropertiesStore<FlexStyle>;
 /// Link type for calc expressions `PropertiesStore`
@@ -70,7 +70,7 @@ pub struct Properties {
     pub expressions: PropertiesExpressions,
 
     /// Appearance properties store
-    pub appearance: Propertiesappearance,
+    pub appearance: PropertiesAppearance,
     /// Layout properties store with yoga `FlexStyle`
     pub layout: PropertiesLayout,
 }

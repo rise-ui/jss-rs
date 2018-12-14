@@ -1,4 +1,5 @@
 use yoga::{FlexStyle, StyleUnit, Layout as Dimension};
+use types::PropertiesAppearance;
 use ordered_float::OrderedFloat;
 use std::collections::HashMap;
 use serde_json::Value;
@@ -41,11 +42,6 @@ pub struct Context {
     pub dimensions: DimensionsContext,
 }
 
-#[derive(Debug, Clone, Default, PartialEq)]
-pub struct CollectedStyle {
-    layout: Vec<FlexStyle>,
-}
-
 /// Style element, with all element status, and context`s,
 /// with implementations of traits for parse unions of one element
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -55,9 +51,6 @@ pub struct Style {
 
     // Context
     pub context: Context,
-
-    // Collected styles, after compilation by enables states
-    pub collected: CollectedStyle,
 
     // Enabled states of current style
     pub enabled_states: Vec<String>,
@@ -72,7 +65,7 @@ pub struct ParseStyleMiddleware {}
 fn set_dimension_variable(context: &mut Context, name: String, dimension: &Option<Dimension>) {
     extract!(Some(_), dimension)
         .and_then(|dimension| {
-            let self_variable = hashmap!{
+            let self_variable = hashmap! {
                 "bottom" => dimension.bottom(),
                 "right" => dimension.right(),
                 "left" => dimension.left(),
@@ -198,5 +191,20 @@ impl TStyleCollect for Style {
         }
 
         (layout_styles, eval_errors)
+    }
+
+    fn collect_appearance_style(&self) -> (PropertiesAppearance, Vec<ProcessingError>) {
+        // use self::ProcessingError::*;
+
+        let mut properties = PropertiesAppearance::default();
+        let eval_errors = vec![];
+
+        // @TODO: Adding support variables & expr for appearance styles
+        for state in self.enabled_states.iter() {
+            let appearance = self.states[state].appearance.0.clone();
+            properties.0.extend(appearance);
+        }
+
+        (properties, eval_errors)
     }
 }

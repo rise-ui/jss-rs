@@ -33,6 +33,6 @@ pub trait TParseStylesheetMiddleware {
         key: StylesheetFieldInfo,
         value: Box<Deserializer>,
         stylesheet: &mut Stylesheet,
-        options: StylesheetOptions, 
+        options: StylesheetOptions,
     ) -> Result<(), ParseError>;
 }

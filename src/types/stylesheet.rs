@@ -40,9 +40,7 @@ impl TParseStylesheetMiddleware for ParseStylesheetMiddleware {
         stylesheet: &mut Stylesheet,
         options: StylesheetOptions,
     ) -> Result<(), ParseError> {
-        let mut style = StyleBuilder::default()
-            .source_type(options.source_type)
-            .case(options.case);
+        let mut style = StyleBuilder::default().source_type(options.source_type).case(options.case);
 
         // @todo: need solve problem with usage style parse middlewares from global stylesheet
         let style = style.parse_from_de(value)?;
@@ -54,8 +52,6 @@ impl TParseStylesheetMiddleware for ParseStylesheetMiddleware {
 
 impl Stylesheet {
     pub fn take(&self, name: String) -> Option<Style> {
-        self.styles.get(&name).and_then(|style| {
-            Some(style.clone())
-        })
+        self.styles.get(&name).and_then(|style| Some(style.clone()))
     }
 }

@@ -6,7 +6,7 @@ use jss::types::*;
 fn main() -> Result<(), failure::Error> {
     let source = r#"
   {
-    "borderTopRightRadius": 10,
+    "borderTopRightRadius": "10px",
     "borderTopStyle": "solid",
     "alignContent": "center",
     "borderTopWidth": 10,
