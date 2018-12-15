@@ -8,14 +8,20 @@ pub enum WebrenderBackground {
 }
 
 pub struct GradientStopWrapper {
-    stop: GradientStop,
-    context: Context,
+    pub stop: GradientStop,
+    pub context: Context,
 }
 
 pub struct GradientWrapper<'a> {
-    builder: &'a mut api::DisplayListBuilder,
-    gradient: Gradient,
-    context: Context,
+    pub builder: &'a mut api::DisplayListBuilder,
+    pub gradient: Gradient,
+    pub context: Context,
+}
+
+pub struct BackgroundWrapper<'a> {
+    pub builder: &'a mut api::DisplayListBuilder,
+    pub background: Background,
+    pub context: Context,
 }
 
 impl Into<api::GradientStop> for GradientStopWrapper {
@@ -57,15 +63,15 @@ impl<'a> Into<api::Gradient> for GradientWrapper<'a> {
     }
 }
 
-impl Into<WebrenderBackground> for (&mut api::DisplayListBuilder, Context, Background) {
-    fn into(self) -> WebrenderBackground {
-        match self.2 {
+impl<'a> From<BackgroundWrapper<'a>> for WebrenderBackground {
+    fn from(wrapper: BackgroundWrapper<'a>) -> WebrenderBackground {
+        match wrapper.background {
             Background::Color(color) => WebrenderBackground::Color(color.into()),
 
             Background::Gradient(gradient) => WebrenderBackground::Gradient(
                 GradientWrapper {
-                    context: self.1,
-                    builder: self.0,
+                    context: wrapper.context,
+                    builder: wrapper.builder,
                     gradient,
                 }
                 .into(),

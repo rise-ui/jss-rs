@@ -9,13 +9,13 @@ pub struct WebrenderBorders {
 }
 
 pub struct BorderStylesWrapper {
-    pub radius: BorderRadiusWrapper,
+    pub border_radius: BorderRadiusWrapper,
     pub borders: BorderStyles,
     pub context: Context,
 }
 
 pub struct BorderRadiusWrapper {
-    pub radius: BorderRadius,
+    pub border_radius: BorderRadius,
     pub context: Context,
 }
 
@@ -52,10 +52,10 @@ impl Into<api::BorderRadius> for BorderRadiusWrapper {
         };
 
         api::BorderRadius {
-            bottom_right: get_layout_size_corners(self.radius.bottom_right, dimensions.clone()),
-            bottom_left: get_layout_size_corners(self.radius.bottom_left, dimensions.clone()),
-            top_right: get_layout_size_corners(self.radius.top_right, dimensions.clone()),
-            top_left: get_layout_size_corners(self.radius.top_left, dimensions.clone()),
+            bottom_right: get_layout_size_corners(self.border_radius.bottom_right, dimensions.clone()),
+            bottom_left: get_layout_size_corners(self.border_radius.bottom_left, dimensions.clone()),
+            top_right: get_layout_size_corners(self.border_radius.top_right, dimensions.clone()),
+            top_left: get_layout_size_corners(self.border_radius.top_left, dimensions.clone()),
         }
     }
 }
@@ -94,7 +94,7 @@ impl From<BorderStylesWrapper> for WebrenderBorders {
             left: value.borders.left.into(),
             top: value.borders.top.into(),
 
-            radius: value.radius.into(),
+            radius: value.border_radius.into(),
             do_aa: true,
         });
 

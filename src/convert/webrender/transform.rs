@@ -13,6 +13,13 @@ use webrender::api::{
   LayoutTransform,
 };
 
+pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
+
+pub struct TransformsWrapper {
+    pub transforms: Transforms,
+    pub context: Context,
+}
+
 pub mod transform {
     use properties::{Length, Angle, Transform, Transforms};
     use webrender::api::LayoutTransform;
@@ -61,13 +68,6 @@ pub mod transform {
             None
         }
     }
-}
-
-pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
-
-pub struct TransformsWrapper {
-    transforms: Transforms,
-    context: Context,
 }
 
 impl TransformsWrapper {
