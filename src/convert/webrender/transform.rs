@@ -11,6 +11,7 @@ use webrender::api::{
   PropertyBindingKey,
   PropertyBinding,
   LayoutTransform,
+  TransformStyle,
 };
 
 pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
@@ -94,7 +95,9 @@ impl TransformsWrapper {
 
             // Generate clip for transform area
             let property_transform = Some(PropertyBinding::Binding(binding_key, transform));
-            let transformed_frame = builder.push_reference_frame(&container, property_transform, None);
+            let transformed_frame =
+                builder.push_reference_frame(&container, TransformStyle::Flat, property_transform, None);
+            
             builder.push_clip_id(transformed_frame);
         }
     }

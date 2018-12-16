@@ -14,7 +14,7 @@ name = "jss"
 default = []
 
 [dependencies]
-webrender = { git = "https://github.com/servo/webrender", ref = "34d58890821d2e606285f21cd6f4befd46c83d47" }
+webrender = { git = "https://github.com/servo/webrender", ref = "fab59ceef070c11aba2a86c4ddf6ddc3c4e8f97d" }
 yoga = { git = "https://github.com/rise-ui/yoga-rs", branch = "enum-case", features = ["serde_support"] }
 jss_derive = { git = "https://github.com/rise-ui/jss_derive", version = "0.1.1" }
 eval = { git = "https://github.com/friktor/eval", branch = "ordering-n-serde" }

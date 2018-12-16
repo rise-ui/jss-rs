@@ -116,15 +116,16 @@ extern crate euclid;
 
 extern crate css_color_parser;
 extern crate interpolation;
-extern crate webrender;
 extern crate inflector;
 extern crate palette;
 extern crate regex;
 extern crate yoga;
 extern crate eval;
 
+pub extern crate webrender;
+
 pub mod animation;
-mod convert;
+pub mod convert;
 pub mod parser;
 pub mod properties;
 pub mod traits;
