@@ -84,6 +84,7 @@
 #![feature(concat_idents)]
 #![feature(never_type)]
 #![feature(try_from)]
+#![feature(test)]
 
 #[macro_use]
 extern crate failure_derive;
@@ -121,6 +122,7 @@ extern crate palette;
 extern crate regex;
 extern crate yoga;
 extern crate eval;
+extern crate test;
 
 pub extern crate webrender;
 

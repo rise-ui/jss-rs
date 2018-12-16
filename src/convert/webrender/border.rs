@@ -3,6 +3,7 @@ use types::{Context, SharedUnit};
 use yoga::StyleUnit;
 use webrender::api;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct WebrenderBorders {
     pub widths: api::LayoutSideOffsets,
     pub details: api::BorderDetails,

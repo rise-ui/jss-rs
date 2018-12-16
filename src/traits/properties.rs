@@ -43,8 +43,8 @@ pub trait TStyleContext: Debug + PartialEq + Clone {
 /// That return processed properties and warning errors
 pub trait TStyleCollect: Debug + PartialEq + Clone {
     /// Collect finalize layout styles with calculate expressions
-    fn collect_layout_style(&self) -> (Vec<FlexStyle>, Vec<ProcessingError>);
-    fn collect_appearance_style(&self) -> (PropertiesAppearance, Vec<ProcessingError>);
+    fn calculate_appearance(&mut self) -> Vec<ProcessingError>;
+    fn calculate_layout(&mut self) -> Vec<ProcessingError>;
 }
 
 /// Enabled states of current style, for create valid style by enabled states

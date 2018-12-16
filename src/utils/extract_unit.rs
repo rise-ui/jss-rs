@@ -1,3 +1,4 @@
+use std::mem::discriminant as enum_eq;
 use yoga::{StyleUnit, FlexStyle};
 use std::f32;
 
@@ -51,7 +52,7 @@ pub fn properties_extract_radius(appearance: &PropertiesAppearance) -> BorderRad
     }
 }
 
-pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &PropertiesLayout) -> BorderStyles {
+pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Vec<FlexStyle>) -> BorderStyles {
     let border_styles: Vec<BorderStyle> =
         ["border_top_style", "border_right_style", "border_bottom_style", "border_left_style"]
             .into_iter()
@@ -64,26 +65,20 @@ pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Pr
             })
             .collect();
 
-    let border_widths: Vec<f32> =
-        ["border_top_width", "border_right_width", "border_bottom_width", "border_left_width"]
-            .into_iter()
-            .map(|key: &&str| -> f32 {
-                layout
-                    .0
-                    .get(&key.to_string())
-                    .and_then(|value| {
-                        match key {
-                            &"border_top_width" => extract!(FlexStyle::BorderTop(_), value),
-                            &"border_right_width" => extract!(FlexStyle::BorderRight(_), value),
-                            &"border_bottom_width" => extract!(FlexStyle::BorderBottom(_), value),
-                            &"border_left_width" => extract!(FlexStyle::BorderLeft(_), value),
-                            _ => None,
-                        }
-                        .and_then(|r| Some(r.into_inner()))
-                    })
-                    .unwrap_or_default()
-            })
-            .collect();
+    let mut border_widths: Vec<f32> = vec![0.0, 0.0, 0.0, 0.0];
+    for prop in layout {
+        let disc = enum_eq(prop);
+
+        if disc == enum_eq(&FlexStyle::BorderTop(0.0.into())) {
+            border_widths[0] = extract!(FlexStyle::BorderTop(_), prop).and_then(|f| Some(f.into_inner())).unwrap();
+        } else if disc == enum_eq(&FlexStyle::BorderRight(0.0.into())) {
+            border_widths[1] = extract!(FlexStyle::BorderRight(_), prop).and_then(|f| Some(f.into_inner())).unwrap();
+        } else if disc == enum_eq(&FlexStyle::BorderBottom(0.0.into())) {
+            border_widths[2] = extract!(FlexStyle::BorderBottom(_), prop).and_then(|f| Some(f.into_inner())).unwrap();
+        } else if disc == enum_eq(&FlexStyle::BorderLeft(0.0.into())) {
+            border_widths[3] = extract!(FlexStyle::BorderLeft(_), prop).and_then(|f| Some(f.into_inner())).unwrap();
+        }
+    }
 
     let border_colors: Vec<Color> =
         ["border_top_color", "border_right_color", "border_bottom_color", "border_left_color"]

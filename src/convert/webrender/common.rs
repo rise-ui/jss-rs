@@ -22,25 +22,26 @@ use convert::{
     WebrenderBorders,
 };
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct WebrenderStyles {
     pub background: WebrenderBackground,
     pub transforms: TransformsWrapper,
     pub borders: WebrenderBorders,
 }
 
-pub struct AppearanceWrapper<'a, 'b> {
+pub struct AppearanceWrapper<'a, 'b, 'c> {
     pub builder: &'a mut api::DisplayListBuilder,
-    pub layout: &'b PropertiesLayout,
-
-    pub properties: PropertiesAppearance,
     pub context: Context,
+
+    pub appearance: &'c PropertiesAppearance,
+    pub layout: &'b Vec<FlexStyle>,
 }
 
-impl<'a, 'b> From<AppearanceWrapper<'a, 'b>> for WebrenderStyles {
-    fn from(wrapper: AppearanceWrapper<'a, 'b>) -> WebrenderStyles {
+impl<'a, 'b, 'c> From<AppearanceWrapper<'a, 'b, 'c>> for WebrenderStyles {
+    fn from(wrapper: AppearanceWrapper<'a, 'b, 'c>) -> WebrenderStyles {
         // BACKGROUND STYLE
         let background_raw =
-            wrapper.properties.0.get("background").and_then(|value| extract!(Appearance::Background(_), value.clone()));
+            wrapper.appearance.0.get("background").and_then(|value| extract!(Appearance::Background(_), value.clone()));
 
         let background: WebrenderBackground = if let Some(value) = background_raw {
             BackgroundWrapper {
@@ -54,14 +55,14 @@ impl<'a, 'b> From<AppearanceWrapper<'a, 'b>> for WebrenderStyles {
         };
 
         // BORDER RADIUS
-        let border_radius = properties_extract_radius(&wrapper.properties);
+        let border_radius = properties_extract_radius(&wrapper.appearance);
         let border_radius = BorderRadiusWrapper {
             context: wrapper.context.clone(),
             border_radius,
         };
 
         // BORDERS STYLE
-        let borders = properties_extract_borders(&wrapper.properties, &wrapper.layout);
+        let borders = properties_extract_borders(&wrapper.appearance, &wrapper.layout);
         let borders: WebrenderBorders = BorderStylesWrapper {
             context: wrapper.context.clone(),
             border_radius,
@@ -71,7 +72,7 @@ impl<'a, 'b> From<AppearanceWrapper<'a, 'b>> for WebrenderStyles {
 
         // TRANSFORMS
         let transforms = wrapper
-            .properties
+            .appearance
             .0
             .get("transforms")
             .and_then(|value| extract!(Appearance::Transforms(_), value.clone()))

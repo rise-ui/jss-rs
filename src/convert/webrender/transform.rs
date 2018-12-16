@@ -16,6 +16,7 @@ use webrender::api::{
 
 pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransformsWrapper {
     pub transforms: Transforms,
     pub context: Context,

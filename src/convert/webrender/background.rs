@@ -2,6 +2,7 @@ use properties::{Background, GradientStop, Gradient};
 use types::Context;
 use webrender::api;
 
+#[derive(Debug, Clone, PartialEq)]
 pub enum WebrenderBackground {
     Gradient(api::Gradient),
     Color(api::ColorF),

@@ -31,9 +31,10 @@ fn main() -> Result<(), failure::Error> {
     println!("Source: {:#?}", style);
 
     // Collect layout properties as FlexStyle with calculate expressions
-    let (layout, collect_errors) = style.collect_layout_style();
-    println!("Layout: {:#?}", layout);
-    println!("Errors: {:#?}", collect_errors);
+    style.calculate_layout();
+    style.calculate_appearance();
+    
+    println!("Computed: {:#?}", style.computed);
 
     Ok(())
 }

@@ -2,6 +2,7 @@ use yoga::{FlexStyle, StyleUnit, Layout as Dimension};
 use types::PropertiesAppearance;
 use ordered_float::OrderedFloat;
 use std::collections::HashMap;
+use convert::WebrenderStyles;
 use serde_json::Value;
 
 use types::{
@@ -42,10 +43,20 @@ pub struct Context {
     pub dimensions: DimensionsContext,
 }
 
+/// Store for save calculated cached styles with converted version
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct Computed {
+    pub appearance: Option<PropertiesAppearance>,
+    pub layout: Option<Vec<FlexStyle>>,
+}
+
 /// Style element, with all element status, and context`s,
 /// with implementations of traits for parse unions of one element
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Style {
+    // Finalize compuited values
+    pub computed: Computed,
+
     // States of properties as :hover, :active, etc..
     pub states: HashMap<String, Properties>,
 
@@ -120,7 +131,7 @@ impl TStyleStates for Style {
 }
 
 impl TStyleCollect for Style {
-    fn collect_layout_style(&self) -> (Vec<FlexStyle>, Vec<ProcessingError>) {
+    fn calculate_layout(&mut self) -> Vec<ProcessingError> {
         use self::ProcessingError::*;
 
         let mut layout_styles = vec![];
@@ -190,10 +201,11 @@ impl TStyleCollect for Style {
             layout_styles.push(value);
         }
 
-        (layout_styles, eval_errors)
+        self.computed.layout = Some(layout_styles);
+        eval_errors
     }
 
-    fn collect_appearance_style(&self) -> (PropertiesAppearance, Vec<ProcessingError>) {
+    fn calculate_appearance(&mut self) -> Vec<ProcessingError> {
         // use self::ProcessingError::*;
 
         let mut properties = PropertiesAppearance::default();
@@ -205,6 +217,43 @@ impl TStyleCollect for Style {
             properties.0.extend(appearance);
         }
 
-        (properties, eval_errors)
+        self.computed.appearance = Some(properties);
+        eval_errors
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use types::{Properties, Style, DimensionType};
+    use types::values::{CalcExpr, Dimensions};
+    use properties::{Background, Color};
+    use traits::*;
+
+    use test::Bencher;
+    use eval::Expr;
+
+    #[bench]
+    fn bench_style_with_calc(b: &mut Bencher) {
+        b.iter(|| {
+            let mut properties = Properties::default();
+            let mut style = Style::default();
+
+            let current = Dimensions::new(10., 10., 10., 10., 480., 480.);
+            let parent = Dimensions::new(0., 0., 0., 0., 500., 500.);
+
+            style.context.set_dimension(DimensionType::Current, Some(current));
+            style.context.set_dimension(DimensionType::Parent, Some(parent));
+
+            properties.set_style("background", Background::Color(Color::transparent())).is_ok();
+            properties.set_style("height", CalcExpr(Expr::new("$parent.width + 10"))).is_ok();
+
+            style.states.insert("default".to_string(), properties);
+            style.enable_states(vec!["default".to_string()]);
+
+            style.calculate_layout();
+            style.calculate_appearance();
+        });
     }
 }
