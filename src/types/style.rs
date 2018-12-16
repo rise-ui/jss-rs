@@ -46,8 +46,8 @@ pub struct Context {
 /// Store for save calculated cached styles with converted version
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct Computed {
-    pub appearance: Option<PropertiesAppearance>,
-    pub layout: Option<Vec<FlexStyle>>,
+    pub appearance: PropertiesAppearance,
+    pub layout: Vec<FlexStyle>,
 }
 
 /// Style element, with all element status, and context`s,
@@ -201,7 +201,7 @@ impl TStyleCollect for Style {
             layout_styles.push(value);
         }
 
-        self.computed.layout = Some(layout_styles);
+        self.computed.layout = layout_styles;
         eval_errors
     }
 
@@ -217,7 +217,7 @@ impl TStyleCollect for Style {
             properties.0.extend(appearance);
         }
 
-        self.computed.appearance = Some(properties);
+        self.computed.appearance = properties;
         eval_errors
     }
 }
