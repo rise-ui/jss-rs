@@ -5,6 +5,7 @@ use webrender::api;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct WebrenderBorders {
+    pub border_radius: api::BorderRadius,
     pub widths: api::LayoutSideOffsets,
     pub details: api::BorderDetails,
 }
@@ -82,6 +83,8 @@ impl Into<api::BorderStyle> for BorderStyle {
 
 impl From<BorderStylesWrapper> for WebrenderBorders {
     fn from(value: BorderStylesWrapper) -> WebrenderBorders {
+        let border_radius: api::BorderRadius = value.border_radius.into();
+
         let widths = api::LayoutSideOffsets::new(
             value.borders.top.width,
             value.borders.right.width,
@@ -95,11 +98,12 @@ impl From<BorderStylesWrapper> for WebrenderBorders {
             left: value.borders.left.into(),
             top: value.borders.top.into(),
 
-            radius: value.border_radius.into(),
+            radius: border_radius.clone(),
             do_aa: true,
         });
 
         WebrenderBorders {
+            border_radius,
             details,
             widths,
         }

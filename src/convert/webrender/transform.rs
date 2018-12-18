@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::hash::Hash;
 use types::Context;
 
 use properties::{
@@ -14,7 +15,7 @@ use webrender::api::{
   TransformStyle,
 };
 
-pub type PropertiesCollection = HashMap<String, PropertyBindingKey<LayoutTransform>>;
+pub type PropertiesCollection<T: Hash + Eq> = HashMap<T, PropertyBindingKey<LayoutTransform>>;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct TransformsWrapper {
@@ -73,12 +74,12 @@ pub mod transform {
 }
 
 impl TransformsWrapper {
-    pub fn push_builder(
+    pub fn push_builder<T: Hash + Eq>(
         &self,
         container: &LayoutPrimitiveInfo,
-        tag: (String, u64),
+        id: (T, u64),
 
-        properties: &mut PropertiesCollection,
+        properties: &mut PropertiesCollection<T>,
         builder: &mut DisplayListBuilder,
     ) {
         let dimensions: (f32, f32) = if let Some(layout) = self.context.dimensions.current {
@@ -88,11 +89,10 @@ impl TransformsWrapper {
         };
 
         if let Some(transform) = transform::multiply(self.transforms.clone(), dimensions) {
-            let binding_key = PropertyBindingKey::new(tag.1);
-            let property_key = tag.0;
+            let binding_key = PropertyBindingKey::new(id.1);
 
             // Add dynamic binding property
-            properties.insert(property_key, binding_key);
+            properties.insert(id.0, binding_key);   
 
             // Generate clip for transform area
             let property_transform = Some(PropertyBinding::Binding(binding_key, transform));

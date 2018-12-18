@@ -1,7 +1,7 @@
 /// Style Builder
+use traits::{TParseStyleMiddleware, TStyleStates};
 use utils::{generic_erase, StylePropertyField};
 use erased_serde::{Deserializer, deserialize};
-use traits::TParseStyleMiddleware;
 use std::collections::HashMap;
 use serde_json::Value;
 use std::boxed::Box;
@@ -116,6 +116,7 @@ impl StyleBuilder {
     {
         let mut style = Style::default();
         make_initial_style_states!(style, [default, active, hover]);
+        style.enable_states(vec![ "default".to_string() ]);
 
         for (key, value) in iter {
             match key.key_type {
