@@ -81,7 +81,7 @@ impl TransformsWrapper {
 
         properties: &mut PropertiesCollection<T>,
         builder: &mut DisplayListBuilder,
-    ) {
+    ) -> bool {
         let dimensions: (f32, f32) = if let Some(layout) = self.context.dimensions.current {
             (layout.width(), layout.height())
         } else {
@@ -100,6 +100,9 @@ impl TransformsWrapper {
                 builder.push_reference_frame(&container, TransformStyle::Flat, property_transform, None);
             
             builder.push_clip_id(transformed_frame);
+            true
+        } else {
+            false
         }
     }
 }

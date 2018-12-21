@@ -74,7 +74,7 @@ impl<'a, 'b, 'c> From<AppearanceWrapper<'a, 'b, 'c>> for WebrenderStyles {
         let transforms = wrapper
             .appearance
             .0
-            .get("transforms")
+            .get("transform")
             .and_then(|value| extract!(Appearance::Transforms(_), value.clone()))
             .unwrap_or_default();
 
