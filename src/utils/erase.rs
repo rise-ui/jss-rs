@@ -1,6 +1,6 @@
 use types::{PropertyKeyInfo, ParseError, SourceFormat};
 use erased_serde::Deserializer;
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use serde_json;
 use serde_yaml;
 

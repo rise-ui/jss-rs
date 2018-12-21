@@ -4,7 +4,7 @@ mod repr;
 pub use self::repr::get_reflect_property_type;
 use self::common::*;
 
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use types::SharedUnit;
 use eval::Expr;
 

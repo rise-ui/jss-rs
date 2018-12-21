@@ -1,7 +1,7 @@
 /// Stylesheet Builder
 use utils::{generic_erase, StylePropertyField};
 use erased_serde::{Deserializer, deserialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use std::boxed::Box;
 
 use traits::{

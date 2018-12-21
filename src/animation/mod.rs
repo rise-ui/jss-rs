@@ -1,6 +1,6 @@
 //! Animations module for create simple tick based animations for one or more properties
 
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use std::hash::Hash;
 
 mod action;

@@ -1,4 +1,5 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
+use hashbrown::HashMap;
 use super::{Easing, Action, AnimationError};
 use yoga::StyleUnit;
 

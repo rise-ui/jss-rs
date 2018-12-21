@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 /// The value of the variable for calculations in runtime
 #[derive(Clone, Debug, PartialEq)]

@@ -1,5 +1,5 @@
 use super::{Easing, TaskProperties, AnimationError};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use utils::extract_unit_value;
 use yoga::StyleUnit;
 

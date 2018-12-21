@@ -2,7 +2,7 @@
 use traits::{TParseStyleMiddleware, TStyleStates};
 use utils::{generic_erase, StylePropertyField};
 use erased_serde::{Deserializer, deserialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use serde_json::Value;
 use std::boxed::Box;
 

@@ -123,6 +123,7 @@ extern crate regex;
 extern crate yoga;
 extern crate eval;
 extern crate test;
+extern crate hashbrown;
 
 pub extern crate webrender;
 

@@ -1,7 +1,7 @@
 use yoga::{FlexStyle, StyleUnit, Layout as Dimension};
 use types::PropertiesAppearance;
 use ordered_float::OrderedFloat;
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use convert::WebrenderStyles;
 use serde_json::Value;
 
