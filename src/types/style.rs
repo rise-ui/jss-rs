@@ -149,9 +149,7 @@ impl TStyleCollect for Style {
         }
 
         // Run expressions
-        for (property, expr) in expressions.0 {
-            let mut expression = expr.clone();
-
+        for (property, mut expression) in expressions.0 {
             // Set variables into runtime expression
             for (name, value) in self.context.variables.iter() {
                 match value {
