@@ -2,7 +2,6 @@ use yoga::{FlexStyle, StyleUnit, Layout as Dimension};
 use types::PropertiesAppearance;
 use ordered_float::OrderedFloat;
 use hashbrown::HashMap;
-use convert::WebrenderStyles;
 use serde_json::Value;
 
 use types::{
@@ -130,6 +129,13 @@ impl TStyleStates for Style {
     }
 }
 
+fn make_type_error(key: String, msg: &str) -> ProcessingError {
+    ProcessingError::InvalidType {
+        expected: msg.to_string(),
+        property: key,
+    }
+}
+
 impl TStyleCollect for Style {
     fn calculate_layout(&mut self) -> Vec<ProcessingError> {
         use self::ProcessingError::*;
@@ -150,6 +156,8 @@ impl TStyleCollect for Style {
 
         // Run expressions
         for (property, mut expression) in expressions.0 {
+            let formatted_key = format!("{:?}", property);
+
             // Set variables into runtime expression
             for (name, value) in self.context.variables.iter() {
                 match value {
@@ -164,26 +172,17 @@ impl TStyleCollect for Style {
 
             match expression.exec() {
                 Err(error) => eval_errors.push(ExecFailed {
-                    property,
+                    property: formatted_key,
                     error,
                 }),
 
                 Ok(value) => {
-                    let number_msg = "expected float or integer";
-
-                    let make_type_error = |msg: &str| InvalidType {
-                        expected: msg.to_string(),
-                        property: property.clone(),
-                    };
-
                     extract!(Value::Number(_), value)
-                        .ok_or(make_type_error(number_msg))
-                        .and_then(|n| n.as_f64().ok_or(make_type_error(number_msg)))
+                        .ok_or(make_type_error(formatted_key.clone(), "expected float or integer"))
+                        .and_then(|n| n.as_f64().ok_or(make_type_error(formatted_key.clone(), "expected float or integer")))
                         .and_then(|number| {
                             let number: OrderedFloat<f32> = (number as f32).into();
-
-                            pair_to_flex(property.clone(), StyleUnit::Point(number))
-                                .map_err(|_| make_type_error("valid unit by key"))
+                            Ok(pair_to_flex(property.clone(), StyleUnit::Point(number)))
                         })
                         .and_then(|flex_style| {
                             layout_styles.push(flex_style);
@@ -244,8 +243,8 @@ mod tests {
             style.context.set_dimension(DimensionType::Current, Some(current));
             style.context.set_dimension(DimensionType::Parent, Some(parent));
 
-            properties.set_style("background", Background::Color(Color::transparent())).is_ok();
-            properties.set_style("height", CalcExpr(Expr::new("$parent.width + 10"))).is_ok();
+            // properties.set_style("background", Background::Color(Color::transparent())).is_ok();
+            // properties.set_style("height", CalcExpr(Expr::new("$parent.width + 10"))).is_ok();
 
             style.states.insert("default".to_string(), properties);
             style.enable_states(vec!["default".to_string()]);

@@ -2,7 +2,7 @@ extern crate failure;
 extern crate eval;
 extern crate jss;
 
-use jss::types::{Properties, Style, DimensionType};
+use jss::types::{Properties, Style, DimensionType, LayoutKey, AppearanceKey, PropertyKey};
 use jss::types::values::{CalcExpr, Dimensions};
 use jss::properties::{Background, Color};
 use jss::traits::*;
@@ -20,9 +20,9 @@ fn main() -> Result<(), failure::Error> {
     style.context.set_dimension(DimensionType::Parent, Some(parent));
 
     // Set properties
-    properties.set_style("background", Background::Color(Color::transparent()))?;
+    properties.set_style(PropertyKey::Appearance(AppearanceKey::Background), Background::Color(Color::transparent()))?;
     // Calculated expression
-    properties.set_style("height", CalcExpr(Expr::new("$parent.width + 10")))?;
+    properties.set_style(PropertyKey::Layout(LayoutKey::Height), CalcExpr(Expr::new("$parent.width + 10")))?;
 
     // Insert properties as new state of style
     style.states.insert("default".to_string(), properties);

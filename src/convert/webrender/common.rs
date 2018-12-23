@@ -9,6 +9,7 @@ use utils::{
 use types::{
     PropertiesAppearance,
     PropertiesLayout,
+    AppearanceKey,
     Appearance,
     Context,
 };
@@ -41,7 +42,7 @@ impl<'a, 'b, 'c> From<AppearanceWrapper<'a, 'b, 'c>> for WebrenderStyles {
     fn from(wrapper: AppearanceWrapper<'a, 'b, 'c>) -> WebrenderStyles {
         // BACKGROUND STYLE
         let background_raw =
-            wrapper.appearance.0.get("background").and_then(|value| extract!(Appearance::Background(_), value.clone()));
+            wrapper.appearance.0.get(&AppearanceKey::Background).and_then(|value| extract!(Appearance::Background(_), value.clone()));
 
         let background: WebrenderBackground = if let Some(value) = background_raw {
             BackgroundWrapper {
@@ -74,7 +75,7 @@ impl<'a, 'b, 'c> From<AppearanceWrapper<'a, 'b, 'c>> for WebrenderStyles {
         let transforms = wrapper
             .appearance
             .0
-            .get("transform")
+            .get(&AppearanceKey::Transform)
             .and_then(|value| extract!(Appearance::Transforms(_), value.clone()))
             .unwrap_or_default();
 

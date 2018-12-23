@@ -4,10 +4,13 @@ use std::fmt::Debug;
 
 use types::{
     ProcessingError,
+    AppearanceKey,
     PropertyError,
     PropertyValue,
     DimensionType,
+    PropertyKey,
     Appearance,
+    LayoutKey,
     Variable,
     Layout,
 };
@@ -15,13 +18,13 @@ use types::{
 /// Operation over component - set and remove style properties
 pub trait TStyle: Debug + PartialEq + Clone {
     /// Set appearance styles such like `Background`, `BorderStyle` etc..
-    fn set_appearance_style<T: Into<Appearance>>(&mut self, &str, T) -> Result<(), PropertyError>;
+    fn set_appearance_style<T: Into<Appearance>>(&mut self, AppearanceKey, T) -> Result<(), PropertyError>;
     /// Set layout styles such like Flex properties, `Margin`, `Padding` etc..
-    fn set_layout_style<T: Into<Layout>>(&mut self, &str, T) -> Result<(), PropertyError>;
+    fn set_layout_style<T: Into<Layout>>(&mut self, LayoutKey, T) -> Result<(), PropertyError>;
     /// Unified setter for any property
-    fn set_style<T: Into<PropertyValue>>(&mut self, &str, T) -> Result<(), PropertyError>;
+    fn set_style<T: Into<PropertyValue>>(&mut self, PropertyKey, T) -> Result<(), PropertyError>;
     /// Remove property from style
-    fn remove_style(&mut self, &str);
+    fn remove_style(&mut self, PropertyKey);
 }
 
 /// Manipulate runtime context of current style - work with active element dimensions,

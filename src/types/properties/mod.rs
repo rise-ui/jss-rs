@@ -1,12 +1,18 @@
 mod common;
 mod repr;
 
-pub use self::repr::get_reflect_property_type;
-use self::common::*;
-
 use hashbrown::HashMap;
 use types::SharedUnit;
+use std::hash::Hash;
 use eval::Expr;
+
+use self::common::*;
+
+pub use self::repr::{
+    AppearanceKey,
+    PropertyKey,
+    LayoutKey,
+};
 
 /// Values for appearance styles properties
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -53,15 +59,15 @@ pub enum PropertyValue {
 }
 
 /// Link type for appearance `PropertiesStore`
-pub type PropertiesAppearance = PropertiesStore<Appearance>;
+pub type PropertiesAppearance = PropertiesStore<AppearanceKey, Appearance>;
 /// Link type for layout `PropertiesStore`
-pub type PropertiesLayout = PropertiesStore<FlexStyle>;
+pub type PropertiesLayout = PropertiesStore<LayoutKey, FlexStyle>;
 /// Link type for calc expressions `PropertiesStore`
-pub type PropertiesExpressions = PropertiesStore<Expr>;
+pub type PropertiesExpressions = PropertiesStore<LayoutKey, Expr>;
 
 /// Properties storage generic type
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct PropertiesStore<T>(pub HashMap<String, T>);
+pub struct PropertiesStore<K: Eq + Hash, T>(pub HashMap<K, T>);
 
 /// All properties of styles of different types.
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
@@ -80,8 +86,8 @@ impl_union_property_conversion!(Appearance);
 impl_union_property_conversion!(Layout);
 
 /* ___________________Impl Traits & Conversions_____________________ */
-impl<T> Default for PropertiesStore<T> {
-    fn default() -> PropertiesStore<T> {
+impl<K: Eq + Hash, T> Default for PropertiesStore<K, T> {
+    fn default() -> PropertiesStore<K, T> {
         PropertiesStore(HashMap::new())
     }
 }

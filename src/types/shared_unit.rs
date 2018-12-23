@@ -1,4 +1,4 @@
-use types::{PropertyError, ParseError, Layout, PropertyValue};
+use types::{PropertyError, ParseError, Layout, PropertyValue, LayoutKey};
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use yoga::{FlexStyle, StyleUnit};
@@ -105,42 +105,40 @@ impl<'de> Deserialize<'de> for SharedUnit {
 }
 
 /// Convertor: create FlexStyle by property key and unit value
-pub fn pair_to_flex(key: String, value: StyleUnit) -> Result<FlexStyle, PropertyError> {
-    match key.as_str() {
-        "bottom" => Ok(FlexStyle::Bottom(value)),
-        "end" => Ok(FlexStyle::End(value)),
-        "flex_basis" => Ok(FlexStyle::FlexBasis(value)),
-        "height" => Ok(FlexStyle::Height(value)),
-        "left" => Ok(FlexStyle::Left(value)),
-        "margin" => Ok(FlexStyle::Margin(value)),
-        "margin_bottom" => Ok(FlexStyle::MarginBottom(value)),
-        "margin_end" => Ok(FlexStyle::MarginEnd(value)),
-        "margin_horizontal" => Ok(FlexStyle::MarginHorizontal(value)),
-        "margin_left" => Ok(FlexStyle::MarginLeft(value)),
-        "margin_right" => Ok(FlexStyle::MarginRight(value)),
-        "margin_start" => Ok(FlexStyle::MarginStart(value)),
-        "margin_top" => Ok(FlexStyle::MarginTop(value)),
-        "margin_vertical" => Ok(FlexStyle::MarginVertical(value)),
-        "max_height" => Ok(FlexStyle::MaxHeight(value)),
-        "max_width" => Ok(FlexStyle::MaxWidth(value)),
-        "min_height" => Ok(FlexStyle::MinHeight(value)),
-        "min_width" => Ok(FlexStyle::MinWidth(value)),
-        "padding" => Ok(FlexStyle::Padding(value)),
-        "padding_bottom" => Ok(FlexStyle::PaddingBottom(value)),
-        "padding_end" => Ok(FlexStyle::PaddingEnd(value)),
-        "padding_horizontal" => Ok(FlexStyle::PaddingHorizontal(value)),
-        "padding_left" => Ok(FlexStyle::PaddingLeft(value)),
-        "padding_right" => Ok(FlexStyle::PaddingRight(value)),
-        "padding_start" => Ok(FlexStyle::PaddingStart(value)),
-        "padding_top" => Ok(FlexStyle::PaddingTop(value)),
-        "padding_vertical" => Ok(FlexStyle::PaddingVertical(value)),
-        "right" => Ok(FlexStyle::Right(value)),
-        "start" => Ok(FlexStyle::Start(value)),
-        "top" => Ok(FlexStyle::Top(value)),
-        "width" => Ok(FlexStyle::Width(value)),
-        _ => Err(PropertyError::SharedUnitConvert {
-            key,
-        }),
+pub fn pair_to_flex(key: LayoutKey, value: StyleUnit) -> FlexStyle {
+    match key {
+        LayoutKey::Bottom => FlexStyle::Bottom(value),
+        LayoutKey::End => FlexStyle::End(value),
+        LayoutKey::FlexBasis => FlexStyle::FlexBasis(value),
+        LayoutKey::Height => FlexStyle::Height(value),
+        LayoutKey::Left => FlexStyle::Left(value),
+        LayoutKey::Margin => FlexStyle::Margin(value),
+        LayoutKey::MarginBottom => FlexStyle::MarginBottom(value),
+        LayoutKey::MarginEnd => FlexStyle::MarginEnd(value),
+        LayoutKey::MarginHorizontal => FlexStyle::MarginHorizontal(value),
+        LayoutKey::MarginLeft => FlexStyle::MarginLeft(value),
+        LayoutKey::MarginRight => FlexStyle::MarginRight(value),
+        LayoutKey::MarginStart => FlexStyle::MarginStart(value),
+        LayoutKey::MarginTop => FlexStyle::MarginTop(value),
+        LayoutKey::MarginVertical => FlexStyle::MarginVertical(value),
+        LayoutKey::MaxHeight => FlexStyle::MaxHeight(value),
+        LayoutKey::MaxWidth => FlexStyle::MaxWidth(value),
+        LayoutKey::MinHeight => FlexStyle::MinHeight(value),
+        LayoutKey::MinWidth => FlexStyle::MinWidth(value),
+        LayoutKey::Padding => FlexStyle::Padding(value),
+        LayoutKey::PaddingBottom => FlexStyle::PaddingBottom(value),
+        LayoutKey::PaddingEnd => FlexStyle::PaddingEnd(value),
+        LayoutKey::PaddingHorizontal => FlexStyle::PaddingHorizontal(value),
+        LayoutKey::PaddingLeft => FlexStyle::PaddingLeft(value),
+        LayoutKey::PaddingRight => FlexStyle::PaddingRight(value),
+        LayoutKey::PaddingStart => FlexStyle::PaddingStart(value),
+        LayoutKey::PaddingTop => FlexStyle::PaddingTop(value),
+        LayoutKey::PaddingVertical => FlexStyle::PaddingVertical(value),
+        LayoutKey::Right => FlexStyle::Right(value),
+        LayoutKey::Start => FlexStyle::Start(value),
+        LayoutKey::Top => FlexStyle::Top(value),
+        LayoutKey::Width => FlexStyle::Width(value),
+        _ => unreachable!(),
     }
 }
 

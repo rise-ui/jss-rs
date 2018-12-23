@@ -20,13 +20,15 @@ pub use self::parser::*;
 pub use self::style::*;
 
 pub use self::properties::{
-    get_reflect_property_type,
     PropertiesExpressions,
     PropertiesAppearance,
     PropertiesLayout,
     PropertiesStore,
     PropertyValue,
+    AppearanceKey,
+    PropertyKey,
     Properties,
     Appearance,
+    LayoutKey,
     Layout,
 };

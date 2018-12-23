@@ -22,6 +22,86 @@ use super::common::{
     Wrap,
 };
 
+/// Union Represenation if property keys
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum PropertyKey {
+    Appearance(AppearanceKey),
+    Layout(LayoutKey),
+}
+
+/// Worked enum keys representation of appearance styles for fast hashed
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum AppearanceKey {
+    Background,
+    Transform,
+    Filter,
+    BorderTopColor,
+    BorderRightColor,
+    BorderLeftColor,
+    BorderBottomColor,
+    BorderTopStyle,
+    BorderRightStyle,
+    BorderLeftStyle,
+    BorderBottomStyle,
+    BorderTopRightRadius,
+    BorderTopLeftRadius,
+    BorderBottomRightRadius,
+    BorderBottomLeftRadius,
+}
+
+/// Worked enum keys representation of layout styles for fast hashed
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum LayoutKey {
+    FlexDirection,
+    JustifyContent,
+    Position,
+    AlignContent,
+    AlignItems,
+    AlignSelf,
+    FlexWrap,
+    Display,
+    Overflow,
+    AspectRatio,
+    FlexShrink,
+    FlexGrow,
+    Flex,
+    Bottom,
+    End,
+    FlexBasis,
+    Height,
+    Left,
+    Margin,
+    MarginBottom,
+    MarginEnd,
+    MarginHorizontal,
+    MarginLeft,
+    MarginRight,
+    MarginStart,
+    MarginTop,
+    MarginVertical,
+    MaxHeight,
+    MaxWidth,
+    MinHeight,
+    MinWidth,
+    Padding,
+    PaddingBottom,
+    PaddingEnd,
+    PaddingHorizontal,
+    PaddingLeft,
+    PaddingRight,
+    PaddingStart,
+    PaddingTop,
+    PaddingVertical,
+    Right,
+    Start,
+    Top,
+    Width,
+    BorderBottomWidth,
+    BorderRightWidth,
+    BorderLeftWidth,
+    BorderTopWidth,
+}
+
 /// Style properties struct with all css properties,
 /// by default allow to raw serialize/deserialize with serde.
 /// All elements wrap over Option<T> for support optional field.

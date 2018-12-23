@@ -1,57 +1,45 @@
 //! Property setters without runtime type-checking
 //! *Warning*: Be careful when using: functions allow you to change properties
 //! without checking - which can lead to untracked errors during execution.
+use utils::get_reflect_property_type;
 use yoga::FlexStyle;
 
 use types::{
-    get_reflect_property_type,
-    pair_to_flex,
+    AppearanceKey,
     PropertyError,
+    pair_to_flex,
+    PropertyKey,
     SharedUnit,
     Appearance,
     Properties,
+    LayoutKey,
 };
 
 macro_rules! default_setter {
     ($properties:ident, $field:ident, $key:ident, $value:ident) => {
-        if $properties.$field.0.contains_key(&$key) {
-            let item = $properties.$field.0.get_mut(&$key).unwrap();
-            *item = $value;
-        } else {
-            $properties.$field.0.insert($key, $value);
-        }
+        $properties.$field.0.insert($key, $value);
     };
 }
 
 /// Set basic appearance property without check
-pub fn set_appearance_without_check(properties: &mut Properties, key: String, value: Appearance) {
+pub fn set_appearance_without_check(properties: &mut Properties, key: AppearanceKey, value: Appearance) {
     default_setter!(properties, appearance, key, value);
 }
 
 /// Set basic layout property without check
-pub fn set_layout_without_check(properties: &mut Properties, key: String, value: FlexStyle) {
+pub fn set_layout_without_check(properties: &mut Properties, key: LayoutKey, value: FlexStyle) {
     default_setter!(properties, layout, key, value);
 }
 
 /// Set shared layout property without check (expression or exact unit)
-pub fn set_layout_unit_without_check(
-    properties: &mut Properties,
-    key: String,
-    value: SharedUnit,
-) -> Result<(), PropertyError> {
+pub fn set_layout_unit_without_check(properties: &mut Properties, key: LayoutKey, value: SharedUnit) -> Result<(), PropertyError> {
     match value {
         SharedUnit::StyleUnit(unit) => {
             properties.expressions.0.remove(&key).is_some();
+            let unit = pair_to_flex(key.clone(), unit);
+            properties.layout.0.insert(key, unit).is_some();
 
-            pair_to_flex(key.clone(), unit).and_then(|unit| {
-                if let Some(item) = properties.layout.0.get_mut(&key) {
-                    *item = unit;
-                    return Ok(());
-                }
-
-                properties.layout.0.insert(key, unit).is_some();
-                Ok(())
-            })
+            Ok(())
         }
 
         SharedUnit::CalcExpr(expression) => {
@@ -59,7 +47,7 @@ pub fn set_layout_unit_without_check(
 
             let expression = if !expression.get_compiled().is_some() {
                 expression.compile().map_err(|error| PropertyError::InvalidExpression {
-                    key: key.clone(),
+                    key: format!("{:?}", key),
                     error,
                 })?
             } else {
@@ -73,9 +61,9 @@ pub fn set_layout_unit_without_check(
 }
 
 /// Create expected type error by property key
-pub fn expected_type_error(property: String) -> PropertyError {
+pub fn expected_type_error(property: PropertyKey) -> PropertyError {
     PropertyError::InvalidType {
-        expected: get_reflect_property_type(property.as_str()).to_string(),
-        property: property,
+        expected: get_reflect_property_type(&property),
+        property: format!("{:?}", property),
     }
 }

@@ -13,8 +13,11 @@ use properties::{
 use types::{
     PropertiesAppearance,
     PropertiesLayout,
+    AppearanceKey,
+    PropertyKey,
     Appearance,
     SharedUnit,
+    LayoutKey,
 };
 
 pub fn extract_unit_value(unit: &StyleUnit) -> f32 {
@@ -29,16 +32,16 @@ pub fn extract_unit_value(unit: &StyleUnit) -> f32 {
 
 pub fn properties_extract_radius(appearance: &PropertiesAppearance) -> BorderRadius {
     let corners: Vec<SharedUnit> = [
-        "border_top_left_radius",
-        "border_top_right_radius",
-        "border_bottom_right_radius",
-        "border_bottom_left_radius",
+        AppearanceKey::BorderTopLeftRadius,
+        AppearanceKey::BorderTopRightRadius,
+        AppearanceKey::BorderBottomRightRadius,
+        AppearanceKey::BorderBottomLeftRadius,
     ]
     .into_iter()
-    .map(|key: &&str| -> SharedUnit {
+    .map(|key: &AppearanceKey| -> SharedUnit {
         appearance
             .0
-            .get(&key.to_string())
+            .get(key)
             .and_then(|value| extract!(Appearance::BorderRadius(_), value.clone()))
             .unwrap_or(SharedUnit::StyleUnit(StyleUnit::Point(0.0.into())))
     })
@@ -53,17 +56,21 @@ pub fn properties_extract_radius(appearance: &PropertiesAppearance) -> BorderRad
 }
 
 pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Vec<FlexStyle>) -> BorderStyles {
-    let border_styles: Vec<BorderStyle> =
-        ["border_top_style", "border_right_style", "border_bottom_style", "border_left_style"]
-            .into_iter()
-            .map(|key: &&str| -> BorderStyle {
-                appearance
-                    .0
-                    .get(&key.to_string())
-                    .and_then(|value| extract!(Appearance::BorderStyle(_), value.clone()))
-                    .unwrap_or(BorderStyle::None)
-            })
-            .collect();
+    let border_styles: Vec<BorderStyle> = [
+        AppearanceKey::BorderTopStyle,
+        AppearanceKey::BorderRightStyle,
+        AppearanceKey::BorderBottomStyle,
+        AppearanceKey::BorderLeftStyle
+    ]
+    .into_iter()
+    .map(|key: &AppearanceKey| -> BorderStyle {
+        appearance
+            .0
+            .get(key)
+            .and_then(|value| extract!(Appearance::BorderStyle(_), value.clone()))
+            .unwrap_or(BorderStyle::None)
+    })
+    .collect();
 
     let mut border_widths: Vec<f32> = vec![0.0, 0.0, 0.0, 0.0];
     for prop in layout {
@@ -80,17 +87,21 @@ pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Ve
         }
     }
 
-    let border_colors: Vec<Color> =
-        ["border_top_color", "border_right_color", "border_bottom_color", "border_left_color"]
-            .into_iter()
-            .map(|key: &&str| -> Color {
-                appearance
-                    .0
-                    .get(&key.to_string())
-                    .and_then(|value| extract!(Appearance::BorderColor(_), value.clone()))
-                    .unwrap_or(Color::transparent())
-            })
-            .collect();
+    let border_colors: Vec<Color> = [
+        AppearanceKey::BorderTopColor,
+        AppearanceKey::BorderRightColor,
+        AppearanceKey::BorderBottomColor,
+        AppearanceKey::BorderLeftColor
+    ]
+    .into_iter()
+    .map(|key: &AppearanceKey| -> Color {
+        appearance
+            .0
+            .get(key)
+            .and_then(|value| extract!(Appearance::BorderColor(_), value.clone()))
+            .unwrap_or(Color::transparent())
+    })
+    .collect();
 
     let borders: Vec<Border> = (0..4)
         .into_iter()
