@@ -20,7 +20,8 @@ fn main() -> Result<(), failure::Error> {
     style.context.set_dimension(DimensionType::Parent, Some(parent));
 
     // Set properties
-    properties.set_style(PropertyKey::Appearance(AppearanceKey::Background), Background::Color(Color::transparent()))?;
+    properties
+        .set_style(PropertyKey::Appearance(AppearanceKey::Background), Background::Color(Color::transparent()))?;
     // Calculated expression
     properties.set_style(PropertyKey::Layout(LayoutKey::Height), CalcExpr(Expr::new("$parent.width + 10")))?;
 
@@ -33,7 +34,7 @@ fn main() -> Result<(), failure::Error> {
     // Collect layout properties as FlexStyle with calculate expressions
     style.calculate_layout();
     style.calculate_appearance();
-    
+
     println!("Computed: {:#?}", style.computed);
 
     Ok(())

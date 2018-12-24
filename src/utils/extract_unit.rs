@@ -60,7 +60,7 @@ pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Ve
         AppearanceKey::BorderTopStyle,
         AppearanceKey::BorderRightStyle,
         AppearanceKey::BorderBottomStyle,
-        AppearanceKey::BorderLeftStyle
+        AppearanceKey::BorderLeftStyle,
     ]
     .into_iter()
     .map(|key: &AppearanceKey| -> BorderStyle {
@@ -91,7 +91,7 @@ pub fn properties_extract_borders(appearance: &PropertiesAppearance, layout: &Ve
         AppearanceKey::BorderTopColor,
         AppearanceKey::BorderRightColor,
         AppearanceKey::BorderBottomColor,
-        AppearanceKey::BorderLeftColor
+        AppearanceKey::BorderLeftColor,
     ]
     .into_iter()
     .map(|key: &AppearanceKey| -> Color {

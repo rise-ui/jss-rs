@@ -92,13 +92,13 @@ impl TransformsWrapper {
             let binding_key = PropertyBindingKey::new(id.1);
 
             // Add dynamic binding property
-            properties.insert(id.0, binding_key);   
+            properties.insert(id.0, binding_key);
 
             // Generate clip for transform area
             let property_transform = Some(PropertyBinding::Binding(binding_key, transform));
             let transformed_frame =
                 builder.push_reference_frame(&container, TransformStyle::Flat, property_transform, None);
-            
+
             builder.push_clip_id(transformed_frame);
             true
         } else {

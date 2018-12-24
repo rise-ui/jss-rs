@@ -31,7 +31,9 @@ fn main() -> Result<(), failure::Error> {
         "border_top".to_string() => Point(50.0.into()),
         "height".to_string() => Point(20.0.into()),
         "width".to_string() => Point(20.0.into()),
-    }.into_iter().collect();
+    }
+    .into_iter()
+    .collect();
 
     // Elapsed by frame (fps)
     let mut frame_elapsed = Instant::now();
@@ -53,7 +55,9 @@ fn main() -> Result<(), failure::Error> {
                     "border_top".to_string() => Point(150.0.into()),
                     "height".to_string() => Point(100.0.into()),
                     "width".to_string() => Point(100.0.into()),
-                }.into_iter().collect(),
+                }
+                .into_iter()
+                .collect(),
                 10000,
                 Easing::Basic(EaseFunction::BounceIn),
             )),

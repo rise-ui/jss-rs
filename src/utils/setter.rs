@@ -32,7 +32,11 @@ pub fn set_layout_without_check(properties: &mut Properties, key: LayoutKey, val
 }
 
 /// Set shared layout property without check (expression or exact unit)
-pub fn set_layout_unit_without_check(properties: &mut Properties, key: LayoutKey, value: SharedUnit) -> Result<(), PropertyError> {
+pub fn set_layout_unit_without_check(
+    properties: &mut Properties,
+    key: LayoutKey,
+    value: SharedUnit,
+) -> Result<(), PropertyError> {
     match value {
         SharedUnit::StyleUnit(unit) => {
             properties.expressions.0.remove(&key).is_some();

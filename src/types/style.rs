@@ -188,7 +188,9 @@ impl TStyleCollect for Style {
                 Ok(value) => {
                     extract!(Value::Number(_), value)
                         .ok_or(make_type_error(formatted_key.clone(), "expected float or integer"))
-                        .and_then(|n| n.as_f64().ok_or(make_type_error(formatted_key.clone(), "expected float or integer")))
+                        .and_then(|n| {
+                            n.as_f64().ok_or(make_type_error(formatted_key.clone(), "expected float or integer"))
+                        })
                         .and_then(|number| {
                             let number: OrderedFloat<f32> = (number as f32).into();
                             Ok(pair_to_flex(property.clone(), StyleUnit::Point(number)))
@@ -242,29 +244,24 @@ mod tests {
 
     #[bench]
     fn bench_style_with_calc(b: &mut Bencher) {
-        b.iter(|| {
-            let mut properties = Properties::default();
-            let mut style = Style::default();
+        let mut properties = Properties::default();
+        let mut style = Style::default();
 
-            let current = Dimensions::new(10., 10., 10., 10., 480., 480.);
-            let parent = Dimensions::new(0., 0., 0., 0., 500., 500.);
+        let current = Dimensions::new(10., 10., 10., 10., 480., 480.);
+        let parent = Dimensions::new(0., 0., 0., 0., 500., 500.);
 
-            style.context.set_dimension(DimensionType::Current, Some(current));
-            style.context.set_dimension(DimensionType::Parent, Some(parent));
+        style.context.set_dimension(DimensionType::Current, Some(current));
+        style.context.set_dimension(DimensionType::Parent, Some(parent));
 
-            properties.set_style(
-                PropertyKey::Appearance(AppearanceKey::Background),
-                Background::Color(Color::transparent())
-            ).is_ok();
+        properties
+            .set_style(PropertyKey::Appearance(AppearanceKey::Background), Background::Color(Color::transparent()))
+            .is_ok();
 
-            properties.set_style(
-                PropertyKey::Layout(LayoutKey::Height),
-                CalcExpr(Expr::new("$parent.width + 10"))
-            ).is_ok();
-            
-            style.states.insert(StateKey::Default, properties);
-            style.enable_state(StateKey::Default);
+        properties.set_style(PropertyKey::Layout(LayoutKey::Height), CalcExpr(Expr::new("$parent.width + 10"))).is_ok();
 
+        style.states.insert(StateKey::Default, properties);
+        style.enable_state(StateKey::Default);
+        b.iter(move || {
             style.calculate_layout();
             style.calculate_appearance();
         });

@@ -1,9 +1,9 @@
 //! Various utils
-mod reflect_properties;
-mod extract_unit;
-mod unit_args;
-mod property;
 mod erase;
+mod extract_unit;
+mod property;
+mod reflect_properties;
+mod unit_args;
 
 pub mod setter;
 

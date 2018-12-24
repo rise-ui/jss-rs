@@ -56,7 +56,6 @@ lazy_static! {
 
         map
     };
-
     static ref APPEARANCE_PROPERTIES: HashMap<AppearanceKey, &'static str> = {
         let mut map = HashMap::new();
 
@@ -93,7 +92,7 @@ pub fn get_appearance_property_key(key: &str) -> Option<AppearanceKey> {
         "border_right_color" => Some(AppearanceKey::BorderRightColor),
         "border_left_color" => Some(AppearanceKey::BorderLeftColor),
         "border_bottom_color" => Some(AppearanceKey::BorderBottomColor),
-        
+
         "border_top_style" => Some(AppearanceKey::BorderTopStyle),
         "border_right_style" => Some(AppearanceKey::BorderRightStyle),
         "border_left_style" => Some(AppearanceKey::BorderLeftStyle),
@@ -127,7 +126,7 @@ pub fn get_layout_property_key(key: &str) -> Option<LayoutKey> {
         "flex_basis" => Some(LayoutKey::FlexBasis),
         "height" => Some(LayoutKey::Height),
         "left" => Some(LayoutKey::Left),
-        
+
         "margin" => Some(LayoutKey::Margin),
         "margin_bottom" => Some(LayoutKey::MarginBottom),
         "margin_end" => Some(LayoutKey::MarginEnd),
@@ -137,12 +136,12 @@ pub fn get_layout_property_key(key: &str) -> Option<LayoutKey> {
         "margin_start" => Some(LayoutKey::MarginStart),
         "margin_top" => Some(LayoutKey::MarginTop),
         "margin_vertical" => Some(LayoutKey::MarginVertical),
-        
+
         "max_height" => Some(LayoutKey::MaxHeight),
         "max_width" => Some(LayoutKey::MaxWidth),
         "min_height" => Some(LayoutKey::MinHeight),
         "min_width" => Some(LayoutKey::MinWidth),
-        
+
         "padding" => Some(LayoutKey::Padding),
         "padding_bottom" => Some(LayoutKey::PaddingBottom),
         "padding_end" => Some(LayoutKey::PaddingEnd),
