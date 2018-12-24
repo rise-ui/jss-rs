@@ -13,6 +13,7 @@ use types::{
     PropertyError,
     SourceFormat,
     ParseError,
+    StateKey,
     Style,
     Case,
 };
@@ -115,8 +116,8 @@ impl StyleBuilder {
         I: Iterator<Item = StylePropertyField<'a>>,
     {
         let mut style = Style::default();
-        make_initial_style_states!(style, [default, active, hover]);
-        style.enable_states(vec![ "default".to_string() ]);
+        make_initial_style_states!(style, [Default, Active, Hover]);
+        style.enable_state(StateKey::Default);
 
         for (key, value) in iter {
             match key.key_type {

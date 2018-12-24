@@ -54,9 +54,9 @@ macro_rules! impl_into_for_yoga_property {
 
 macro_rules! make_initial_style_states {
     ($style:ident, [$($state:ident),*]) => {
-        use types::Properties;
+        use types::{Properties, StateKey};
         $(
-            $style.states.insert(stringify!($state).to_string(), Properties::default());
+            $style.states.insert(StateKey::$state, Properties::default());
         )*
     };
 }

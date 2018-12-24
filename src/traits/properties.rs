@@ -11,6 +11,7 @@ use types::{
     PropertyKey,
     Appearance,
     LayoutKey,
+    StateKey,
     Variable,
     Layout,
 };
@@ -55,5 +56,5 @@ pub trait TStyleCollect: Debug + PartialEq + Clone {
 /// states ordering by prority - each subsequent state overlaps the properties
 /// of the previous state by key/value properties
 pub trait TStyleStates: Debug + PartialEq + Clone {
-    fn enable_states(&mut self, Vec<String>);
+    fn enable_state(&mut self, StateKey);
 }

@@ -2,7 +2,7 @@ extern crate failure;
 extern crate eval;
 extern crate jss;
 
-use jss::types::{Properties, Style, DimensionType, LayoutKey, AppearanceKey, PropertyKey};
+use jss::types::{Properties, Style, StateKey, DimensionType, LayoutKey, AppearanceKey, PropertyKey};
 use jss::types::values::{CalcExpr, Dimensions};
 use jss::properties::{Background, Color};
 use jss::traits::*;
@@ -25,9 +25,9 @@ fn main() -> Result<(), failure::Error> {
     properties.set_style(PropertyKey::Layout(LayoutKey::Height), CalcExpr(Expr::new("$parent.width + 10")))?;
 
     // Insert properties as new state of style
-    style.states.insert("default".to_string(), properties);
+    style.states.insert(StateKey::Default, properties);
     // Set enabled states
-    style.enable_states(vec!["default".to_string()]);
+    style.enable_state(StateKey::Default);
     println!("Source: {:#?}", style);
 
     // Collect layout properties as FlexStyle with calculate expressions

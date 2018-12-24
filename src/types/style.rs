@@ -49,6 +49,14 @@ pub struct Computed {
     pub layout: Vec<FlexStyle>,
 }
 
+/// All default states for style
+#[derive(Debug, Ord, PartialOrd, Clone, Eq, Hash, PartialEq)]
+pub enum StateKey {
+    Default = 0,
+    Active = 1,
+    Hover = 2,
+}
+
 /// Style element, with all element status, and context`s,
 /// with implementations of traits for parse unions of one element
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -57,13 +65,13 @@ pub struct Style {
     pub computed: Computed,
 
     // States of properties as :hover, :active, etc..
-    pub states: HashMap<String, Properties>,
+    pub states: HashMap<StateKey, Properties>,
 
     // Context
     pub context: Context,
 
     // Enabled states of current style
-    pub enabled_states: Vec<String>,
+    pub enabled_states: Vec<StateKey>,
 }
 
 /// Default context representation for Parsing Trait
@@ -123,9 +131,10 @@ impl TStyleContext for Context {
 }
 
 impl TStyleStates for Style {
-    // @todo: adding check for state exists
-    fn enable_states(&mut self, states: Vec<String>) {
-        self.enabled_states = states;
+    fn enable_state(&mut self, state: StateKey) {
+        if let Err(index) = self.enabled_states.binary_search(&state) {
+            self.enabled_states.insert(index, state);
+        }
     }
 }
 
@@ -223,7 +232,7 @@ impl TStyleCollect for Style {
 mod tests {
     use super::*;
 
-    use types::{Properties, Style, DimensionType};
+    use types::{Properties, PropertyKey, LayoutKey, AppearanceKey, Style, DimensionType, StateKey};
     use types::values::{CalcExpr, Dimensions};
     use properties::{Background, Color};
     use traits::*;
@@ -243,11 +252,18 @@ mod tests {
             style.context.set_dimension(DimensionType::Current, Some(current));
             style.context.set_dimension(DimensionType::Parent, Some(parent));
 
-            // properties.set_style("background", Background::Color(Color::transparent())).is_ok();
-            // properties.set_style("height", CalcExpr(Expr::new("$parent.width + 10"))).is_ok();
+            properties.set_style(
+                PropertyKey::Appearance(AppearanceKey::Background),
+                Background::Color(Color::transparent())
+            ).is_ok();
 
-            style.states.insert("default".to_string(), properties);
-            style.enable_states(vec!["default".to_string()]);
+            properties.set_style(
+                PropertyKey::Layout(LayoutKey::Height),
+                CalcExpr(Expr::new("$parent.width + 10"))
+            ).is_ok();
+            
+            style.states.insert(StateKey::Default, properties);
+            style.enable_state(StateKey::Default);
 
             style.calculate_layout();
             style.calculate_appearance();
