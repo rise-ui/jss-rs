@@ -73,36 +73,36 @@ pub mod transform {
     }
 }
 
-impl TransformsWrapper {
-    pub fn push_builder<T: Hash + Eq>(
-        &self,
-        container: &LayoutPrimitiveInfo,
-        id: (T, u64),
+// impl TransformsWrapper {
+//     pub fn push_builder<T: Hash + Eq>(
+//         &self,
+//         container: &LayoutPrimitiveInfo,
+//         id: (T, u64),
 
-        properties: &mut PropertiesCollection<T>,
-        builder: &mut DisplayListBuilder,
-    ) -> bool {
-        let dimensions: (f32, f32) = if let Some(layout) = self.context.dimensions.current {
-            (layout.width(), layout.height())
-        } else {
-            (0.0, 0.0)
-        };
+//         properties: &mut PropertiesCollection<T>,
+//         builder: &mut DisplayListBuilder,
+//     ) -> bool {
+//         let dimensions: (f32, f32) = if let Some(layout) = self.context.dimensions.current {
+//             (layout.width(), layout.height())
+//         } else {
+//             (0.0, 0.0)
+//         };
 
-        if let Some(transform) = transform::multiply(self.transforms.clone(), dimensions) {
-            let binding_key = PropertyBindingKey::new(id.1);
+//         if let Some(transform) = transform::multiply(self.transforms.clone(), dimensions) {
+//             let binding_key = PropertyBindingKey::new(id.1);
 
-            // Add dynamic binding property
-            properties.insert(id.0, binding_key);
+//             // Add dynamic binding property
+//             properties.insert(id.0, binding_key);
 
-            // Generate clip for transform area
-            let property_transform = Some(PropertyBinding::Binding(binding_key, transform));
-            let transformed_frame =
-                builder.push_reference_frame(&container, TransformStyle::Flat, property_transform, None);
+//             // Generate clip for transform area
+//             let property_transform = Some(PropertyBinding::Binding(binding_key, transform));
+//             let transformed_frame =
+//                 builder.push_reference_frame(&container, TransformStyle::Flat, property_transform, None);
 
-            builder.push_clip_id(transformed_frame);
-            true
-        } else {
-            false
-        }
-    }
-}
+//             builder.push_clip_id(transformed_frame);
+//             true
+//         } else {
+//             false
+//         }
+//     }
+// }
